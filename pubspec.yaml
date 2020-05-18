@@ -1,0 +1,10 @@
+name: clerk
+version: 0.3.11
+description: >-
+  Command-based state manager. Clerk can properly compose small
+  logic parts to improve readability and reusability of state
+  management in your project.
+environment:
+  sdk: '>=2.6.0 <3.0.0'
+dev_dependencies:
+  test: ^1.14.2
