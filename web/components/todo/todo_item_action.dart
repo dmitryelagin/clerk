@@ -1,4 +1,4 @@
-import '../../actions/change_item.dart';
+import '../../actions/commit_item_change.dart';
 import '../../actions/remove_item.dart';
 import '../../actions/start_item_change.dart';
 import '../../actions/stop_item_change.dart';
@@ -8,6 +8,6 @@ abstract class TodoItemAction
     implements
         StartItemChange,
         StopItemChange,
-        ChangeItem,
+        CommitItemChange,
         ToggleItem,
         RemoveItem {}

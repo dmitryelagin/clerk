@@ -1,5 +1,5 @@
 import '../actions/add_item.dart';
-import '../actions/change_item.dart';
+import '../actions/commit_item_change.dart';
 import '../actions/init.dart';
 import '../actions/remove_item.dart';
 import '../actions/start_item_add.dart';
@@ -15,12 +15,12 @@ class TodoActionFactory
     with
         Init,
         AddItem,
-        ChangeItem,
         RemoveItem,
+        ToggleItem,
         StartItemAdd,
         StartItemChange,
         StopItemChange,
-        ToggleItem
+        CommitItemChange
     implements TodoItemAction, TodoListAction {
   TodoActionFactory(this.loader, this.todoList);
 

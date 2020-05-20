@@ -18,6 +18,7 @@ class Input {
     bool isAutofocused = false,
     Iterable<String> classes = const [],
     Action Function(KeyboardEvent, String) keyDownAction,
+    Action Function(Event, String) blurAction,
   }) {
     final element = InputElement()
       ..classes.addAll(classes)
@@ -32,6 +33,9 @@ class Input {
     return element
       ..onKeyDown.listen((event) {
         _execute(keyDownAction(event, element.value));
+      })
+      ..onBlur.listen((event) {
+        _execute(blurAction(event, element.value));
       });
   }
 }

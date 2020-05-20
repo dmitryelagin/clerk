@@ -19,6 +19,9 @@ class TodoListSelectorFactory<M extends TodoListModel> {
   Selector<M, bool> isChangingItem(TodoItemId id) =>
       (model) => model.editingItemId == id;
 
+  Selector<M, bool> isNotChangingItem(TodoItemId id) =>
+      (model) => model.editingItemId != id;
+
   Selector<M, bool> isAddingAvailable() => (model) =>
       getItemsIds()(model).every((id) => id != const TodoItemId.fake());
 }

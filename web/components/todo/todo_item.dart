@@ -37,16 +37,9 @@ class TodoItemComponent {
         Input().render(
           item.label,
           isAutofocused: true,
-          keyDownAction: (event, value) {
-            switch (event.keyCode) {
-              case KeyCode.ESC:
-                return _action.stopItemChange();
-              case KeyCode.ENTER:
-                return _action.changeItem(id, value);
-              default:
-                return null;
-            }
-          },
+          blurAction: (_, value) => _action.commitItemChange(id, value),
+          keyDownAction: (event, value) =>
+              _action.commitItemChange(id, value, event.keyCode),
         ),
       if (!isChanging)
         Span().render(
