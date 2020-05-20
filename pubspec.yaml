@@ -7,4 +7,6 @@ description: >-
 environment:
   sdk: '>=2.6.0 <3.0.0'
 dev_dependencies:
-  test: ^1.14.2
+  build_runner: ^1.6.2
+  build_web_compilers: ^2.6.1
+  test: ^1.14.3
