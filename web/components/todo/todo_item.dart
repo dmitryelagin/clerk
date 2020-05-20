@@ -30,7 +30,7 @@ class TodoItemComponent {
     final isChanging = _evaluate(_todoList.isChangingItem(id));
     return Div().render(children: [
       Checkbox().render(
-        isChecked: item.isChecked,
+        isChecked: item.isDone,
         toggleAction: (_) => _action.toggleItem(id),
       ),
       if (isChanging)

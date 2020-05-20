@@ -14,8 +14,8 @@ class _TodoLoaderStub implements TodoLoader {
   @override
   Future<TodoInitResponse> initApp() => _requestData(
         TodoInitResponse(const [
-          TodoItem(TodoItemId(1), 'Test 1', isChecked: false),
-          TodoItem(TodoItemId(2), 'Test 2', isChecked: true),
+          TodoItem(TodoItemId(1), 'Test 1', isDone: false),
+          TodoItem(TodoItemId(2), 'Test 2', isDone: true),
         ]),
         canReturnError: false,
         minResponseLag: 300,
