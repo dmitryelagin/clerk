@@ -5,13 +5,13 @@ import 'package:clerk/clerk.dart';
 class Span {
   factory Span() => _lastInstance;
 
-  Span.create(this._executor) {
+  Span.create(this._execute) {
     _lastInstance = this;
   }
 
   static Span _lastInstance;
 
-  final StoreExecutor _executor;
+  final Execute _execute;
 
   Element render(
     String label, {
@@ -24,7 +24,7 @@ class Span {
     if (clickAction == null) return element;
     return element
       ..onClick.listen((event) {
-        _executor.execute(clickAction(event));
+        _execute(clickAction(event));
       });
   }
 }

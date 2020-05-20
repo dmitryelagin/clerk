@@ -7,6 +7,6 @@ mixin AddItem {
   TodoListManager get todoList;
 
   Action addItem(TodoItemId id, String label) => Action((store) {
-        store.assignBinary(todoList.addItem, id, label);
+        store.assign(todoList.addItem(id, label));
       });
 }

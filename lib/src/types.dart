@@ -1,3 +1,4 @@
+import 'action.dart';
 import 'public_interfaces.dart';
 
 /// Type of a function that returns specific data from a complex object.
@@ -37,3 +38,13 @@ typedef ModelComparator<M> = bool Function(M, M);
 
 /// Type of a function that works with store by [StoreManager].
 typedef ActionOperation = void Function(StoreManager);
+
+/// Type of a function that can evaluate [Selector].
+///
+/// It is the same type as the [StoreEvaluator.evaluate] method.
+typedef Evaluate = V Function<M, V>(Selector<M, V>);
+
+/// Type of a function that can execute [Action].
+///
+/// It is the same type as the [StoreExecutor.execute] method.
+typedef Execute = void Function(Action);

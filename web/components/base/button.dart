@@ -5,13 +5,13 @@ import 'package:clerk/clerk.dart';
 class Button {
   factory Button() => _lastInstance;
 
-  Button.create(this._executor) {
+  Button.create(this._execute) {
     _lastInstance = this;
   }
 
   static Button _lastInstance;
 
-  final StoreExecutor _executor;
+  final Execute _execute;
 
   Element render(
     String label, {
@@ -24,7 +24,7 @@ class Button {
     if (clickAction == null) return element;
     return element
       ..onClick.listen((event) {
-        _executor.execute(clickAction(event));
+        _execute(clickAction(event));
       });
   }
 }

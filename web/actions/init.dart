@@ -10,7 +10,7 @@ mixin Init {
   Action init() => Action((store) async {
         try {
           final data = await loader.initApp();
-          store.assignUnary(todoList.replaceItems, data.items);
+          store.assign(todoList.replaceItems(data.items));
         } on Exception catch (exception) {
           print(exception);
         }

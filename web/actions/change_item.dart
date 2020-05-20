@@ -8,7 +8,7 @@ mixin ChangeItem {
 
   Action changeItem(TodoItemId id, String label) => Action((store) {
         store
-          ..assign(todoList.stopItemChange)
-          ..assignBinary(todoList.changeItem, id, label);
+          ..assign(todoList.stopItemChange())
+          ..assign(todoList.changeItem(id, label));
       });
 }

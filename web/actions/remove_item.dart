@@ -7,6 +7,6 @@ mixin RemoveItem {
   TodoListManager get todoList;
 
   Action removeItem(TodoItemId id) => Action((store) {
-        store.assignUnary(todoList.removeItem, id);
+        store.assign(todoList.removeItem(id));
       });
 }

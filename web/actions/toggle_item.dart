@@ -7,6 +7,6 @@ mixin ToggleItem {
   TodoListManager get todoList;
 
   Action toggleItem(TodoItemId id, {bool isChecked}) => Action((store) {
-        store.assignBinary(todoList.toggleItem, id, isChecked);
+        store.assign(todoList.toggleItem(id, isChecked: isChecked));
       });
 }

@@ -5,13 +5,13 @@ import 'package:clerk/clerk.dart';
 class Input {
   factory Input() => _lastInstance;
 
-  Input.create(this._executor) {
+  Input.create(this._execute) {
     _lastInstance = this;
   }
 
   static Input _lastInstance;
 
-  final StoreExecutor _executor;
+  final Execute _execute;
 
   Element render(
     String value, {
@@ -31,7 +31,7 @@ class Input {
     if (keyDownAction == null) return element;
     return element
       ..onKeyDown.listen((event) {
-        _executor.execute(keyDownAction(event, element.value));
+        _execute(keyDownAction(event, element.value));
       });
   }
 }

@@ -5,13 +5,13 @@ import 'package:clerk/clerk.dart';
 class Checkbox {
   factory Checkbox() => _lastInstance;
 
-  Checkbox.create(this._executor) {
+  Checkbox.create(this._execute) {
     _lastInstance = this;
   }
 
   static Checkbox _lastInstance;
 
-  final StoreExecutor _executor;
+  final Execute _execute;
 
   Element render({
     bool isChecked,
@@ -24,7 +24,7 @@ class Checkbox {
     if (toggleAction == null) return element;
     return element
       ..onInput.listen((event) {
-        _executor.execute(toggleAction(event));
+        _execute(toggleAction(event));
       });
   }
 }

@@ -12,13 +12,14 @@ import 'components/todo/todo_list.dart';
 import 'factories/todo_action_factory.dart';
 import 'factories/todo_store_factory.dart';
 import 'services/todo_loader.dart';
-import 'states/todo_list/todo_list_selector.dart';
+import 'states/todo_list/todo_list_selector_factory.dart';
 import 'states/todo_list/todo_list_state.dart';
 
 void main() {
   final store = createTodoStore();
-  final action = TodoActionFactory(TodoLoader(), TodoListManager());
-  _initializeComponents(store, action);
+  final manager = TodoListManager();
+  final action = TodoActionFactory(TodoLoader(), manager);
+  _initializeComponents(store, manager, action);
   final appRoot = document.querySelector('#app')
     ..append(TodoListComponent().render());
   store.accessor.onChange.listen((_) {
@@ -29,12 +30,16 @@ void main() {
   store.executor.execute(action.init());
 }
 
-void _initializeComponents(Store store, TodoActionFactory action) {
+void _initializeComponents(
+  Store store,
+  TodoListSelectorFactory selector,
+  TodoActionFactory action,
+) {
   Div.create();
-  Button.create(store.executor);
-  Checkbox.create(store.executor);
-  Input.create(store.executor);
-  Span.create(store.executor);
-  TodoItemComponent.create(store.evaluator, TodoListSelector.standard, action);
-  TodoListComponent.create(store.evaluator, TodoListSelector.standard, action);
+  Button.create(store.executor.execute);
+  Checkbox.create(store.executor.execute);
+  Input.create(store.executor.execute);
+  Span.create(store.executor.execute);
+  TodoItemComponent.create(store.evaluator.evaluate, selector, action);
+  TodoListComponent.create(store.evaluator.evaluate, selector, action);
 }

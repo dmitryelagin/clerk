@@ -2,10 +2,10 @@ import 'package:clerk/clerk.dart';
 
 import 'todo_list_accumulator.dart';
 import 'todo_list_model.dart';
-import 'todo_list_selector.dart';
-import 'todo_list_writer.dart';
+import 'todo_list_selector_factory.dart';
+import 'todo_list_writer_factory.dart';
 
-class TodoListManager = TodoListSelector with TodoListWriter;
+class TodoListManager = TodoListSelectorFactory with TodoListWriterFactory;
 
 State<TodoListModel, TodoListAccumulator> createTodoListState() => State(
       (model) => model != null

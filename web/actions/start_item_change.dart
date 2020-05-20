@@ -7,6 +7,6 @@ mixin StartItemChange {
   TodoListManager get todoList;
 
   Action startItemChange(TodoItemId id) => Action((store) {
-        store.assignUnary(todoList.startItemChange, id);
+        store.assign(todoList.startItemChange(id));
       });
 }

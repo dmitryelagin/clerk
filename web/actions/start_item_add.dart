@@ -9,7 +9,7 @@ mixin StartItemAdd {
   Action startItemAdd() => Action((store) {
         const id = TodoItemId.fake();
         store
-          ..assignUnary(todoList.addItem, id)
-          ..assignUnary(todoList.startItemChange, id);
+          ..assign(todoList.addItem(id))
+          ..assign(todoList.startItemChange(id));
       });
 }

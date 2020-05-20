@@ -4,7 +4,7 @@ import 'package:clerk/clerk.dart';
 
 import '../../intl/todo_intl.dart';
 import '../../models/todo_item_id.dart';
-import '../../states/todo_list/todo_list_selector.dart';
+import '../../states/todo_list/todo_list_selector_factory.dart';
 import '../base/button.dart';
 import '../base/checkbox.dart';
 import '../base/div.dart';
@@ -15,19 +15,19 @@ import 'todo_item_action.dart';
 class TodoItemComponent {
   factory TodoItemComponent() => _lastInstance;
 
-  TodoItemComponent.create(this._evaluator, this._todoList, this._action) {
+  TodoItemComponent.create(this._evaluate, this._todoList, this._action) {
     _lastInstance = this;
   }
 
   static TodoItemComponent _lastInstance;
 
-  final StoreEvaluator _evaluator;
-  final TodoListSelector _todoList;
+  final Evaluate _evaluate;
+  final TodoListSelectorFactory _todoList;
   final TodoItemAction _action;
 
   Element render(TodoItemId id) {
-    final item = _evaluator.evaluateUnary(_todoList.getItem, id);
-    final isChanging = _evaluator.evaluateUnary(_todoList.isChangingItem, id);
+    final item = _evaluate(_todoList.getItem(id));
+    final isChanging = _evaluate(_todoList.isChangingItem(id));
     return Div().render(children: [
       Checkbox().render(
         isChecked: item.isChecked,

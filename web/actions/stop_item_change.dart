@@ -7,9 +7,9 @@ mixin StopItemChange {
   TodoListManager get todoList;
 
   Action stopItemChange() => Action((store) {
-        if (store.evaluate(todoList.hasAdding)) {
-          store.assignUnary(todoList.removeItem, const TodoItemId.fake());
+        if (store.evaluate(todoList.hasAdding())) {
+          store.assign(todoList.removeItem(const TodoItemId.fake()));
         }
-        store.assign(todoList.stopItemChange);
+        store.assign(todoList.stopItemChange());
       });
 }
