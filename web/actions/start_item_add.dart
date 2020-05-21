@@ -7,9 +7,8 @@ mixin StartItemAdd {
   TodoListManager get todoList;
 
   Action startItemAdd() => Action((store) {
-        const id = TodoItemId.fake();
         store
-          ..assign(todoList.addItem(id))
-          ..assign(todoList.startItemChange(id));
+          ..assign(todoList.addItem(TodoItemId.fake))
+          ..assign(todoList.startItemChange(TodoItemId.fake));
       });
 }

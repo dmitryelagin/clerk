@@ -8,17 +8,15 @@ import 'stop_item_change.dart';
 mixin CommitItemChange on CancelItemChange, AddItem, ChangeItem {
   Action commitItemChange(TodoItemId id, String label, [int keyCode]) =>
       Action((store) async {
-        final isBlur = keyCode == null;
-        final isEnter = keyCode == 13;
-        final isEsc = keyCode == 27;
-        final isCommit = isBlur || isEnter || isEsc;
-        final isAdding = TodoItemId.isFake(id);
+        final isSubmit = keyCode == null || keyCode == 13;
+        final isCancel = keyCode == 27;
+        final isAdding = store.evaluate(todoList.isAddingItem(id));
 
-        if (!isCommit) return;
-        if (store.evaluate(todoList.isNotChangingItem(id))) return;
+        if (!isSubmit && !isCancel) return;
+        if (!store.evaluate(todoList.isChangingItem(id))) return;
 
-        if (isEsc) store.execute(cancelItemChange());
-        if (!isEsc && isAdding) store.execute(addItem(label));
-        if (!isEsc && !isAdding) store.execute(changeItem(id, label));
+        if (isCancel) store.execute(cancelItemChange());
+        if (!isCancel && isAdding) store.execute(addItem(label));
+        if (!isCancel && !isAdding) store.execute(changeItem(id, label));
       });
 }

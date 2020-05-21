@@ -9,17 +9,16 @@ mixin AddItem {
   TodoLoader get loader;
 
   Action addItem(String label) => Action((store) async {
-        if (!store.evaluate(todoList.hasAdding())) return;
+        if (store.evaluate(todoList.hasNoAddInteraction())) return;
 
-        const fakeId = TodoItemId.fake();
         store
-          ..assign(todoList.changeItem(fakeId, label))
+          ..assign(todoList.changeItem(TodoItemId.fake, label))
           ..assign(todoList.stopItemChange());
 
         try {
           final createdId = await loader.addItem(label);
           store
-            ..assign(todoList.removeItem(fakeId))
+            ..assign(todoList.removeItem(TodoItemId.fake))
             ..assign(todoList.addItem(createdId, label));
         } on Exception catch (e) {
           print(e);
