@@ -3,10 +3,10 @@ import 'package:clerk/clerk.dart';
 import '../models/todo_item_id.dart';
 import '../states/todo_list/todo_list_state.dart';
 
-mixin StopItemChange {
+mixin CancelItemChange {
   TodoListManager get todoList;
 
-  Action stopItemChange() => Action((store) {
+  Action cancelItemChange() => Action((store) {
         if (store.evaluate(todoList.hasAdding())) {
           store.assign(todoList.removeItem(const TodoItemId.fake()));
         }

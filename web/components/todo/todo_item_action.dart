@@ -7,7 +7,7 @@ import '../../actions/toggle_item.dart';
 abstract class TodoItemAction
     implements
         StartItemChange,
-        StopItemChange,
+        CancelItemChange,
         CommitItemChange,
         ToggleItem,
         RemoveItem {}

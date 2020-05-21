@@ -11,8 +11,8 @@ mixin Init {
         try {
           final data = await loader.initApp();
           store.assign(todoList.replaceItems(data.items));
-        } on Exception catch (exception) {
-          print(exception);
+        } on Exception catch (e) {
+          print(e);
         }
       });
 }
