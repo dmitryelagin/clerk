@@ -4,10 +4,15 @@ import '../models/todo_item_id.dart';
 import '../services/todo_loader.dart';
 import '../states/todo_list/todo_list_state.dart';
 
-mixin AddItem {
+abstract class AddItem {
+  Action addItem(String label);
+}
+
+mixin AddItemFactory implements AddItem {
   TodoListManager get todoList;
   TodoLoader get loader;
 
+  @override
   Action addItem(String label) => Action((store) async {
         if (store.evaluate(todoList.hasNoAddInteraction())) return;
 

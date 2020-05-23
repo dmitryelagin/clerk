@@ -4,10 +4,15 @@ import '../models/todo_item_id.dart';
 import '../services/todo_loader.dart';
 import '../states/todo_list/todo_list_state.dart';
 
-mixin ChangeItem {
+abstract class ChangeItem {
+  Action changeItem(TodoItemId id, String label);
+}
+
+mixin ChangeItemFactory implements ChangeItem {
   TodoListManager get todoList;
   TodoLoader get loader;
 
+  @override
   Action changeItem(TodoItemId id, String label) => Action((store) async {
         final item = store.evaluate(todoList.getItem(id));
         store

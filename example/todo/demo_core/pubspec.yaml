@@ -1,0 +1,10 @@
+name: demo_core
+description: A core, reusable code for Clerk package demos.
+publish_to: none
+version: 1.0.0
+environment:
+  sdk: ">=2.6.0 <3.0.0"
+dependencies:
+  clerk:
+    version: ^0.3.0
+    path: ../../../

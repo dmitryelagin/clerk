@@ -28,6 +28,8 @@ class _TodoLoaderStub implements TodoLoader {
         TodoInitResponse([
           TodoItem(_nextItemId, 'Test label 1', isDone: false),
           TodoItem(_nextItemId, 'Test label 2', isDone: true),
+          TodoItem(_nextItemId, 'Test label 3', isDone: false),
+          TodoItem(_nextItemId, 'Test label 4', isDone: true),
         ]),
         minResponseLag: 300,
       );
