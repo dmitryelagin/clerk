@@ -26,6 +26,7 @@ class TodoListItem extends StatelessWidget {
             ),
             Expanded(
               child: TextField(
+                autofocus: store.evaluate(todoList.isAddingItem(id)),
                 controller: TextEditingController(text: item.label),
                 style: const TextStyle(fontSize: 20),
                 onSubmitted: (value) {
