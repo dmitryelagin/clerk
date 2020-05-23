@@ -10,7 +10,7 @@ abstract class TodoLoader {
   factory TodoLoader() = _TodoLoaderStub;
 
   Future<TodoInitResponse> initApp();
-  Future<TodoItemId> addItem(String label);
-  Future<void> changeItem(TodoItemId id, String label);
+  Future<TodoItemId> addItem(String label, {bool isDone});
+  Future<void> changeItem(TodoItemId id, {String label, bool isDone});
   Future<void> removeItem(TodoItemId id);
 }

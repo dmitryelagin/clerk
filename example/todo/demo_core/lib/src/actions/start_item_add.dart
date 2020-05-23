@@ -11,9 +11,9 @@ mixin StartItemAddFactory implements StartItemAdd {
   TodoListManager get todoList;
 
   @override
-  Action startItemAdd() => Action((store) {
-        store
-          ..assign(todoList.addItem(TodoItemId.fake))
-          ..assign(todoList.startItemChange(TodoItemId.fake));
-      });
+  Action startItemAdd() {
+    return Action((store) {
+      store.assign(todoList.addItem(TodoItemId.fake));
+    });
+  }
 }

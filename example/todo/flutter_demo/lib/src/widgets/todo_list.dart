@@ -14,6 +14,7 @@ class TodoList extends StatelessWidget {
     return StoreBuilder(
       builder: (_, store) {
         final ids = store.evaluate(todoList.getItemsIds());
+        final isAddingAvailable = store.evaluate(todoList.isAddingAvailable());
         return Scaffold(
           appBar: AppBar(
             title: const Text('TODO'),
@@ -24,13 +25,15 @@ class TodoList extends StatelessWidget {
                 TodoListItem(key: Key(id.value.toString()), id: id),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              store.execute(action.startItemAdd());
-            },
-            tooltip: 'Increment',
-            child: Icon(Icons.add),
-          ),
+          floatingActionButton: isAddingAvailable
+              ? FloatingActionButton(
+                  onPressed: () {
+                    store.execute(action.startItemAdd());
+                  },
+                  tooltip: 'Increment',
+                  child: Icon(Icons.add),
+                )
+              : null,
         );
       },
     );

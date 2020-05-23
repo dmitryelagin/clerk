@@ -11,7 +11,6 @@ class _TodoLoaderStub implements TodoLoader {
     bool canReturnError = false,
     int minResponseLag = 100,
   }) {
-    print('Request: $type');
     final random = Random();
     final milliseconds = (random.nextDouble() * 200 + minResponseLag).round();
     final duration = Duration(milliseconds: milliseconds);
@@ -35,11 +34,11 @@ class _TodoLoaderStub implements TodoLoader {
       );
 
   @override
-  Future<TodoItemId> addItem(String label) =>
+  Future<TodoItemId> addItem(String label, {bool isDone}) =>
       _requestData('addItem', _nextItemId);
 
   @override
-  Future<void> changeItem(TodoItemId id, String label) =>
+  Future<void> changeItem(TodoItemId id, {String label, bool isDone}) =>
       _requestData('changeItem', null);
 
   @override

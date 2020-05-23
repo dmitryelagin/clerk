@@ -1,22 +1,35 @@
 import 'package:clerk/clerk.dart';
 
+import '../../demo_core.dart';
 import '../models/todo_item_id.dart';
+import '../models/todo_item_id_utils.dart';
 import 'add_item.dart';
 import 'change_item.dart';
-import 'stop_item_change.dart';
+import 'remove_item.dart';
 
-mixin CommitItemChange on CancelItemChange, AddItem, ChangeItem {
-  Action commitItemChange(TodoItemId id, String label, [int keyCode]) =>
-      Action((store) async {
-        final isSubmit = keyCode == null || keyCode == 13;
-        final isCancel = keyCode == 27;
-        final isAdding = store.evaluate(todoList.isAddingItem(id));
+abstract class CommitItemChange {
+  Action commitItemChange(TodoItemId id, String label);
+}
 
-        if (!isSubmit && !isCancel) return;
-        if (!store.evaluate(todoList.isChangingItem(id))) return;
+mixin CommitItemChangeFactory
+    on AddItem, ChangeItem, RemoveItem
+    implements CommitItemChange {
+  TodoListManager get todoList;
 
-        if (isCancel) store.execute(cancelItemChange());
-        if (!isCancel && isAdding) store.execute(addItem(label));
-        if (!isCancel && !isAdding) store.execute(changeItem(id, label));
-      });
+  @override
+  Action commitItemChange(TodoItemId id, String label) {
+    return Action((store) async {
+      if (label.isEmpty) {
+        if (id.isFake) store.execute(removeItem(id));
+      } else {
+        final item = store.evaluate(todoList.getItem(id));
+        if (label == item.label) return;
+        if (id.isFake) {
+          store.execute(addItem(label));
+        } else {
+          store.execute(changeItem(id, label));
+        }
+      }
+    });
+  }
 }

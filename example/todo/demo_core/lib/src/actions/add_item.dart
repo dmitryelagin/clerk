@@ -13,20 +13,19 @@ mixin AddItemFactory implements AddItem {
   TodoLoader get loader;
 
   @override
-  Action addItem(String label) => Action((store) async {
-        if (store.evaluate(todoList.hasNoAddInteraction())) return;
+  Action addItem(String label) {
+    return Action((store) async {
+      final isDone = store.evaluate(todoList.getItem(TodoItemId.fake)).isDone;
+      store.assign(todoList.changeItem(TodoItemId.fake, label));
 
+      try {
+        final createdId = await loader.addItem(label, isDone: isDone);
         store
-          ..assign(todoList.changeItem(TodoItemId.fake, label))
-          ..assign(todoList.stopItemChange());
-
-        try {
-          final createdId = await loader.addItem(label);
-          store
-            ..assign(todoList.removeItem(TodoItemId.fake))
-            ..assign(todoList.addItem(createdId, label));
-        } on Exception catch (e) {
-          print(e);
-        }
-      });
+          ..assign(todoList.removeItem(TodoItemId.fake))
+          ..assign(todoList.addItem(createdId, label: label, isDone: isDone));
+      } on Exception catch (e) {
+        print(e);
+      }
+    });
+  }
 }

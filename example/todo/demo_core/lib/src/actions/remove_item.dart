@@ -14,15 +14,17 @@ mixin RemoveItemFactory implements RemoveItem {
   TodoLoader get loader;
 
   @override
-  Action removeItem(TodoItemId id) => Action((store) async {
-        store.assign(todoList.removeItem(id));
+  Action removeItem(TodoItemId id) {
+    return Action((store) async {
+      store.assign(todoList.removeItem(id));
 
-        if (id.isFake) return;
+      if (id.isFake) return;
 
-        try {
-          await loader.removeItem(id);
-        } on Exception catch (e) {
-          print(e);
-        }
-      });
+      try {
+        await loader.removeItem(id);
+      } on Exception catch (e) {
+        print(e);
+      }
+    });
+  }
 }

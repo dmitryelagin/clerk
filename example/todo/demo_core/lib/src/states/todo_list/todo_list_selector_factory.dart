@@ -12,20 +12,6 @@ class TodoListSelectorFactory<M extends TodoListModel> {
   Selector<M, Iterable<TodoItemId>> getItemsIds() =>
       (model) => model.items.map((item) => item.id);
 
-  Selector<M, bool> hasInteraction() => (model) => model.editingItemId != null;
-
-  Selector<M, bool> hasAddInteraction() =>
-      (model) => model.editingItemId.isFake;
-
-  Selector<M, bool> hasNoAddInteraction() =>
-      (model) => !hasAddInteraction()(model);
-
-  Selector<M, bool> isAddingItem(TodoItemId id) =>
-      (model) => hasAddInteraction()(model) && isChangingItem(id)(model);
-
-  Selector<M, bool> isChangingItem(TodoItemId id) =>
-      (model) => model.editingItemId == id;
-
   Selector<M, bool> isAddingAvailable() =>
       (model) => getItemsIds()(model).every((id) => !id.isFake);
 }

@@ -2,12 +2,13 @@ import 'package:demo_core/demo_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/src/clerk_helpers/store_builder.dart';
 import 'package:flutter_demo/src/modules/todo_module.dart';
+import 'package:flutter_demo/src/widgets/todo_list_item_text_field.dart';
 
 abstract class TodoListItemAction
-    implements ChangeItem, ToggleItem, RemoveItem {}
+    implements CommitItemChange, ToggleItem, RemoveItem {}
 
 class TodoListItem extends StatelessWidget {
-  const TodoListItem({Key key, this.id}) : super(key: key);
+  const TodoListItem({this.id, Key key}) : super(key: key);
 
   final TodoItemId id;
 
@@ -21,23 +22,21 @@ class TodoListItem extends StatelessWidget {
             Checkbox(
               value: item.isDone,
               onChanged: (isDone) {
-                store.execute(action.toggleItem(id, isDone: isDone));
+                store.execute(action.toggleItem(item.id, isDone: isDone));
               },
             ),
             Expanded(
-              child: TextField(
-                autofocus: store.evaluate(todoList.isAddingItem(id)),
-                controller: TextEditingController(text: item.label),
-                style: const TextStyle(fontSize: 20),
+              child: TodoListItemTextField(
+                item: item,
                 onSubmitted: (value) {
-                  store.execute(action.changeItem(id, value));
+                  store.execute(action.commitItemChange(item.id, value));
                 },
               ),
             ),
             IconButton(
               icon: Icon(Icons.remove_circle_outline),
               onPressed: () {
-                store.execute(action.removeItem(id));
+                store.execute(action.removeItem(item.id));
               },
             ),
           ],

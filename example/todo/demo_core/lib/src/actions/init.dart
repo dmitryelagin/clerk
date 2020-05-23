@@ -12,12 +12,14 @@ mixin InitFactory implements Init {
   TodoListManager get todoList;
 
   @override
-  Action init() => Action((store) async {
-        try {
-          final data = await loader.initApp();
-          store.assign(todoList.replaceItems(data.items));
-        } on Exception catch (e) {
-          print(e);
-        }
-      });
+  Action init() {
+    return Action((store) async {
+      try {
+        final data = await loader.initApp();
+        store.assign(todoList.replaceItems(data.items));
+      } on Exception catch (e) {
+        print(e);
+      }
+    });
+  }
 }

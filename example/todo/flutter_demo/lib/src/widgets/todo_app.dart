@@ -9,7 +9,6 @@ abstract class TodoAppAction implements Init {}
 class TodoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    store.executor.execute(action.init());
     return MaterialApp(
       title: 'Clerk package demo',
       theme: ThemeData(
@@ -21,7 +20,7 @@ class TodoApp extends StatelessWidget {
         brightness: Brightness.dark,
       ),
       home: StoreProvider(
-        store: store,
+        store: createTodoStore()..executor.execute(action.init()),
         child: const TodoList(),
       ),
     );

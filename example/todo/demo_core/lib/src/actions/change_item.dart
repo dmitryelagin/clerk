@@ -13,18 +13,18 @@ mixin ChangeItemFactory implements ChangeItem {
   TodoLoader get loader;
 
   @override
-  Action changeItem(TodoItemId id, String label) => Action((store) async {
-        final item = store.evaluate(todoList.getItem(id));
-        store
-          ..assign(todoList.changeItem(id, label))
-          ..assign(todoList.stopItemChange());
+  Action changeItem(TodoItemId id, String label) {
+    return Action((store) async {
+      final item = store.evaluate(todoList.getItem(id));
+      store.assign(todoList.changeItem(id, label));
 
-        if (item.label == label) return;
+      if (item.label == label) return;
 
-        try {
-          await loader.changeItem(id, label);
-        } on Exception catch (e) {
-          print(e);
-        }
-      });
+      try {
+        await loader.changeItem(id, label: label);
+      } on Exception catch (e) {
+        print(e);
+      }
+    });
+  }
 }
