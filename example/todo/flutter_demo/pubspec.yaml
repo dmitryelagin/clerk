@@ -1,0 +1,17 @@
+name: flutter_demo
+description: A Flutter demo project for Clerk package.
+publish_to: none
+version: 1.0.0
+environment:
+  sdk: ">=2.6.0 <3.0.0"
+dependencies:
+  clerk:
+    version: ^0.3.0
+    path: ../../../
+  demo_core:
+    version: ^1.0.0
+    path: ../demo_core
+  flutter:
+    sdk: flutter
+flutter:
+  uses-material-design: true
