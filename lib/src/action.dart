@@ -1,5 +1,5 @@
 import 'public_interfaces.dart';
-import 'types.dart';
+import 'public_types.dart';
 
 /// A command that is allowed to interact with store via [StoreManager].
 ///

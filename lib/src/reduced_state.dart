@@ -1,5 +1,5 @@
+import 'public_types.dart';
 import 'state.dart';
-import 'types.dart';
 import 'utils.dart';
 
 /// A simplified [State] that acts like a reducer.

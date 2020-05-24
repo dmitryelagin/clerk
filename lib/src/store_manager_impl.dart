@@ -1,9 +1,10 @@
 import 'action.dart';
 import 'private_interfaces.dart';
 import 'public_interfaces.dart';
+import 'public_types.dart';
 import 'state_manager.dart';
 import 'state_repository.dart';
-import 'types.dart';
+import 'utils.dart';
 
 class StoreManagerImpl implements StoreManager {
   StoreManagerImpl(this._repository, this._eventBus);
@@ -23,9 +24,7 @@ class StoreManagerImpl implements StoreManager {
   V evaluate<M, V>(Selector<M, V> select) {
     final state = _repository.getByModel<M>();
     if (state != null) return state.evaluate(select);
-    if (select is Selector<StoreEvaluator, V>) {
-      return select(_getEvaluator());
-    }
+    if (isGenericSelector(select)) return select(asType(this));
     _eventBus.evaluationFailed.add(M);
     return null;
   }
@@ -34,9 +33,7 @@ class StoreManagerImpl implements StoreManager {
   V evaluateUnary<M, V, X>(SelectorUnary<M, V, X> select, X x) {
     final state = _repository.getByModel<M>();
     if (state != null) return state.evaluateUnary(select, x);
-    if (select is SelectorUnary<StoreEvaluator, V, X>) {
-      return select(_getEvaluator(), x);
-    }
+    if (isGenericSelectorUnary(select)) return select(asType(this), x);
     _eventBus.evaluationFailed.add(M);
     return null;
   }
@@ -45,9 +42,7 @@ class StoreManagerImpl implements StoreManager {
   V evaluateBinary<M, V, X, Y>(SelectorBinary<M, V, X, Y> select, X x, Y y) {
     final state = _repository.getByModel<M>();
     if (state != null) return state.evaluateBinary(select, x, y);
-    if (select is SelectorBinary<StoreEvaluator, V, X, Y>) {
-      return select(_getEvaluator(), x, y);
-    }
+    if (isGenericSelectorBinary(select)) return select(asType(this), x, y);
     _eventBus.evaluationFailed.add(M);
     return null;
   }
@@ -66,8 +61,6 @@ class StoreManagerImpl implements StoreManager {
   void assignBinary<A, V, X, Y>(WriterBinary<A, V, X, Y> write, X x, Y y) {
     _getStateForAssignment<A>()?.assignBinary(write, x, y);
   }
-
-  M _getEvaluator<M>() => this as M; // ignore: avoid_as
 
   StateManager _getStateForAssignment<A>() {
     final state = _repository.getByAccumulator<A>();

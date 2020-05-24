@@ -1,4 +1,4 @@
-import 'types.dart';
+import 'public_types.dart';
 import 'utils.dart';
 
 /// A container of rules for working with specific model and accumulator.

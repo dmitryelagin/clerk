@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'public_types.dart';
 import 'state.dart';
-import 'types.dart';
 
 class StateManager<M extends Object, A extends Object> {
   StateManager(this._getAccumulator, this._getModel, this._areEqualModels) {

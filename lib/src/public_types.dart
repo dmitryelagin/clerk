@@ -2,16 +2,23 @@ import 'action.dart';
 import 'public_interfaces.dart';
 
 /// Type of a function that returns specific data from a complex object.
+///
+/// [Selector] can have [StoreEvaluator] as the first argument, so evaluator
+/// will be provided instead of model.
 typedef Selector<M, V> = V Function(M);
 
 /// Type of a function that returns specific data from a complex object.
 ///
-/// Accepts an additional argument to influence the result.
+/// Accepts an additional argument to influence the result. [SelectorUnary]
+/// can have [StoreEvaluator] as the first argument, so it will be provided
+/// instead of model.
 typedef SelectorUnary<M, V, X> = V Function(M, X);
 
 /// Type of a function that returns specific data from a complex object.
 ///
-/// Accepts an additional arguments to influence the result.
+/// Accepts an additional arguments to influence the result. [SelectorBinary]
+/// can have [StoreEvaluator] as the first argument, so it will be provided
+/// instead of model.
 typedef SelectorBinary<M, V, X, Y> = V Function(M, X, Y);
 
 /// Type of a function that writes data to a complex object.
@@ -39,12 +46,12 @@ typedef ModelComparator<M> = bool Function(M, M);
 /// Type of a function that works with store by [StoreManager].
 typedef ActionOperation = void Function(StoreManager);
 
-/// Type of a function that can evaluate [Selector].
-///
-/// It is the same type as the [StoreEvaluator.evaluate] method.
-typedef Evaluate = V Function<M, V>(Selector<M, V>);
-
 /// Type of a function that can execute [Action].
 ///
 /// It is the same type as the [StoreExecutor.execute] method.
 typedef Execute = void Function(Action);
+
+/// Type of a function that can evaluate [Selector].
+///
+/// It is the same type as the [StoreEvaluator.evaluate] method.
+typedef Evaluate = V Function<M, V>(Selector<M, V>);
