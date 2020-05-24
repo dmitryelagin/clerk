@@ -1,20 +1,24 @@
-import 'package:clerk/clerk.dart' hide State;
+import 'package:clerk/clerk.dart' show Store;
 import 'package:flutter/widgets.dart';
 
 import 'store_porter.dart';
-import 'store_porter_impl.dart';
 import 'store_provider.dart';
-import 'store_trigger.dart';
 
 class StoreBuilder extends StatefulWidget {
-  const StoreBuilder({
-    @required this.builder,
-    this.trigger = StoreTrigger.sync,
-    Key key,
-  }) : super(key: key);
+  const StoreBuilder({@required this.builder, Key key})
+      : _getPorter = _getSyncPorter,
+        super(key: key);
+
+  const StoreBuilder.after({@required this.builder, Key key})
+      : _getPorter = _getAfterPorter,
+        super(key: key);
 
   final Widget Function(BuildContext, StorePorter) builder;
-  final StoreTrigger trigger;
+
+  final StorePorter Function(Store) _getPorter;
+
+  static StorePorter _getSyncPorter(Store store) => StorePorter(store);
+  static StorePorter _getAfterPorter(Store store) => StorePorter.after(store);
 
   @override
   _StoreBuilderState createState() => _StoreBuilderState();
@@ -22,13 +26,13 @@ class StoreBuilder extends StatefulWidget {
 
 class _StoreBuilderState extends State<StoreBuilder> {
   Store _store;
-  StorePorterImpl _porter;
+  StorePorter _porter;
 
   @override
-  void initState() {
+  void didChangeDependencies() {
     _store = StoreProvider.of(context);
-    _porter = StorePorterImpl(_store, widget.trigger);
-    super.initState();
+    _porter = widget._getPorter(_store);
+    super.didChangeDependencies();
   }
 
   @override
