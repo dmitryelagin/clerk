@@ -45,25 +45,28 @@ abstract class StoreExecutor {
 abstract class StoreEvaluator {
   /// Returns the result of [Selector] execution.
   ///
-  /// Selector will be called with required [State] model. Returns `null` and
+  /// It will be called with required [State] model. Returns `null` and
   /// emits event to [StoreActionEventBus.onEvaluationFailed] if required
-  /// [State] was not found.
+  /// [State] was not found. [Selector] can have [StoreEvaluator] as the first
+  /// argument, so [StoreEvaluator] will be provided instead of model.
   V evaluate<M, V>(Selector<M, V> select);
 
   /// Returns the result of [SelectorUnary] execution.
   ///
-  /// Selector will be called with required [State] model and provided
-  /// argument. Returns `null` and emits event to
+  /// It will be called with required [State] model and provided
+  /// additional argument. Returns `null` and emits event to
   /// [StoreActionEventBus.onEvaluationFailed] if required [State]
-  /// was not found.
+  /// was not found. [SelectorUnary] can have [StoreEvaluator] as the first
+  /// argument, so [StoreEvaluator] will be provided instead of model.
   V evaluateUnary<M, V, X>(SelectorUnary<M, V, X> select, X x);
 
   /// Returns the result of [SelectorBinary] execution.
   ///
-  /// Selector will be called with required [State] model and provided
-  /// arguments. Returns `null` and emits event to
+  /// It will be called with required [State] model and provided
+  /// additional arguments. Returns `null` and emits event to
   /// [StoreActionEventBus.onEvaluationFailed] if required [State]
-  /// was not found.
+  /// was not found. [SelectorBinary] can have [StoreEvaluator] as the first
+  /// argument, so [StoreEvaluator] will be provided instead of model.
   V evaluateBinary<M, V, X, Y>(SelectorBinary<M, V, X, Y> select, X x, Y y);
 }
 
