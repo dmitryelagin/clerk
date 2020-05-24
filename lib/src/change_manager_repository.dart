@@ -2,15 +2,15 @@ import 'change_manager.dart';
 import 'map_utils.dart';
 
 class ChangeManagerRepository {
-  static bool _hasChange(ChangeManager manager) => manager.hasChange;
-
-  static bool _hasDeferredChange(ChangeManager manager) =>
-      manager.hasDeferredChange;
-
   final _managers = <Type, ChangeManager>{};
 
   bool get hasChanges => _managers.values.any(_hasChange);
   bool get hasDeferredChanges => _managers.values.any(_hasDeferredChange);
+
+  static bool _hasChange(ChangeManager manager) => manager.hasChange;
+
+  static bool _hasDeferredChange(ChangeManager manager) =>
+      manager.hasDeferredChange;
 
   ChangeManager<T> get<T>() => _managers.get(T);
 

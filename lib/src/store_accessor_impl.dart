@@ -10,8 +10,8 @@ import 'state_repository.dart';
 class StoreAccessorImpl implements StoreAccessor, StoreEventBusController {
   StoreAccessorImpl(this._repository, this._changesRepository);
 
-  static StreamController<T> _createController<T>() =>
-      StreamController.broadcast(sync: true);
+  final StateRepository _repository;
+  final ChangeManagerRepository _changesRepository;
 
   @override
   final StreamController<Action> beforeAction = _createController();
@@ -28,9 +28,6 @@ class StoreAccessorImpl implements StoreAccessor, StoreEventBusController {
   final _change = _createController<StateAggregate>();
   final _afterChanges = _createController<StateAggregate>();
   final _zone = Zone.current;
-
-  final StateRepository _repository;
-  final ChangeManagerRepository _changesRepository;
 
   var _state = StateAggregateImpl.empty;
   var _hasScheduledChanges = false;
@@ -55,6 +52,9 @@ class StoreAccessorImpl implements StoreAccessor, StoreEventBusController {
 
   @override
   Stream<StateAggregate> get onAfterChanges => _afterChanges.stream;
+
+  static StreamController<T> _createController<T>() =>
+      StreamController.broadcast(sync: true);
 
   @override
   Stream<M> onModelChange<M>() => _changesRepository.get<M>()?.onModelChange;

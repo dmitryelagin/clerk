@@ -2,9 +2,6 @@ import 'map_utils.dart';
 import 'state_manager.dart';
 
 class StateRepository {
-  static MapEntry<Type, Object> _getTypeModel(Type type, StateManager state) =>
-      MapEntry(type, state.model);
-
   final _accumulatorStateMap = <Type, StateManager>{};
   final _modelStateMap = <Type, StateManager>{};
   final _states = <StateManager>[];
@@ -12,6 +9,9 @@ class StateRepository {
   bool get isEmpty => _states.isEmpty;
   Iterable<StateManager> get values => _states;
   Map<Type, Object> get models => _modelStateMap.map(_getTypeModel);
+
+  static MapEntry<Type, Object> _getTypeModel(Type type, StateManager state) =>
+      MapEntry(type, state.model);
 
   StateManager<Object, A> getByAccumulator<A>() => _accumulatorStateMap.get(A);
   StateManager<M, Object> getByModel<M>() => _modelStateMap.get(M);

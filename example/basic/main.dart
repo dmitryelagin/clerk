@@ -3,9 +3,9 @@ import 'package:clerk/clerk.dart';
 class AppModel {
   const AppModel(this.counter);
 
-  static bool areEqual(AppModel a, AppModel b) => a.counter == b.counter;
-
   final int counter;
+
+  static bool areEqual(AppModel a, AppModel b) => a.counter == b.counter;
 }
 
 int getMultipliedCounter(AppModel model, int multiplier) =>

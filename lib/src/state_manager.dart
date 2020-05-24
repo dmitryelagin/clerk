@@ -12,18 +12,18 @@ class StateManager<M extends Object, A extends Object> {
   factory StateManager.fromState(State<M, A> state) =>
       StateManager(state.getAccumulator, state.getModel, state.areEqualModels);
 
-  final _change = StreamController<M>(sync: true);
-
   final AccumulatorFactory<M, A> _getAccumulator;
   final ModelFactory<M, A> _getModel;
   final ModelComparator<M> _areEqualModels;
 
-  bool _hasTransanction = false;
-  bool _isChanged = false;
+  final _change = StreamController<M>(sync: true);
 
   A _accumulator;
   M _prevModel;
   M _model;
+
+  bool _hasTransanction = false;
+  bool _isChanged = false;
 
   M get model => _model;
 

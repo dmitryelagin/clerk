@@ -8,11 +8,11 @@ class StoreProvider extends StatefulWidget {
     Key key,
   }) : super(key: key);
 
-  static Store of(BuildContext context) =>
-      context.findAncestorWidgetOfExactType<StoreProvider>()?.store;
-
   final Widget child;
   final Store store;
+
+  static Store of(BuildContext context) =>
+      context.findAncestorWidgetOfExactType<StoreProvider>()?.store;
 
   @override
   _StoreProviderState createState() => _StoreProviderState();
