@@ -13,9 +13,10 @@ class ToggleItem {
 
   Action call(TodoItemId id, {bool isDone}) {
     return Action((store) async {
+      final previousItem = store.evaluate(_todoList.getItem(id));
       store.assign(_todoList.toggleItem(id, isDone: isDone));
 
-      if (id.isFake) return;
+      if (id.isFake || previousItem.isDone == isDone) return;
 
       try {
         await _loader.changeItem(id, isDone: isDone);

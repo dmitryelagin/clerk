@@ -12,10 +12,10 @@ class ChangeItem {
 
   Action call(TodoItemId id, String label) {
     return Action((store) async {
-      final item = store.evaluate(_todoList.getItem(id));
+      final previousItem = store.evaluate(_todoList.getItem(id));
       store.assign(_todoList.changeItem(id, label));
 
-      if (item.label == label) return;
+      if (previousItem.label == label) return;
 
       try {
         await _loader.changeItem(id, label: label);
