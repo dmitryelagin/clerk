@@ -5,23 +5,20 @@ import '../models/todo_item_id_utils.dart';
 import '../services/todo_loader.dart';
 import '../states/todo_list/todo_list_state.dart';
 
-abstract class RemoveItem {
-  Action removeItem(TodoItemId id);
-}
+class RemoveItem {
+  const RemoveItem(this._todoList, this._loader);
 
-mixin RemoveItemFactory implements RemoveItem {
-  TodoListManager get todoList;
-  TodoLoader get loader;
+  final TodoListManager _todoList;
+  final TodoLoader _loader;
 
-  @override
-  Action removeItem(TodoItemId id) {
+  Action call(TodoItemId id) {
     return Action((store) async {
-      store.assign(todoList.removeItem(id));
+      store.assign(_todoList.removeItem(id));
 
       if (id.isFake) return;
 
       try {
-        await loader.removeItem(id);
+        await _loader.removeItem(id);
       } on Exception catch (e) {
         print(e);
       }

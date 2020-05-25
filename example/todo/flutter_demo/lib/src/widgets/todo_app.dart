@@ -1,10 +1,9 @@
-import 'package:demo_core/demo_core.dart';
+import 'package:clerk/clerk.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/src/clerk_helpers/store_provider.dart';
+import 'package:flutter_demo/src/clerk_helpers/clerk.dart';
+import 'package:flutter_demo/src/module_helpers/module.dart';
 import 'package:flutter_demo/src/modules/todo_module.dart';
 import 'package:flutter_demo/src/widgets/todo_list.dart';
-
-abstract class TodoAppAction implements Init {}
 
 class TodoApp extends StatelessWidget {
   @override
@@ -19,9 +18,16 @@ class TodoApp extends StatelessWidget {
       darkTheme: ThemeData(
         brightness: Brightness.dark,
       ),
-      home: StoreProvider(
-        store: createTodoStore()..executor.execute(action.init()),
-        child: const TodoList(),
+      home: ModuleBuilder(
+        initializers: const [initializeTodoModule],
+        builder: (context) {
+          final store = context.get<Store>();
+
+          return StoreProvider(
+            store: store,
+            child: const TodoList(),
+          );
+        },
       ),
     );
   }

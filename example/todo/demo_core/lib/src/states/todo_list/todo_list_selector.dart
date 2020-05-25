@@ -5,7 +5,7 @@ import '../../models/todo_item_id.dart';
 import '../../models/todo_item_id_utils.dart';
 import 'todo_list_model.dart';
 
-class TodoListSelectorFactory<M extends TodoListModel> {
+class TodoListSelector<M extends TodoListModel> {
   Selector<M, TodoItem> getItem(TodoItemId id) =>
       (model) => model.items.firstWhere((item) => item.id.value == id.value);
 

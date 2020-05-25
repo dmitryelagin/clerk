@@ -5,7 +5,7 @@ import '../../models/todo_item_id.dart';
 import '../../models/todo_item_utils.dart';
 import 'todo_list_accumulator.dart';
 
-mixin TodoListWriterFactory<A extends TodoListAccumulator> {
+mixin TodoListWriter<A extends TodoListAccumulator> {
   Writer<A, A> replaceItems(Iterable<TodoItem> items) =>
       (acc) => acc..items.replaceRange(0, acc.items.length, items);
 

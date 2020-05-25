@@ -18,13 +18,17 @@ class StorePorter implements StoreExecutor, StoreEvaluator {
   ///
   /// It will use [StoreAccessor.onModelChange()] to collect changes.
   StorePorter(this._evaluator, this._executor, StoreAccessor accessor)
-      : _getChanges = accessor.onModelChange;
+      : _getChanges = accessor.onModelChange {
+    _setUpTeardown(accessor);
+  }
 
   /// Creates [StorePorter] which notifies about changes in microtask.
   ///
   /// It will use [StoreAccessor.onAfterModelChanges()] to collect changes.
   StorePorter.after(this._evaluator, this._executor, StoreAccessor accessor)
-      : _getChanges = accessor.onAfterModelChanges;
+      : _getChanges = accessor.onAfterModelChanges {
+    _setUpTeardown(accessor);
+  }
 
   final StoreEvaluator _evaluator;
   final StoreExecutor _executor;
@@ -65,6 +69,10 @@ class StorePorter implements StoreExecutor, StoreEvaluator {
   /// Closes this [StorePorter] only.
   void teardown() {
     _change.close();
+  }
+
+  void _setUpTeardown(StoreAccessor accessor) {
+    accessor.onChange.listen(null, onDone: teardown);
   }
 
   void _checkSubscription<M>() {

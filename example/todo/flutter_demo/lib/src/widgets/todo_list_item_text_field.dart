@@ -1,9 +1,6 @@
 import 'package:demo_core/demo_core.dart';
 import 'package:flutter/material.dart';
 
-abstract class TodoListItemAction
-    implements CommitItemChange, ToggleItem, RemoveItem {}
-
 class TodoListItemTextField extends StatefulWidget {
   const TodoListItemTextField({
     @required this.item,

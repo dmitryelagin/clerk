@@ -4,21 +4,18 @@ import '../models/todo_item_id.dart';
 import '../services/todo_loader.dart';
 import '../states/todo_list/todo_list_state.dart';
 
-abstract class ToggleItem {
-  Action toggleItem(TodoItemId id, {bool isDone});
-}
+class ToggleItem {
+  const ToggleItem(this._todoList, this._loader);
 
-mixin ToggleItemFactory implements ToggleItem {
-  TodoListManager get todoList;
-  TodoLoader get loader;
+  final TodoListManager _todoList;
+  final TodoLoader _loader;
 
-  @override
-  Action toggleItem(TodoItemId id, {bool isDone}) {
+  Action call(TodoItemId id, {bool isDone}) {
     return Action((store) async {
-      store.assign(todoList.toggleItem(id, isDone: isDone));
+      store.assign(_todoList.toggleItem(id, isDone: isDone));
 
       try {
-        await loader.changeItem(id, isDone: isDone);
+        await _loader.changeItem(id, isDone: isDone);
       } on Exception catch (e) {
         print(e);
       }

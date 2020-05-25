@@ -4,25 +4,22 @@ import '../models/todo_item_id.dart';
 import '../services/todo_loader.dart';
 import '../states/todo_list/todo_list_state.dart';
 
-abstract class AddItem {
-  Action addItem(String label);
-}
+class AddItem {
+  const AddItem(this._todoList, this._loader);
 
-mixin AddItemFactory implements AddItem {
-  TodoListManager get todoList;
-  TodoLoader get loader;
+  final TodoListManager _todoList;
+  final TodoLoader _loader;
 
-  @override
-  Action addItem(String label) {
+  Action call(String label) {
     return Action((store) async {
-      final isDone = store.evaluate(todoList.getItem(TodoItemId.fake)).isDone;
-      store.assign(todoList.changeItem(TodoItemId.fake, label));
+      final isDone = store.evaluate(_todoList.getItem(TodoItemId.fake)).isDone;
+      store.assign(_todoList.changeItem(TodoItemId.fake, label));
 
       try {
-        final createdId = await loader.addItem(label, isDone: isDone);
+        final createdId = await _loader.addItem(label, isDone: isDone);
         store
-          ..assign(todoList.removeItem(TodoItemId.fake))
-          ..assign(todoList.addItem(createdId, label: label, isDone: isDone));
+          ..assign(_todoList.removeItem(TodoItemId.fake))
+          ..assign(_todoList.addItem(createdId, label: label, isDone: isDone));
       } on Exception catch (e) {
         print(e);
       }

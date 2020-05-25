@@ -3,20 +3,17 @@ import 'package:clerk/clerk.dart';
 import '../services/todo_loader.dart';
 import '../states/todo_list/todo_list_state.dart';
 
-abstract class Init {
-  Action init();
-}
+class Init {
+  const Init(this._todoList, this._loader);
 
-mixin InitFactory implements Init {
-  TodoLoader get loader;
-  TodoListManager get todoList;
+  final TodoListManager _todoList;
+  final TodoLoader _loader;
 
-  @override
-  Action init() {
+  Action call() {
     return Action((store) async {
       try {
-        final data = await loader.initApp();
-        store.assign(todoList.replaceItems(data.items));
+        final data = await _loader.initApp();
+        store.assign(_todoList.replaceItems(data.items));
       } on Exception catch (e) {
         print(e);
       }

@@ -3,17 +3,14 @@ import 'package:clerk/clerk.dart';
 import '../models/todo_item_id.dart';
 import '../states/todo_list/todo_list_state.dart';
 
-abstract class StartItemAdd {
-  Action startItemAdd();
-}
+class StartItemAdd {
+  const StartItemAdd(this._todoList);
 
-mixin StartItemAddFactory implements StartItemAdd {
-  TodoListManager get todoList;
+  final TodoListManager _todoList;
 
-  @override
-  Action startItemAdd() {
+  Action call() {
     return Action((store) {
-      store.assign(todoList.addItem(TodoItemId.fake));
+      store.assign(_todoList.addItem(TodoItemId.fake));
     });
   }
 }

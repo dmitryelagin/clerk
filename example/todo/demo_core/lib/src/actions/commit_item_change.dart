@@ -7,28 +7,27 @@ import 'add_item.dart';
 import 'change_item.dart';
 import 'remove_item.dart';
 
-abstract class CommitItemChange {
-  Action commitItemChange(TodoItemId id, String label);
-}
+class CommitItemChange {
+  const CommitItemChange(
+    this._todoList,
+    this._addItem,
+    this._changeItem,
+    this._removeItem,
+  );
 
-mixin CommitItemChangeFactory
-    on AddItem, ChangeItem, RemoveItem
-    implements CommitItemChange {
-  TodoListManager get todoList;
+  final TodoListManager _todoList;
+  final AddItem _addItem;
+  final ChangeItem _changeItem;
+  final RemoveItem _removeItem;
 
-  @override
-  Action commitItemChange(TodoItemId id, String label) {
+  Action call(TodoItemId id, String label) {
     return Action((store) async {
       if (label.isEmpty) {
-        if (id.isFake) store.execute(removeItem(id));
+        if (id.isFake) store.execute(_removeItem(id));
       } else {
-        final item = store.evaluate(todoList.getItem(id));
+        final item = store.evaluate(_todoList.getItem(id));
         if (label == item.label) return;
-        if (id.isFake) {
-          store.execute(addItem(label));
-        } else {
-          store.execute(changeItem(id, label));
-        }
+        store.execute(id.isFake ? _addItem(label) : _changeItem(id, label));
       }
     });
   }
