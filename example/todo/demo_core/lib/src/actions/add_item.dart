@@ -12,7 +12,7 @@ class AddItem {
 
   Action call(String label) {
     return Action((store) async {
-      final isDone = store.evaluate(_todoList.getItem(TodoItemId.fake)).isDone;
+      final isDone = store.evaluate(_todoList.isItemDone(TodoItemId.fake));
       store.assign(_todoList.changeItem(TodoItemId.fake, label));
 
       try {

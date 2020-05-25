@@ -1,6 +1,7 @@
 import 'package:clerk/clerk.dart';
 
 import '../models/todo_item_id.dart';
+import '../models/todo_item_id_utils.dart';
 import '../services/todo_loader.dart';
 import '../states/todo_list/todo_list_state.dart';
 
@@ -13,6 +14,8 @@ class ToggleItem {
   Action call(TodoItemId id, {bool isDone}) {
     return Action((store) async {
       store.assign(_todoList.toggleItem(id, isDone: isDone));
+
+      if (id.isFake) return;
 
       try {
         await _loader.changeItem(id, isDone: isDone);
