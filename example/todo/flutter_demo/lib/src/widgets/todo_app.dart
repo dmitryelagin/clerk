@@ -1,8 +1,8 @@
-import 'package:clerk/clerk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/src/clerk_helpers/clerk.dart';
 import 'package:flutter_demo/src/module_helpers/module.dart';
 import 'package:flutter_demo/src/modules/todo_module.dart';
+import 'package:flutter_demo/src/utils/build_context_utils.dart';
 import 'package:flutter_demo/src/widgets/todo_list.dart';
 
 class TodoApp extends StatelessWidget {
@@ -18,13 +18,11 @@ class TodoApp extends StatelessWidget {
       darkTheme: ThemeData(
         brightness: Brightness.dark,
       ),
-      home: ModuleBuilder(
+      home: ModuleProvider(
         initializers: const [initializeTodoModule],
         builder: (context) {
-          final store = context.get<Store>();
-
           return StoreProvider(
-            store: store,
+            store: context.resolve(),
             child: const TodoList(),
           );
         },

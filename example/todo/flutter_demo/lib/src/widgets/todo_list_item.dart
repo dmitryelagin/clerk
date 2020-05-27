@@ -1,7 +1,7 @@
 import 'package:demo_core/demo_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/src/clerk_helpers/clerk.dart';
-import 'package:flutter_demo/src/module_helpers/module.dart';
+import 'package:flutter_demo/src/utils/build_context_utils.dart';
 import 'package:flutter_demo/src/widgets/todo_list_item_text_field.dart';
 
 class TodoListItem extends StatelessWidget {
@@ -13,10 +13,10 @@ class TodoListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreBuilder(
       builder: (_, store) {
-        final todoList = context.get<TodoListSelector>();
-        final toggleItem = context.get<ToggleItem>();
-        final commitItemChange = context.get<CommitItemChange>();
-        final removeItem = context.get<RemoveItem>();
+        final todoList = context.resolve<TodoListSelector>();
+        final toggleItem = context.resolve<ToggleItem>();
+        final commitItemChange = context.resolve<CommitItemChange>();
+        final removeItem = context.resolve<RemoveItem>();
 
         final item = store.evaluate(todoList.getItem(id));
 

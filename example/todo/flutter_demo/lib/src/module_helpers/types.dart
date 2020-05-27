@@ -1,5 +1,5 @@
-import 'injector.dart';
+import 'interfaces.dart';
 
-typedef GetInstance = T Function<T>();
-typedef CreateInstance<T> = T Function(GetInstance);
+typedef ResolveInstance = T Function<T>();
+typedef CreateInstance<T> = T Function(ResolveInstance);
 typedef Initialize = void Function(Injector);

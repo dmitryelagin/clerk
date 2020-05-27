@@ -1,4 +1,3 @@
-export 'context_utils.dart';
-export 'injector.dart';
-export 'module_builder.dart';
+export 'interfaces.dart';
+export 'module_provider.dart';
 export 'providers.dart';

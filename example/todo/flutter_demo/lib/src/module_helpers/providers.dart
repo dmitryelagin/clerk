@@ -1,8 +1,5 @@
+import 'interfaces.dart';
 import 'types.dart';
-
-abstract class Provider<T> {
-  T getInstance(GetInstance get);
-}
 
 class SingletonProvider<T> implements Provider<T> {
   SingletonProvider(this._create);
@@ -12,7 +9,7 @@ class SingletonProvider<T> implements Provider<T> {
   T _instance;
 
   @override
-  T getInstance(GetInstance get) => _instance ??= _create(get);
+  T getInstance(ResolveInstance resolve) => _instance ??= _create(resolve);
 }
 
 class FactoryProvider<T> implements Provider<T> {
@@ -21,10 +18,10 @@ class FactoryProvider<T> implements Provider<T> {
   final CreateInstance<T> _create;
 
   @override
-  T getInstance(GetInstance get) => _create(get);
+  T getInstance(ResolveInstance resolve) => _create(resolve);
 }
 
 class MimicProvider<T, S extends T> implements Provider<T> {
   @override
-  T getInstance(GetInstance get) => get<S>();
+  T getInstance(ResolveInstance resolve) => resolve<S>();
 }

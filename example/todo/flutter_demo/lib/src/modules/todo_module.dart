@@ -2,14 +2,18 @@ import 'package:demo_core/demo_core.dart';
 import 'package:flutter_demo/src/module_helpers/module.dart';
 
 Injector initializeTodoModule(Injector injector) => injector
-  ..mapMimic<TodoListSelector, TodoListManager>()
-  ..mapFactory((get) => createTodoStore()..executor.execute(get<Init>()()))
-  ..mapSingleton((_) => TodoLoader())
-  ..mapSingleton((_) => TodoListManager())
-  ..mapSingleton((get) => Init(get(), get()))
-  ..mapSingleton((get) => AddItem(get(), get()))
-  ..mapSingleton((get) => ChangeItem(get(), get()))
-  ..mapSingleton((get) => CommitItemChange(get(), get(), get(), get()))
-  ..mapSingleton((get) => RemoveItem(get(), get()))
-  ..mapSingleton((get) => StartItemAdd(get()))
-  ..mapSingleton((get) => ToggleItem(get(), get()));
+  ..registerMimic<TodoListSelector, TodoListManager>()
+  ..registerFactory((resolve) {
+    return createTodoStore()..executor.execute(resolve<Init>()());
+  })
+  ..registerSingleton((_) => TodoLoader())
+  ..registerSingleton((_) => TodoListManager())
+  ..registerSingleton((resolve) => Init(resolve(), resolve()))
+  ..registerSingleton((resolve) => AddItem(resolve(), resolve()))
+  ..registerSingleton((resolve) => ChangeItem(resolve(), resolve()))
+  ..registerSingleton((resolve) => RemoveItem(resolve(), resolve()))
+  ..registerSingleton((resolve) => StartItemAdd(resolve()))
+  ..registerSingleton((resolve) => ToggleItem(resolve(), resolve()))
+  ..registerSingleton((resolve) {
+    return CommitItemChange(resolve(), resolve(), resolve(), resolve());
+  });
