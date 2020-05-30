@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'action.dart';
-import 'private_interfaces.dart';
-import 'public_interfaces.dart';
+import 'interfaces_private.dart';
+import 'interfaces_public.dart';
 
 class StoreExecutorImpl implements StoreExecutor {
   StoreExecutorImpl(this._controller, this._innerExecutor) {

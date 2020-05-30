@@ -1,5 +1,5 @@
 import 'action.dart';
-import 'public_interfaces.dart';
+import 'interfaces_public.dart';
 
 /// Type of a function that returns specific data from a complex object.
 typedef Selector<M, V> = V Function(M);

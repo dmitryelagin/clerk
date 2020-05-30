@@ -1,5 +1,5 @@
+import 'interfaces_public.dart';
 import 'map_utils.dart';
-import 'public_interfaces.dart';
 
 class StateAggregateImpl implements StateAggregate {
   const StateAggregateImpl(this._models);

@@ -1,5 +1,5 @@
 import 'change_manager_repository.dart';
-import 'public_interfaces.dart';
+import 'interfaces_public.dart';
 import 'state_repository.dart';
 import 'store_accessor_impl.dart';
 import 'store_composer_impl.dart';

@@ -1,5 +1,5 @@
-import 'public_interfaces.dart';
-import 'public_types.dart';
+import 'interfaces_public.dart';
+import 'types_public.dart';
 
 class StoreEvaluatorImpl implements StoreEvaluator {
   StoreEvaluatorImpl(this._innerEvaluator);

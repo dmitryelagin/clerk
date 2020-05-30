@@ -1,10 +1,11 @@
 import 'action.dart';
-import 'private_interfaces.dart';
-import 'public_interfaces.dart';
-import 'public_types.dart';
+import 'interfaces_private.dart';
+import 'interfaces_public.dart';
+import 'interfaces_utils.dart';
 import 'state_manager.dart';
 import 'state_repository.dart';
-import 'utils.dart';
+import 'types_public.dart';
+import 'types_utils.dart';
 
 class StoreManagerImpl implements StoreManager {
   StoreManagerImpl(this._repository, this._eventBus);
@@ -24,7 +25,7 @@ class StoreManagerImpl implements StoreManager {
   V evaluate<M, V>(Selector<M, V> select) {
     final state = _repository.getByModel<M>();
     if (state != null) return state.evaluate(select);
-    if (isGenericSelector(select)) return select(asType(this));
+    if (select.isGeneric) return select(castEvaluator());
     _eventBus.evaluationFailed.add(M);
     return null;
   }
@@ -33,7 +34,7 @@ class StoreManagerImpl implements StoreManager {
   V evaluateUnary<M, V, X>(SelectorUnary<M, V, X> select, X x) {
     final state = _repository.getByModel<M>();
     if (state != null) return state.evaluateUnary(select, x);
-    if (isGenericSelectorUnary(select)) return select(asType(this), x);
+    if (select.isGeneric) return select(castEvaluator(), x);
     _eventBus.evaluationFailed.add(M);
     return null;
   }
@@ -42,7 +43,7 @@ class StoreManagerImpl implements StoreManager {
   V evaluateBinary<M, V, X, Y>(SelectorBinary<M, V, X, Y> select, X x, Y y) {
     final state = _repository.getByModel<M>();
     if (state != null) return state.evaluateBinary(select, x, y);
-    if (isGenericSelectorBinary(select)) return select(asType(this), x, y);
+    if (select.isGeneric) return select(castEvaluator(), x, y);
     _eventBus.evaluationFailed.add(M);
     return null;
   }

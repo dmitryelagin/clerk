@@ -1,5 +1,4 @@
-import 'public_types.dart';
-import 'utils.dart';
+import 'types_public.dart';
 
 /// A container of rules for working with specific model and accumulator.
 ///
@@ -14,11 +13,7 @@ class State<M extends Object, A extends Object> {
   /// Creates [State] with provided rules.
   ///
   /// Callbacks will be executed as if they are appropriate methods.
-  const State(
-    this._getAccumulator,
-    this._getModel, [
-    this._areEqualModels = areEqual,
-  ]);
+  const State(this._getAccumulator, this._getModel, [this._areEqualModels]);
 
   final AccumulatorFactory<M, A> _getAccumulator;
   final ModelFactory<M, A> _getModel;
@@ -35,6 +30,6 @@ class State<M extends Object, A extends Object> {
 
   /// Returns whether two models are equal or not.
   ///
-  /// By default uses simple equality operator.
-  bool areEqualModels(M a, M b) => _areEqualModels(a, b);
+  /// It uses [identical] function by default.
+  bool areEqualModels(M a, M b) => (_areEqualModels ?? identical)(a, b);
 }

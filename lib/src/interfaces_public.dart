@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'action.dart';
-import 'public_types.dart';
 import 'state.dart';
+import 'types_public.dart';
 
 /// A container that provides access to all [State] models of specific store.
 abstract class StateAggregate {

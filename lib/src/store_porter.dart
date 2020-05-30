@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'action.dart';
-import 'private_types.dart';
-import 'public_interfaces.dart';
-import 'public_types.dart';
-import 'utils.dart';
+import 'interfaces_public.dart';
+import 'interfaces_utils.dart';
+import 'types_private.dart';
+import 'types_public.dart';
+import 'types_utils.dart';
 
 /// An object that is a facade for values evaluation and [Action]s execution.
 ///
@@ -47,21 +48,21 @@ class StorePorter implements StoreExecutor, StoreEvaluator {
 
   @override
   V evaluate<M, V>(Selector<M, V> select) {
-    if (isGenericSelector(select)) return select(asType(this));
+    if (select.isGeneric) return select(castEvaluator());
     _checkSubscription<M>();
     return _evaluator.evaluate(select);
   }
 
   @override
   V evaluateUnary<M, V, X>(SelectorUnary<M, V, X> select, X x) {
-    if (isGenericSelectorUnary(select)) return select(asType(this), x);
+    if (select.isGeneric) return select(castEvaluator(), x);
     _checkSubscription<M>();
     return _evaluator.evaluateUnary(select, x);
   }
 
   @override
   V evaluateBinary<M, V, X, Y>(SelectorBinary<M, V, X, Y> select, X x, Y y) {
-    if (isGenericSelectorBinary(select)) return select(asType(this), x, y);
+    if (select.isGeneric) return select(castEvaluator(), x, y);
     _checkSubscription<M>();
     return _evaluator.evaluateBinary(select, x, y);
   }

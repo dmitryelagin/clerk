@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'action.dart';
 import 'change_manager_repository.dart';
-import 'private_interfaces.dart';
-import 'public_interfaces.dart';
+import 'interfaces_private.dart';
+import 'interfaces_public.dart';
 import 'state_aggregate_impl.dart';
 import 'state_repository.dart';
 

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'public_types.dart';
+import 'types_public.dart';
 
 /// Runs [ActionOperation] asynchronously.
 ActionOperation executeAsync(ActionOperation execute) {

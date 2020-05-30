@@ -1,5 +1,5 @@
-import 'private_interfaces.dart';
-import 'public_interfaces.dart';
+import 'interfaces_private.dart';
+import 'interfaces_public.dart';
 import 'state.dart';
 import 'state_manager.dart';
 import 'state_repository.dart';
