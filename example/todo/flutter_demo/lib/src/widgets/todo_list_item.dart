@@ -10,9 +10,9 @@ class TodoListItem extends StatelessWidget {
   final TodoItemId id;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return StoreBuilder(
-      builder: (_, store) {
+      builder: (context, store) {
         final todoList = context.resolve<TodoListSelector>();
         final toggleItem = context.resolve<ToggleItem>();
         final commitItemChange = context.resolve<CommitItemChange>();
@@ -24,23 +24,19 @@ class TodoListItem extends StatelessWidget {
           children: [
             Checkbox(
               value: item.isDone,
-              onChanged: (isDone) {
-                store.execute(toggleItem(item.id, isDone: isDone));
-              },
+              onChanged: store
+                  .bindUnary((isDone) => toggleItem(item.id, isDone: isDone)),
             ),
             Expanded(
               child: TodoListItemTextField(
                 item: item,
-                onSubmitted: (value) {
-                  store.execute(commitItemChange(item.id, value));
-                },
+                onSubmitted: store
+                    .bindUnary((value) => commitItemChange(item.id, value)),
               ),
             ),
             IconButton(
               icon: Icon(Icons.remove_circle_outline),
-              onPressed: () {
-                store.execute(removeItem(item.id));
-              },
+              onPressed: store.bind(() => removeItem(item.id)),
             ),
           ],
         );

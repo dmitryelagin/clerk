@@ -8,9 +8,5 @@ class StartItemAdd {
 
   final TodoListManager _todoList;
 
-  Action call() {
-    return Action((store) {
-      store.assign(_todoList.addItem(TodoItemId.fake));
-    });
-  }
+  Action call() => Action(executeWriter(_todoList.addItem(TodoItemId.fake)));
 }

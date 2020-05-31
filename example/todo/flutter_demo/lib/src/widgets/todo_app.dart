@@ -7,7 +7,7 @@ import 'package:flutter_demo/src/widgets/todo_list.dart';
 
 class TodoApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return MaterialApp(
       title: 'Clerk package demo',
       theme: ThemeData(

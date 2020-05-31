@@ -8,13 +8,13 @@ class TodoList extends StatelessWidget {
   const TodoList({Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return StoreBuilder(
-      builder: (_, store) {
+      builder: (context, store) {
         final todoList = context.resolve<TodoListSelector>();
         final startItemAdd = context.resolve<StartItemAdd>();
 
-        final ids = store.evaluate(todoList.getItemsIds());
+        final itemsIds = store.evaluate(todoList.getItemsIds());
         final isAddingAvailable = store.evaluate(todoList.isAddingAvailable());
 
         return Scaffold(
@@ -23,16 +23,14 @@ class TodoList extends StatelessWidget {
           ),
           body: ListView(
             children: [
-              for (final id in ids)
+              for (final id in itemsIds)
                 TodoListItem(key: Key(id.value.toString()), id: id),
             ],
           ),
           floatingActionButton: isAddingAvailable
               ? FloatingActionButton(
                   tooltip: 'Increment',
-                  onPressed: () {
-                    store.execute(startItemAdd());
-                  },
+                  onPressed: store.bind(startItemAdd),
                   child: Icon(Icons.add),
                 )
               : null,
