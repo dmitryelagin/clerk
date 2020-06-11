@@ -1,5 +1,5 @@
-extension MapUtils<K, V> on Map<K, V> {
-  T get<T>(K key) {
+extension MapTypeUtils on Map<Type, Object> {
+  T get<T>(Type key) {
     final value = this[key];
     return value is T ? value : null;
   }

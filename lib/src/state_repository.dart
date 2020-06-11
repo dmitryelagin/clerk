@@ -1,4 +1,4 @@
-import 'map_utils.dart';
+import 'map_type_utils.dart';
 import 'state_manager.dart';
 
 class StateRepository {

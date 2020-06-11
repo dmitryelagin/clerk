@@ -1,5 +1,5 @@
 import 'change_manager.dart';
-import 'map_utils.dart';
+import 'map_type_utils.dart';
 
 class ChangeManagerRepository {
   final _managers = <Type, ChangeManager>{};
