@@ -11,7 +11,8 @@ class StateReduced<T extends Object> extends State<T, T> {
   /// cause performance issues.
   StateReduced(T initialModel, [ModelComparator<T> areEqualModels])
       : super(
-          (value) => value ?? initialModel,
+          initialModel,
+          (value) => value,
           (value) => value,
           areEqualModels,
         );

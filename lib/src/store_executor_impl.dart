@@ -32,8 +32,7 @@ class StoreExecutorImpl implements StoreExecutor {
 
   RunHandler get _run {
     return <R>(source, parent, zone, fn) {
-      if (_controller.isTeardowned) return null;
-      if (_controller.hasTransanction) {
+      if (_controller.canNotStartTransanction) {
         return parent.run(zone, fn);
       } else {
         _controller.beginTransanction();
@@ -46,8 +45,7 @@ class StoreExecutorImpl implements StoreExecutor {
 
   RunUnaryHandler get _runUnary {
     return <R, X>(source, parent, zone, fn, x) {
-      if (_controller.isTeardowned) return null;
-      if (_controller.hasTransanction) {
+      if (_controller.canNotStartTransanction) {
         return parent.runUnary(zone, fn, x);
       } else {
         _controller.beginTransanction();
@@ -60,8 +58,7 @@ class StoreExecutorImpl implements StoreExecutor {
 
   RunBinaryHandler get _runBinary {
     return <R, X, Y>(source, parent, zone, fn, x, y) {
-      if (_controller.isTeardowned) return null;
-      if (_controller.hasTransanction) {
+      if (_controller.canNotStartTransanction) {
         return parent.runBinary(zone, fn, x, y);
       } else {
         _controller.beginTransanction();

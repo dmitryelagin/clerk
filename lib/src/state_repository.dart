@@ -1,44 +1,68 @@
+import 'interfaces_private.dart';
+import 'interfaces_public.dart';
 import 'map_type_utils.dart';
-import 'state_manager.dart';
+import 'state.dart';
+import 'state_aggregate_impl.dart';
+import 'state_controller.dart';
+import 'state_controller_utils.dart';
+import 'state_factory.dart';
 
 class StateRepository {
-  final _accumulatorStateMap = <Type, StateManager>{};
-  final _modelStateMap = <Type, StateManager>{};
-  final _states = <StateManager>[];
+  StateRepository(this._factory);
 
-  bool get isEmpty => _states.isEmpty;
-  Iterable<StateManager> get values => _states;
-  Map<Type, Object> get models => _modelStateMap.map(_getTypeModel);
+  final StateFactory _factory;
 
-  static MapEntry<Type, Object> _getTypeModel(Type type, StateManager state) =>
-      MapEntry(type, state.model);
+  final _accumulatorControllerMap = <Type, StateController>{};
+  final _modelControllerMap = <Type, StateController>{};
+  final _controllers = <StateController>[];
 
-  StateManager<Object, A> getByAccumulator<A>() => _accumulatorStateMap.get(A);
-  StateManager<M, Object> getByModel<M>() => _modelStateMap.get(M);
+  StateAggregate get state =>
+      StateAggregateImpl(_modelControllerMap.extractModels());
 
-  StateManager<M, A> add<M, A>(StateManager<M, A> state) {
-    _accumulatorStateMap[A] = state;
-    _modelStateMap[M] = state;
-    _states.add(state);
-    return state;
+  bool get isEmpty => _controllers.isEmpty;
+  bool get hasChanges => _controllers.hasChanges;
+  bool get hasDeferredChanges => _controllers.hasDeferredChanges;
+
+  StateManager<Object, A> getByAccumulator<A>() =>
+      _accumulatorControllerMap.get(A) ?? _factory.createManager();
+
+  StateManager<M, Object> getByModel<M>() =>
+      _modelControllerMap.get(M) ?? _factory.createManager();
+
+  void add<M, A>(State<M, A> state) {
+    final controller = _factory.createController(state);
+    _accumulatorControllerMap[A] = controller;
+    _modelControllerMap[M] = controller;
+    _controllers.add(controller);
   }
 
-  StateManager<M, Object> remove<M>() {
-    final state = getByModel<M>();
-    if (state == null) return null;
-    bool isState(Type _, StateManager value) => value == state;
-    _accumulatorStateMap.removeWhere(isState);
-    _modelStateMap.removeWhere(isState);
-    _states.remove(state);
-    return state;
+  bool remove<M>() {
+    final controller = _modelControllerMap.get<StateController>(M);
+    if (controller == null) return false;
+    controller.teardown();
+    bool isState(Type _, StateController value) => value == controller;
+    _accumulatorControllerMap.removeWhere(isState);
+    _modelControllerMap.removeWhere(isState);
+    _controllers.remove(controller);
+    return true;
   }
 
   void clear() {
-    for (final state in _states) {
-      state.teardown();
-    }
-    _accumulatorStateMap.clear();
-    _modelStateMap.clear();
-    _states.clear();
+    _controllers.teardown();
+    _accumulatorControllerMap.clear();
+    _modelControllerMap.clear();
+    _controllers.clear();
+  }
+
+  void endTransanctions() {
+    _controllers.endTransanctions();
+  }
+
+  void sinkChanges() {
+    _controllers.sinkChanges();
+  }
+
+  void sinkDeferredChanges() {
+    _controllers.sinkDeferredChanges();
   }
 }

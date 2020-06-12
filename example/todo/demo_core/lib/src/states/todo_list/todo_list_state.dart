@@ -10,10 +10,9 @@ class TodoListManager = TodoListSelector with TodoListWriter;
 
 State<TodoListModel, TodoListAccumulator> createTodoListState() {
   return State(
-    (model) => model != null
-        ? TodoListAccumulator.fromModel(model)
-        : TodoListAccumulator(),
+    TodoListAccumulator(),
     (accumulator) => TodoListModel.fromAccumulator(accumulator),
+    (model) => TodoListAccumulator.fromModel(model),
     (a, b) => a.equals(b),
   );
 }

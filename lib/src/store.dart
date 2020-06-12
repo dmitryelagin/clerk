@@ -1,9 +1,10 @@
-import 'change_manager_repository.dart';
 import 'interfaces_public.dart';
+import 'state_factory.dart';
 import 'state_repository.dart';
 import 'store_accessor_impl.dart';
 import 'store_composer_impl.dart';
 import 'store_evaluator_impl.dart';
+import 'store_event_bus_controller.dart';
 import 'store_executor_impl.dart';
 import 'store_manager_impl.dart';
 
@@ -11,19 +12,22 @@ import 'store_manager_impl.dart';
 class Store {
   /// Creates an assembled [Store].
   Store() {
-    _accessor = StoreAccessorImpl(_repository, _changesRepository);
-    _manager = StoreManagerImpl(_repository, _accessor);
-    _composer = StoreComposerImpl(_repository, _accessor);
+    _factory = StateFactory(_eventBus);
+    _repository = StateRepository(_factory);
+    _accessor = StoreAccessorImpl(_eventBus, _repository);
+    _composer = StoreComposerImpl(_eventBus, _repository);
+    _manager = StoreManagerImpl(_eventBus, _repository);
     _executor = StoreExecutorImpl(_composer, _manager);
     _evaluator = StoreEvaluatorImpl(_manager);
   }
 
-  final _repository = StateRepository();
-  final _changesRepository = ChangeManagerRepository();
+  final _eventBus = StoreEventBusController();
 
+  StateFactory _factory;
+  StateRepository _repository;
   StoreAccessorImpl _accessor;
-  StoreManagerImpl _manager;
   StoreComposerImpl _composer;
+  StoreManagerImpl _manager;
   StoreExecutorImpl _executor;
   StoreEvaluatorImpl _evaluator;
 
@@ -44,9 +48,8 @@ class Store {
   /// All internal streams will be closed and most internal info will be lost
   /// after calling this method. Use only when you don't need [Store] any more.
   void teardown() {
-    _composer.teardown();
-    _accessor.teardown();
+    _eventBus.teardown();
     _repository.clear();
-    _changesRepository.clear();
+    _factory.clear();
   }
 }

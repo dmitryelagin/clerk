@@ -13,16 +13,24 @@ class State<M extends Object, A extends Object> {
   /// Creates [State] with provided rules.
   ///
   /// Callbacks will be executed as if they are appropriate methods.
-  const State(this._getAccumulator, this._getModel, [this._areEqualModels]);
+  State(
+    this.initial,
+    this._getModel, [
+    AccumulatorFactory<M, A> getAccumulator,
+    this._areEqualModels = identical,
+  ]) : _getAccumulator = getAccumulator ?? ((_) => initial);
+
+  /// Initial accumulator object.
+  ///
+  /// It will be [State]'s permanent accumulator and will act as a single
+  /// source of truth if [AccumulatorFactory] is not provided.
+  final A initial;
 
   final AccumulatorFactory<M, A> _getAccumulator;
   final ModelFactory<M, A> _getModel;
   final ModelComparator<M> _areEqualModels;
 
   /// Returns accumulator produced from model.
-  ///
-  /// Initially this will be called with `null` argument to get the initial
-  /// accumulator value.
   A getAccumulator(M model) => _getAccumulator(model);
 
   /// Returns model produced from accumulator.
@@ -31,5 +39,5 @@ class State<M extends Object, A extends Object> {
   /// Returns whether two models are equal or not.
   ///
   /// It uses [identical] function by default.
-  bool areEqualModels(M a, M b) => (_areEqualModels ?? identical)(a, b);
+  bool areEqualModels(M a, M b) => _areEqualModels(a, b);
 }

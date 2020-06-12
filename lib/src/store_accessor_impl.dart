@@ -1,103 +1,48 @@
 import 'dart:async';
 
 import 'action.dart';
-import 'change_manager_repository.dart';
-import 'interfaces_private.dart';
 import 'interfaces_public.dart';
-import 'state_aggregate_impl.dart';
 import 'state_repository.dart';
+import 'store_event_bus_controller.dart';
 
-class StoreAccessorImpl implements StoreAccessor, StoreEventBusController {
-  StoreAccessorImpl(this._repository, this._changesRepository);
+class StoreAccessorImpl implements StoreAccessor {
+  const StoreAccessorImpl(this._eventBus, this._repository);
 
+  final StoreEventBusController _eventBus;
   final StateRepository _repository;
-  final ChangeManagerRepository _changesRepository;
 
   @override
-  final StreamController<Action> beforeAction = _createController();
+  StateAggregate get state => _repository.state;
 
   @override
-  final StreamController<Action> afterAction = _createController();
+  Stream<StateAggregate> get onChange => _eventBus.change.stream;
 
   @override
-  final StreamController<Type> evaluationFailed = _createController();
+  Stream<StateAggregate> get onAfterChanges => _eventBus.afterChanges.stream;
 
   @override
-  final StreamController<Type> assignmentFailed = _createController();
-
-  final _change = _createController<StateAggregate>();
-  final _afterChanges = _createController<StateAggregate>();
-  final _zone = Zone.current;
-
-  var _state = StateAggregateImpl.empty;
-  var _hasScheduledChanges = false;
+  Stream<Action> get onBeforeAction => _eventBus.beforeAction.stream;
 
   @override
-  StateAggregate get state => _state;
+  Stream<Action> get onAfterAction => _eventBus.afterAction.stream;
 
   @override
-  Stream<Action> get onBeforeAction => beforeAction.stream;
+  Stream<Type> get onEvaluationFailed => _eventBus.evaluationFailed.stream;
 
   @override
-  Stream<Action> get onAfterAction => afterAction.stream;
+  Stream<Type> get onAssignmentFailed => _eventBus.assignmentFailed.stream;
 
   @override
-  Stream<Type> get onEvaluationFailed => evaluationFailed.stream;
+  Stream<Type> get onListenChangeFailed => _eventBus.listenChangeFailed.stream;
 
   @override
-  Stream<Type> get onAssignmentFailed => assignmentFailed.stream;
+  Stream<Type> get onListenAfterChangesFailed =>
+      _eventBus.listenAfterChangesFailed.stream;
 
   @override
-  Stream<StateAggregate> get onChange => _change.stream;
-
-  @override
-  Stream<StateAggregate> get onAfterChanges => _afterChanges.stream;
-
-  static StreamController<T> _createController<T>() =>
-      StreamController.broadcast(sync: true);
-
-  @override
-  Stream<M> onModelChange<M>() => _changesRepository.get<M>()?.onModelChange;
+  Stream<M> onModelChange<M>() => _repository.getByModel<M>().onChange;
 
   @override
   Stream<M> onAfterModelChanges<M>() =>
-      _changesRepository.get<M>()?.onAfterModelChanges;
-
-  @override
-  void connect<M>(Stream<M> changes) {
-    _zone.run(() {
-      _changesRepository.add(changes);
-    });
-  }
-
-  @override
-  void disconnect<M>() {
-    _changesRepository.remove<M>();
-  }
-
-  @override
-  void endTransanction() {
-    _state = StateAggregateImpl(_repository.models);
-    if (_changesRepository.hasChanges) {
-      _changesRepository.sinkChanges();
-      _change.add(_state);
-    }
-    if (!_hasScheduledChanges && _changesRepository.hasDeferredChanges) {
-      _hasScheduledChanges = true;
-      _zone.scheduleMicrotask(() {
-        _changesRepository.sinkDeferredChanges();
-        _afterChanges.add(_state);
-        _hasScheduledChanges = false;
-      });
-    }
-  }
-
-  void teardown() {
-    beforeAction.close();
-    afterAction.close();
-    evaluationFailed.close();
-    assignmentFailed.close();
-    _change.close();
-    _afterChanges.close();
-  }
+      _repository.getByModel<M>().onAfterChanges;
 }

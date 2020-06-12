@@ -1,43 +1,39 @@
+import 'dart:async';
+
 import 'interfaces_private.dart';
 import 'interfaces_public.dart';
 import 'state.dart';
-import 'state_manager.dart';
 import 'state_repository.dart';
 
 class StoreComposerImpl implements StoreComposer, StoreController {
-  StoreComposerImpl(this._repository, this._eventBus);
+  StoreComposerImpl(this._eventBus, this._repository);
 
-  final StateRepository _repository;
   final StoreChangeEventBusController _eventBus;
+  final StateRepository _repository;
 
-  var _isTeardowned = false;
+  final _zone = Zone.current;
+
   var _hasTransanction = false;
+  var _hasScheduledChangesSink = false;
 
   @override
-  bool get isTeardowned => _isTeardowned;
+  bool get isTeardowned => _eventBus.change.isClosed;
 
   @override
-  bool get hasTransanction => _hasTransanction;
+  bool get canNotStartTransanction => _hasTransanction || isTeardowned;
 
   @override
   void add<M, A>(State<M, A> state) {
-    if (_hasTransanction || _isTeardowned) return;
-    final manager = StateManager.fromState(state);
-    _repository.add(manager);
-    _eventBus
-      ..connect(manager.onChange)
-      ..endTransanction();
+    if (canNotStartTransanction) return;
+    _repository.add(state);
+    _notifyListeners();
   }
 
   @override
   void remove<M>() {
-    if (_hasTransanction || _isTeardowned) return;
-    final manager = _repository.remove<M>();
-    if (manager == null) return;
-    manager.teardown();
-    _eventBus
-      ..disconnect<M>()
-      ..endTransanction();
+    if (canNotStartTransanction) return;
+    if (!_repository.remove<M>()) return;
+    _notifyListeners();
   }
 
   @override
@@ -48,14 +44,23 @@ class StoreComposerImpl implements StoreComposer, StoreController {
   @override
   void endTransanction() {
     if (!_hasTransanction) return;
-    for (final manager in _repository.values) {
-      manager.endTransanction();
-    }
-    _eventBus.endTransanction();
+    _repository.endTransanctions();
+    _notifyListeners();
     _hasTransanction = false;
   }
 
-  void teardown() {
-    _isTeardowned = true;
+  void _notifyListeners() {
+    if (_repository.hasChanges) {
+      _repository.sinkChanges();
+      _eventBus.change.add(_repository.state);
+    }
+    if (!_hasScheduledChangesSink && _repository.hasDeferredChanges) {
+      _hasScheduledChangesSink = true;
+      _zone.scheduleMicrotask(() {
+        _repository.sinkDeferredChanges();
+        _eventBus.afterChanges.add(_repository.state);
+        _hasScheduledChangesSink = false;
+      });
+    }
   }
 }
