@@ -21,22 +21,22 @@ class StoreManagerImpl implements StoreManager {
   }
 
   @override
-  V evaluate<M, V>(Selector<M, V> select) {
-    if (select.isGeneric) return select(castEvaluator());
-    return _repository.getByModel<M>().evaluate(select);
-  }
+  V evaluate<M, V>(Selector<M, V> select) =>
+      select.isGeneric && !_repository.has<M>()
+          ? select(castEvaluator())
+          : _repository.getByModel<M>().evaluate(select);
 
   @override
-  V evaluateUnary<M, V, X>(SelectorUnary<M, V, X> select, X x) {
-    if (select.isGeneric) return select(castEvaluator(), x);
-    return _repository.getByModel<M>().evaluateUnary(select, x);
-  }
+  V evaluateUnary<M, V, X>(SelectorUnary<M, V, X> select, X x) =>
+      select.isGeneric && !_repository.has<M>()
+          ? select(castEvaluator(), x)
+          : _repository.getByModel<M>().evaluateUnary(select, x);
 
   @override
-  V evaluateBinary<M, V, X, Y>(SelectorBinary<M, V, X, Y> select, X x, Y y) {
-    if (select.isGeneric) return select(castEvaluator(), x, y);
-    return _repository.getByModel<M>().evaluateBinary(select, x, y);
-  }
+  V evaluateBinary<M, V, X, Y>(SelectorBinary<M, V, X, Y> select, X x, Y y) =>
+      select.isGeneric && !_repository.has<M>()
+          ? select(castEvaluator(), x, y)
+          : _repository.getByModel<M>().evaluateBinary(select, x, y);
 
   @override
   void assign<A, V>(Writer<A, V> write) {
