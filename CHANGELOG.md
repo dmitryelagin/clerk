@@ -1,3 +1,3 @@
-## 0.4.0
+## 0.5.0
 
-- Initial published version. See docs, demo and examples to learn package abilities.
+- Initial published version. See docs, tests and examples to learn more about package abilities.
