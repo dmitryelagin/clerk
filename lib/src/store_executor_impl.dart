@@ -6,7 +6,7 @@ import 'interfaces_public.dart';
 
 class StoreExecutorImpl implements StoreExecutor {
   StoreExecutorImpl(this._controller, this._innerExecutor) {
-    _zone = _executionZone;
+    _zone = _createExecutionZone();
   }
 
   final StoreController _controller;
@@ -20,7 +20,7 @@ class StoreExecutorImpl implements StoreExecutor {
     _zone.runUnary(_innerExecutor.execute, action);
   }
 
-  Zone get _executionZone {
+  Zone _createExecutionZone() {
     return Zone.current.fork(
       specification: ZoneSpecification(
         run: _run,

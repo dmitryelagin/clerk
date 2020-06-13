@@ -23,8 +23,8 @@ class StateController<M extends Object, A extends Object>
   final StreamController<M> _afterChanges;
 
   A _accumulator;
-  M _prevModel;
   M _model;
+  M _prevModel;
 
   bool _hasChange = false;
   bool _hasDeferredChange = false;
