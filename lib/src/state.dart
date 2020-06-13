@@ -9,7 +9,7 @@ import 'types_public.dart';
 /// of how to get accumulator from model (before modifying accumulator),
 /// how to get model from accumulator (after modifying accumulator) and how
 /// to compare models to determine if the model has been changed.
-class State<M extends Object, A extends Object> {
+class State<M, A> {
   /// Creates [State] with provided rules.
   ///
   /// Callbacks will be executed as if they are appropriate methods.
@@ -17,8 +17,9 @@ class State<M extends Object, A extends Object> {
     this.initial,
     this._getModel, [
     AccumulatorFactory<M, A> getAccumulator,
-    this._areEqualModels = identical,
-  ]) : _getAccumulator = getAccumulator ?? ((_) => initial);
+    ModelComparator<M> areEqualModels,
+  ])  : _getAccumulator = getAccumulator ?? ((_) => initial),
+        _areEqualModels = areEqualModels ?? identical;
 
   /// Initial accumulator object.
   ///

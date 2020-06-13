@@ -27,13 +27,6 @@ abstract class StoreActionEventBusController {
   StreamController<Action> get afterAction;
 }
 
-abstract class StoreFailureEventBusController {
-  StreamController<Type> get evaluationFailed;
-  StreamController<Type> get assignmentFailed;
-  StreamController<Type> get listenChangeFailed;
-  StreamController<Type> get listenAfterChangesFailed;
-}
-
 abstract class StoreChangeEventBusController {
   StreamController<StateAggregate> get change;
   StreamController<StateAggregate> get afterChanges;

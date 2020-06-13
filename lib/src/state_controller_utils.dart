@@ -29,14 +29,15 @@ extension StateControllerIterableUtils on Iterable<StateController> {
     }
   }
 
-  void teardown() {
-    for (final controller in this) {
-      controller.teardown();
-    }
+  Future<void> teardown() async {
+    await Future.wait(map(_teardownController));
   }
 
   bool _hasChange(StateController controller) => controller.hasChange;
 
   bool _hasDeferredChange(StateController controller) =>
       controller.hasDeferredChange;
+
+  Future<void> _teardownController(StateController controller) =>
+      controller.teardown();
 }

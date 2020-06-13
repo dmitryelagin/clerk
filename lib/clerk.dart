@@ -6,9 +6,10 @@ library clerk;
 
 export 'src/action.dart';
 export 'src/action_operations.dart';
+export 'src/exceptions.dart';
 export 'src/interfaces_public.dart';
 export 'src/state.dart';
 export 'src/state_reduced.dart';
 export 'src/store.dart';
-export 'src/store_porter.dart';
+export 'src/store_settings.dart';
 export 'src/types_public.dart';

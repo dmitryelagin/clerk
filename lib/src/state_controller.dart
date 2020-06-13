@@ -1,25 +1,26 @@
 import 'dart:async';
 
 import 'interfaces_private.dart';
+import 'store_settings.dart';
 import 'types_public.dart';
 
 class StateController<M extends Object, A extends Object>
     implements StateManager<M, A> {
   StateController(
+    StoreSettings settings,
     this._accumulator,
     this._getAccumulator,
     this._getModel,
     this._areEqualModels,
-  ) {
-    _model = _getModel(_accumulator);
-  }
+  )   : _model = _getModel(_accumulator),
+        _change = settings.createStreamController(),
+        _afterChanges = settings.createStreamController();
 
   final AccumulatorFactory<M, A> _getAccumulator;
   final ModelFactory<M, A> _getModel;
   final ModelComparator<M> _areEqualModels;
-
-  final _change = StreamController<M>.broadcast(sync: true);
-  final _afterChanges = StreamController<M>.broadcast(sync: true);
+  final StreamController<M> _change;
+  final StreamController<M> _afterChanges;
 
   A _accumulator;
   M _prevModel;
@@ -89,9 +90,11 @@ class StateController<M extends Object, A extends Object>
     _hasDeferredChange = false;
   }
 
-  void teardown() {
-    _change.close();
-    _afterChanges.close();
+  Future<void> teardown() async {
+    await Future.wait<void>([
+      _change.close(),
+      _afterChanges.close(),
+    ]);
   }
 
   M _evaluateModel() {

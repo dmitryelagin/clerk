@@ -30,10 +30,13 @@ class StoreComposerImpl implements StoreComposer, StoreController {
   }
 
   @override
-  void remove<M>() {
-    if (canNotStartTransanction) return;
-    if (!_repository.remove<M>()) return;
+  Future<void> remove<M>() {
+    if (canNotStartTransanction || !_repository.has<M>()) {
+      return Future.value();
+    }
+    final teardownState = _repository.remove<M>();
     _notifyListeners();
+    return teardownState;
   }
 
   @override

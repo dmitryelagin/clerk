@@ -29,6 +29,8 @@ class StateRepository {
   StateManager<M, Object> getByModel<M>() =>
       _modelControllerMap.get(M) ?? _factory.createManager();
 
+  bool has<M>() => _modelControllerMap.containsKey(M);
+
   void add<M, A>(State<M, A> state) {
     final controller = _factory.createController(state);
     _accumulatorControllerMap[A] = controller;
@@ -36,22 +38,22 @@ class StateRepository {
     _controllers.add(controller);
   }
 
-  bool remove<M>() {
+  Future<void> remove<M>() {
     final controller = _modelControllerMap.get<StateController>(M);
-    if (controller == null) return false;
-    controller.teardown();
+    if (controller == null) return Future.value();
     bool isState(Type _, StateController value) => value == controller;
     _accumulatorControllerMap.removeWhere(isState);
     _modelControllerMap.removeWhere(isState);
     _controllers.remove(controller);
-    return true;
+    return controller.teardown();
   }
 
-  void clear() {
-    _controllers.teardown();
+  Future<void> teardown() {
+    final teardownState = _controllers.teardown();
     _accumulatorControllerMap.clear();
     _modelControllerMap.clear();
     _controllers.clear();
+    return teardownState;
   }
 
   void endTransanctions() {

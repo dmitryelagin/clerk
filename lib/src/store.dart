@@ -4,24 +4,22 @@ import 'state_repository.dart';
 import 'store_accessor_impl.dart';
 import 'store_composer_impl.dart';
 import 'store_evaluator_impl.dart';
-import 'store_event_bus_controller.dart';
 import 'store_executor_impl.dart';
 import 'store_manager_impl.dart';
+import 'store_settings.dart';
 
 /// An object that stores states and provides instruments to manage them.
 class Store {
   /// Creates an assembled [Store].
-  Store() {
-    _factory = StateFactory(_eventBus);
+  Store([StoreSettings settings = const StoreSettings()]) {
+    _factory = StateFactory(settings);
     _repository = StateRepository(_factory);
-    _accessor = StoreAccessorImpl(_eventBus, _repository);
-    _composer = StoreComposerImpl(_eventBus, _repository);
-    _manager = StoreManagerImpl(_eventBus, _repository);
+    _accessor = StoreAccessorImpl(settings, _repository);
+    _composer = StoreComposerImpl(_accessor, _repository);
+    _manager = StoreManagerImpl(_accessor, _repository);
     _executor = StoreExecutorImpl(_composer, _manager);
     _evaluator = StoreEvaluatorImpl(_manager);
   }
-
-  final _eventBus = StoreEventBusController();
 
   StateFactory _factory;
   StateRepository _repository;
@@ -47,9 +45,11 @@ class Store {
   ///
   /// All internal streams will be closed and most internal info will be lost
   /// after calling this method. Use only when you don't need [Store] any more.
-  void teardown() {
-    _eventBus.teardown();
-    _repository.clear();
+  Future<void> teardown() async {
     _factory.clear();
+    await Future.wait([
+      _accessor.teardown(),
+      _repository.teardown(),
+    ]);
   }
 }
