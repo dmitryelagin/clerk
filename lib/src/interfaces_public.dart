@@ -20,8 +20,8 @@ abstract class StoreComposer {
   /// Adds [State] to [StoreComposer] store.
   ///
   /// [State] model becomes available and typed stream from
-  /// [StoreChangeEventBus.onModelChange] method can be returned instead
-  /// of `null` right after this method was called.
+  /// [StoreChangeEventBus.onModelChange] method can be returned right after
+  /// this method was called.
   void add<M, A>(State<M, A> value);
 
   /// Removes state from [StoreComposer] store.
