@@ -1,26 +1,13 @@
-import 'package:clerk/clerk.dart' show Store, StorePorter;
+import 'package:clerk/clerk.dart' show Store;
 import 'package:flutter/widgets.dart';
 
+import 'store_porter.dart';
 import 'store_provider.dart';
 
 class StoreBuilder extends StatefulWidget {
-  const StoreBuilder({@required this.builder, Key key})
-      : _createPorter = _createSyncPorter,
-        super(key: key);
-
-  const StoreBuilder.after({@required this.builder, Key key})
-      : _createPorter = _createAfterPorter,
-        super(key: key);
+  const StoreBuilder({@required this.builder, Key key}) : super(key: key);
 
   final Widget Function(BuildContext, StorePorter) builder;
-
-  final StorePorter Function(Store) _createPorter;
-
-  static StorePorter _createSyncPorter(Store store) =>
-      StorePorter(store.evaluator, store.executor, store.accessor);
-
-  static StorePorter _createAfterPorter(Store store) =>
-      StorePorter.after(store.evaluator, store.executor, store.accessor);
 
   @override
   _StoreBuilderState createState() => _StoreBuilderState();
@@ -33,7 +20,7 @@ class _StoreBuilderState extends State<StoreBuilder> {
   @override
   void didChangeDependencies() {
     _store = StoreProvider.of(context);
-    _porter = widget._createPorter(_store);
+    _porter = StorePorter(_store.reader, _store.executor, _store.accessor);
     super.didChangeDependencies();
   }
 
@@ -44,8 +31,10 @@ class _StoreBuilderState extends State<StoreBuilder> {
   }
 
   @override
-  Widget build(BuildContext context) => StreamBuilder(
-        stream: _porter.onChange,
-        builder: (context, snapshot) => widget.builder(context, _porter),
-      );
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: _porter.onChange,
+      builder: (context, snapshot) => widget.builder(context, _porter),
+    );
+  }
 }

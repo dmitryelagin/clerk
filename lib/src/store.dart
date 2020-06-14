@@ -1,31 +1,33 @@
-import 'change_manager_repository.dart';
 import 'interfaces_public.dart';
+import 'state_factory.dart';
 import 'state_repository.dart';
 import 'store_accessor_impl.dart';
 import 'store_composer_impl.dart';
-import 'store_evaluator_impl.dart';
 import 'store_executor_impl.dart';
 import 'store_manager_impl.dart';
+import 'store_reader_impl.dart';
+import 'store_settings.dart';
 
 /// An object that stores states and provides instruments to manage them.
 class Store {
   /// Creates an assembled [Store].
-  Store() {
-    _accessor = StoreAccessorImpl(_repository, _changesRepository);
-    _manager = StoreManagerImpl(_repository, _accessor);
-    _composer = StoreComposerImpl(_repository, _accessor);
+  Store([StoreSettings settings = const StoreSettings()]) {
+    _factory = StateFactory(settings);
+    _repository = StateRepository(_factory);
+    _accessor = StoreAccessorImpl(settings, _repository);
+    _composer = StoreComposerImpl(_accessor, _repository);
+    _manager = StoreManagerImpl(_accessor, _repository);
     _executor = StoreExecutorImpl(_composer, _manager);
-    _evaluator = StoreEvaluatorImpl(_manager);
+    _reader = StoreReaderImpl(_manager);
   }
 
-  final _repository = StateRepository();
-  final _changesRepository = ChangeManagerRepository();
-
+  StateFactory _factory;
+  StateRepository _repository;
   StoreAccessorImpl _accessor;
-  StoreManagerImpl _manager;
   StoreComposerImpl _composer;
+  StoreManagerImpl _manager;
   StoreExecutorImpl _executor;
-  StoreEvaluatorImpl _evaluator;
+  StoreReaderImpl _reader;
 
   /// A [StoreAccessor] instance of this store.
   StoreAccessor get accessor => _accessor;
@@ -36,17 +38,18 @@ class Store {
   /// A [StoreExecutor] instance of this store.
   StoreExecutor get executor => _executor;
 
-  /// A [StoreEvaluator] instance of this store.
-  StoreEvaluator get evaluator => _evaluator;
+  /// A [StoreReader] instance of this store.
+  StoreReader get reader => _reader;
 
   /// Closes [Store].
   ///
   /// All internal streams will be closed and most internal info will be lost
   /// after calling this method. Use only when you don't need [Store] any more.
-  void teardown() {
-    _composer.teardown();
-    _accessor.teardown();
-    _repository.clear();
-    _changesRepository.clear();
+  Future<void> teardown() async {
+    _factory.clear();
+    await Future.wait([
+      _accessor.teardown(),
+      _repository.teardown(),
+    ]);
   }
 }

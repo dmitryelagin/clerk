@@ -12,8 +12,8 @@ class ChangeItem {
 
   Action call(TodoItemId id, String label) {
     return Action((store) async {
-      final previousItem = store.evaluate(_todoList.getItem(id));
-      store.assign(_todoList.changeItem(id, label));
+      final previousItem = store.read(_todoList.getItem(id));
+      store.write(_todoList.changeItem(id, label));
 
       if (previousItem.label == label) return;
 

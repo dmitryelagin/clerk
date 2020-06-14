@@ -13,7 +13,7 @@ class RemoveItem {
 
   Action call(TodoItemId id) {
     return Action((store) async {
-      store.assign(_todoList.removeItem(id));
+      store.write(_todoList.removeItem(id));
 
       if (id.isFake) return;
 

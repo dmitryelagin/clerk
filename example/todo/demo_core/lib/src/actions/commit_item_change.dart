@@ -25,7 +25,7 @@ class CommitItemChange {
       if (label.isEmpty) {
         if (id.isFake) store.execute(_removeItem(id));
       } else {
-        final previousItem = store.evaluate(_todoList.getItem(id));
+        final previousItem = store.read(_todoList.getItem(id));
         if (label == previousItem.label) return;
         store.execute(id.isFake ? _addItem(label) : _changeItem(id, label));
       }

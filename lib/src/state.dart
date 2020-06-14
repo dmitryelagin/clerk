@@ -9,20 +9,29 @@ import 'types_public.dart';
 /// of how to get accumulator from model (before modifying accumulator),
 /// how to get model from accumulator (after modifying accumulator) and how
 /// to compare models to determine if the model has been changed.
-class State<M extends Object, A extends Object> {
+class State<M, A> {
   /// Creates [State] with provided rules.
   ///
   /// Callbacks will be executed as if they are appropriate methods.
-  const State(this._getAccumulator, this._getModel, [this._areEqualModels]);
+  State(
+    this.initial,
+    this._getModel, [
+    GetAccumulator<M, A> getAccumulator,
+    CompareModels<M> areEqualModels,
+  ])  : _getAccumulator = getAccumulator ?? ((_) => initial),
+        _areEqualModels = areEqualModels ?? identical;
 
-  final AccumulatorFactory<M, A> _getAccumulator;
-  final ModelFactory<M, A> _getModel;
-  final ModelComparator<M> _areEqualModels;
+  /// Initial accumulator object.
+  ///
+  /// It will be [State]'s permanent accumulator and will act as a single
+  /// source of truth if [GetAccumulator] is not provided.
+  final A initial;
+
+  final GetAccumulator<M, A> _getAccumulator;
+  final GetModel<M, A> _getModel;
+  final CompareModels<M> _areEqualModels;
 
   /// Returns accumulator produced from model.
-  ///
-  /// Initially this will be called with `null` argument to get the initial
-  /// accumulator value.
   A getAccumulator(M model) => _getAccumulator(model);
 
   /// Returns model produced from accumulator.
@@ -31,5 +40,5 @@ class State<M extends Object, A extends Object> {
   /// Returns whether two models are equal or not.
   ///
   /// It uses [identical] function by default.
-  bool areEqualModels(M a, M b) => (_areEqualModels ?? identical)(a, b);
+  bool areEqualModels(M a, M b) => _areEqualModels(a, b);
 }

@@ -20,9 +20,9 @@ abstract class StoreComposer {
   /// Adds [State] to [StoreComposer] store.
   ///
   /// [State] model becomes available and typed stream from
-  /// [StoreChangeEventBus.onModelChange] method can be returned instead
-  /// of `null` right after this method was called.
-  void add<M, A>(State<M, A> value);
+  /// [StoreChangeEventBus.onModelChange] method can be returned right after
+  /// this method was called.
+  void add<M, A>(State<M, A> state);
 
   /// Removes state from [StoreComposer] store.
   ///
@@ -41,62 +41,53 @@ abstract class StoreExecutor {
   void execute(Action action);
 }
 
-/// An object that gets value from store [State] model with provided selector.
-abstract class StoreEvaluator {
-  /// Returns the result of [Selector] execution.
+/// An object that gets value from store [State] model by provided callback.
+abstract class StoreReader {
+  /// Returns the result of [Read] execution.
   ///
-  /// It will be called with required [State] model. Returns `null` and
-  /// emits event to [StoreActionEventBus.onEvaluationFailed] if required
-  /// [State] was not found. [Selector] can have [StoreEvaluator] as the first
-  /// argument, so [StoreEvaluator] will be provided instead of model.
-  V evaluate<M, V>(Selector<M, V> select);
+  /// It will be called with required [State] model. [Read] can have
+  /// [StoreReader] as the first argument, so [StoreReader] will be
+  /// provided instead of model.
+  V read<M, V>(Read<M, V> fn);
 
-  /// Returns the result of [SelectorUnary] execution.
+  /// Returns the result of [ReadUnary] execution.
   ///
   /// It will be called with required [State] model and provided
-  /// additional argument. Returns `null` and emits event to
-  /// [StoreActionEventBus.onEvaluationFailed] if required [State]
-  /// was not found. [SelectorUnary] can have [StoreEvaluator] as the first
-  /// argument, so [StoreEvaluator] will be provided instead of model.
-  V evaluateUnary<M, V, X>(SelectorUnary<M, V, X> select, X x);
+  /// additional argument. [ReadUnary] can have [StoreReader] as the
+  /// first argument, so [StoreReader] will be provided instead of model.
+  V readUnary<M, V, X>(ReadUnary<M, V, X> fn, X x);
 
-  /// Returns the result of [SelectorBinary] execution.
+  /// Returns the result of [ReadBinary] execution.
   ///
   /// It will be called with required [State] model and provided
-  /// additional arguments. Returns `null` and emits event to
-  /// [StoreActionEventBus.onEvaluationFailed] if required [State]
-  /// was not found. [SelectorBinary] can have [StoreEvaluator] as the first
-  /// argument, so [StoreEvaluator] will be provided instead of model.
-  V evaluateBinary<M, V, X, Y>(SelectorBinary<M, V, X, Y> select, X x, Y y);
+  /// additional arguments. [ReadBinary] can have [StoreReader] as the
+  /// first argument, so [StoreReader] will be provided instead of model.
+  V readBinary<M, V, X, Y>(ReadBinary<M, V, X, Y> fn, X x, Y y);
 }
 
 /// An object that can execute most available operations over store.
-abstract class StoreManager implements StoreExecutor, StoreEvaluator {
-  /// Modifies [State] accumulator with provided [Writer].
+abstract class StoreManager implements StoreExecutor, StoreReader {
+  /// Modifies [State] accumulator with provided [Write].
   ///
-  /// Writer will be called with required [State] accumulator. Emits
-  /// event to [StoreActionEventBus.onAssignmentFailed] if required
-  /// [State] was not found.
-  void assign<A, V>(Writer<A, V> write);
+  /// It will be called with required [State] accumulator.
+  void write<A>(Write<A> fn);
 
-  /// Modifies [State] accumulator with provided [WriterUnary].
+  /// Modifies [State] accumulator with provided [WriteUnary].
   ///
-  /// Writer will be called with required [State] accumulator and provided
-  /// argument. Emits event to [StoreActionEventBus.onAssignmentFailed]
-  /// if required [State] was not found.
-  void assignUnary<A, V, X>(WriterUnary<A, V, X> write, X x);
+  /// It will be called with required [State] accumulator and provided
+  /// argument.
+  void writeUnary<A, X>(WriteUnary<A, X> fn, X x);
 
-  /// Modifies [State] accumulator with provided [WriterBinary].
+  /// Modifies [State] accumulator with provided [WriteBinary].
   ///
-  /// Writer will be called with required [State] accumulator and provided
-  /// arguments. Emits event to [StoreActionEventBus.onAssignmentFailed]
-  /// if required [State] was not found.
-  void assignBinary<A, V, X, Y>(WriterBinary<A, V, X, Y> write, X x, Y y);
+  /// It will be called with required [State] accumulator and provided
+  /// arguments.
+  void writeBinary<A, X, Y>(WriteBinary<A, X, Y> fn, X x, Y y);
 }
 
 /// An accessor to all available store data.
 abstract class StoreAccessor
-    implements StoreActionEventBus, StoreChangeEventBus {
+    implements StoreChangeEventBus, StoreActionEventBus {
   /// The latest models of all store [State]s.
   StateAggregate get state;
 }
@@ -108,16 +99,6 @@ abstract class StoreActionEventBus {
 
   /// A stream that emits [Action] after its execution.
   Stream<Action> get onAfterAction;
-
-  /// A stream that emits model type when suitable [State] was not found.
-  ///
-  /// Emits if type of [State] model was not found before any evaluation.
-  Stream<Type> get onEvaluationFailed;
-
-  /// A stream that emits accumulator type when suitable [State] was not found.
-  ///
-  /// Emits if type of [State] accumulator was not found before any assignment.
-  Stream<Type> get onAssignmentFailed;
 }
 
 /// A bus for change related events.
@@ -137,14 +118,12 @@ abstract class StoreChangeEventBus {
   /// Returns stream which emits specific [State] model when it changes.
   ///
   /// Emits synchronously and only when [State] model was changed during
-  /// [Action] execution. Returns `null` if store does not have
-  /// the requested [State].
+  /// [Action] execution.
   Stream<M> onModelChange<M>();
 
   /// Returns stream which emits specific [State] model when it changes.
   ///
   /// Emits in microtask and only when [State] model was changed during all
-  /// [Action] executions before microtask schedule. Returns `null` if
-  /// store does not have the requested [State].
+  /// [Action] executions before microtask schedule.
   Stream<M> onAfterModelChanges<M>();
 }

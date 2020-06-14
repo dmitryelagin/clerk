@@ -10,5 +10,5 @@ export 'src/models/todo_item.dart';
 export 'src/models/todo_item_id.dart';
 export 'src/models/todo_item_id_utils.dart';
 export 'src/services/todo_loader.dart';
-export 'src/states/todo_list/todo_list_selector.dart';
+export 'src/states/todo_list/todo_list_reader.dart';
 export 'src/states/todo_list/todo_list_state.dart';

@@ -8,5 +8,5 @@ class StartItemAdd {
 
   final TodoListManager _todoList;
 
-  Action call() => Action(executeWriter(_todoList.addItem(TodoItemId.fake)));
+  Action call() => Action(executeWrite(_todoList.addItem(TodoItemId.fake)));
 }
