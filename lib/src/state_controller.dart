@@ -32,7 +32,7 @@ class StateController<M extends Object, A extends Object>
   bool _hasTransanction = false;
   bool _shouldRebuild = false;
 
-  M get model => _model;
+  M get model => _prepareModel();
   bool get hasChange => _hasChange;
   bool get hasDeferredChange => _hasDeferredChange;
 
@@ -41,6 +41,9 @@ class StateController<M extends Object, A extends Object>
 
   @override
   Stream<M> get onAfterChanges => _afterChanges.stream;
+
+  bool get _hasChangeComputed =>
+      _prevModel == null || !_areEqualModels(_prevModel, _prepareModel());
 
   @override
   V read<V>(Read<M, V> fn) {
@@ -78,19 +81,19 @@ class StateController<M extends Object, A extends Object>
   void endTransanction() {
     if (!_hasTransanction) return;
     _hasTransanction = false;
-    if (_areEqualModels(_prevModel, _prepareModel())) return;
+    if (_hasChange || !_hasChangeComputed) return;
     _hasChange = _hasDeferredChange = true;
   }
 
   void sinkChange() {
     if (!_hasChange) return;
-    _change.add(_model);
+    _change.add(_prepareModel());
     _hasChange = false;
   }
 
   void sinkDeferredChange() {
     if (!_hasDeferredChange) return;
-    _afterChanges.add(_model);
+    _afterChanges.add(_prepareModel());
     _hasDeferredChange = false;
   }
 
