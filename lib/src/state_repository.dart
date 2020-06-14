@@ -24,15 +24,15 @@ class StateRepository {
   bool get hasDeferredChanges => _controllers.hasDeferredChanges;
 
   StateManager<Object, A> getByAccumulator<A>() =>
-      _accumulatorControllerMap.get(A) ?? _factory.createManager();
+      _accumulatorControllerMap.get(A) ?? _factory.getManager();
 
   StateManager<M, Object> getByModel<M>() =>
-      _modelControllerMap.get(M) ?? _factory.createManager();
+      _modelControllerMap.get(M) ?? _factory.getManager();
 
   bool has<M>() => _modelControllerMap.containsKey(M);
 
   void add<M, A>(State<M, A> state) {
-    final controller = _factory.createController(state);
+    final controller = _factory.getController(state);
     _accumulatorControllerMap[A] = controller;
     _modelControllerMap[M] = controller;
     _controllers.add(controller);

@@ -6,10 +6,10 @@ class StateReduced<T extends Object> extends State<T, T> {
   /// Creates [StateReduced].
   ///
   /// This [State] needs only initial model to operate and it may help when
-  /// writers act like reducers. Consider using [StateReduced] in existing
-  /// code base while migrating from reducers, because this approach can
-  /// cause performance issues.
-  StateReduced(T initialModel, [ModelComparator<T> areEqualModels])
+  /// write callbacks act like reducers. Consider using [StateReduced] in
+  /// existing code base while migrating from reducers, because this approach
+  /// can cause performance issues.
+  StateReduced(T initialModel, [CompareModels<T> areEqualModels])
       : super(
           initialModel,
           (value) => value,

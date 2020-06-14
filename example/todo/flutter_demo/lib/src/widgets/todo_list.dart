@@ -11,11 +11,11 @@ class TodoList extends StatelessWidget {
   Widget build(BuildContext _) {
     return StoreBuilder(
       builder: (context, store) {
-        final todoList = context.resolve<TodoListSelector>();
+        final todoList = context.resolve<TodoListReader>();
         final startItemAdd = context.resolve<StartItemAdd>();
 
-        final itemsIds = store.evaluate(todoList.getItemsIds());
-        final isAddingAvailable = store.evaluate(todoList.isAddingAvailable());
+        final itemsIds = store.read(todoList.getItemsIds());
+        final isAddingAvailable = store.read(todoList.isAddingAvailable());
 
         return Scaffold(
           appBar: AppBar(

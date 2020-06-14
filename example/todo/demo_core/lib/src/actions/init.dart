@@ -13,7 +13,7 @@ class Init {
     return Action((store) async {
       try {
         final data = await _loader.initApp();
-        store.assign(_todoList.replaceItems(data.items));
+        store.write(_todoList.replaceItems(data.items));
       } on Exception catch (e) {
         print(e);
       }

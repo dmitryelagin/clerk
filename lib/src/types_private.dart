@@ -1,5 +1,6 @@
 import 'dart:async';
 
-typedef StreamFactory = Stream<T> Function<T>();
-typedef StreamControllerFactory = StreamController<T> Function<T>();
-typedef FallbackValueFactory = T Function<T>(Type, Type, [Object, Object]);
+typedef GetStream = Stream<T> Function<T>();
+typedef GetStreamController = StreamController<T> Function<T>();
+typedef ReadFallback = T Function<T>(Type, Type, [Object, Object]);
+typedef WriteFallback = void Function(Type, [Object, Object]);

@@ -3,9 +3,9 @@ import 'state_factory.dart';
 import 'state_repository.dart';
 import 'store_accessor_impl.dart';
 import 'store_composer_impl.dart';
-import 'store_evaluator_impl.dart';
 import 'store_executor_impl.dart';
 import 'store_manager_impl.dart';
+import 'store_reader_impl.dart';
 import 'store_settings.dart';
 
 /// An object that stores states and provides instruments to manage them.
@@ -18,7 +18,7 @@ class Store {
     _composer = StoreComposerImpl(_accessor, _repository);
     _manager = StoreManagerImpl(_accessor, _repository);
     _executor = StoreExecutorImpl(_composer, _manager);
-    _evaluator = StoreEvaluatorImpl(_manager);
+    _reader = StoreReaderImpl(_manager);
   }
 
   StateFactory _factory;
@@ -27,7 +27,7 @@ class Store {
   StoreComposerImpl _composer;
   StoreManagerImpl _manager;
   StoreExecutorImpl _executor;
-  StoreEvaluatorImpl _evaluator;
+  StoreReaderImpl _reader;
 
   /// A [StoreAccessor] instance of this store.
   StoreAccessor get accessor => _accessor;
@@ -38,8 +38,8 @@ class Store {
   /// A [StoreExecutor] instance of this store.
   StoreExecutor get executor => _executor;
 
-  /// A [StoreEvaluator] instance of this store.
-  StoreEvaluator get evaluator => _evaluator;
+  /// A [StoreReader] instance of this store.
+  StoreReader get reader => _reader;
 
   /// Closes [Store].
   ///

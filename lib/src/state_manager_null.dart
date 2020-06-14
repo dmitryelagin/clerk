@@ -15,28 +15,32 @@ class StateManagerNull<M extends Object, A extends Object>
   Stream<M> get onAfterChanges => _settings.onListenChangeFailed();
 
   @override
-  V evaluate<V>(Selector<M, V> select) => _settings.onEvaluationFailed(M, V);
-
-  @override
-  V evaluateUnary<V, X>(SelectorUnary<M, V, X> select, X x) =>
-      _settings.onEvaluationFailed(M, V, x);
-
-  @override
-  V evaluateBinary<V, X, Y>(SelectorBinary<M, V, X, Y> select, X x, Y y) =>
-      _settings.onEvaluationFailed(M, V, x, y);
-
-  @override
-  void assign<V>(Writer<A, V> write) {
-    _settings.onAssignmentFailed<V>(A, V);
+  V read<V>(Read<M, V> fn) {
+    return _settings.onReadFailed(M, V);
   }
 
   @override
-  void assignUnary<V, X>(WriterUnary<A, V, X> write, X x) {
-    _settings.onAssignmentFailed<V>(A, V, x);
+  V readUnary<V, X>(ReadUnary<M, V, X> fn, X x) {
+    return _settings.onReadFailed(M, V, x);
   }
 
   @override
-  void assignBinary<V, X, Y>(WriterBinary<A, V, X, Y> write, X x, Y y) {
-    _settings.onAssignmentFailed<V>(A, V, x, y);
+  V readBinary<V, X, Y>(ReadBinary<M, V, X, Y> fn, X x, Y y) {
+    return _settings.onReadFailed(M, V, x, y);
+  }
+
+  @override
+  void write(Write<A> fn) {
+    _settings.onWriteFailed(A);
+  }
+
+  @override
+  void writeUnary<X>(WriteUnary<A, X> fn, X x) {
+    _settings.onWriteFailed(A, x);
+  }
+
+  @override
+  void writeBinary<X, Y>(WriteBinary<A, X, Y> fn, X x, Y y) {
+    _settings.onWriteFailed(A, x, y);
   }
 }

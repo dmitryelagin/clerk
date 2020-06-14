@@ -12,15 +12,15 @@ class AddItem {
 
   Action call(String label) {
     return Action((store) async {
-      final previousItem = store.evaluate(_todoList.getItem(TodoItemId.fake));
+      final previousItem = store.read(_todoList.getItem(TodoItemId.fake));
       final isDone = previousItem.isDone;
-      store.assign(_todoList.changeItem(TodoItemId.fake, label));
+      store.write(_todoList.changeItem(TodoItemId.fake, label));
 
       try {
         final createdId = await _loader.addItem(label, isDone: isDone);
         store
-          ..assign(_todoList.removeItem(TodoItemId.fake))
-          ..assign(_todoList.addItem(createdId, label: label, isDone: isDone));
+          ..write(_todoList.removeItem(TodoItemId.fake))
+          ..write(_todoList.addItem(createdId, label: label, isDone: isDone));
       } on Exception catch (e) {
         print(e);
       }

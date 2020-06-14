@@ -13,7 +13,7 @@ class Action {
   /// callback's clojure.
   const Action(this._execute);
 
-  final ActionOperation _execute;
+  final Execute _execute;
 
   /// Execute operation saved in command.
   ///

@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:clerk/clerk.dart';
 
-class StorePorter implements StoreExecutor, StoreEvaluator {
-  StorePorter(this._evaluator, this._executor, this._accessor) {
+class StorePorter implements StoreExecutor, StoreReader {
+  StorePorter(this._reader, this._executor, this._accessor) {
     _subscriptions[StateAggregate] =
         _accessor.onChange.listen(null, onDone: teardown);
   }
 
-  final StoreEvaluator _evaluator;
+  final StoreReader _reader;
   final StoreExecutor _executor;
   final StoreAccessor _accessor;
 
@@ -21,21 +21,21 @@ class StorePorter implements StoreExecutor, StoreEvaluator {
   void execute(Action action) => _executor.execute(action);
 
   @override
-  V evaluate<M, V>(Selector<M, V> select) {
+  V read<M, V>(Read<M, V> fn) {
     _checkSubscription<M>();
-    return _evaluator.evaluate(select);
+    return _reader.read(fn);
   }
 
   @override
-  V evaluateUnary<M, V, X>(SelectorUnary<M, V, X> select, X x) {
+  V readUnary<M, V, X>(ReadUnary<M, V, X> fn, X x) {
     _checkSubscription<M>();
-    return _evaluator.evaluateUnary(select, x);
+    return _reader.readUnary(fn, x);
   }
 
   @override
-  V evaluateBinary<M, V, X, Y>(SelectorBinary<M, V, X, Y> select, X x, Y y) {
+  V readBinary<M, V, X, Y>(ReadBinary<M, V, X, Y> fn, X x, Y y) {
     _checkSubscription<M>();
-    return _evaluator.evaluateBinary(select, x, y);
+    return _reader.readBinary(fn, x, y);
   }
 
   void teardown() {

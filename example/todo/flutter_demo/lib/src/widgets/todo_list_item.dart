@@ -13,12 +13,12 @@ class TodoListItem extends StatelessWidget {
   Widget build(BuildContext _) {
     return StoreBuilder(
       builder: (context, store) {
-        final todoList = context.resolve<TodoListSelector>();
+        final todoList = context.resolve<TodoListReader>();
         final toggleItem = context.resolve<ToggleItem>();
         final commitItemChange = context.resolve<CommitItemChange>();
         final removeItem = context.resolve<RemoveItem>();
 
-        final item = store.evaluate(todoList.getItem(id));
+        final item = store.read(todoList.getItem(id));
 
         return Row(
           children: [

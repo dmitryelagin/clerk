@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'types_public.dart';
 
-/// Runs [ActionOperation] asynchronously.
-ActionOperation executeAsync(ActionOperation execute) {
+/// Runs [Execute] asynchronously.
+Execute executeAsync(Execute execute) {
   return (store) {
     Timer.run(() {
       execute(store);
@@ -11,8 +11,8 @@ ActionOperation executeAsync(ActionOperation execute) {
   };
 }
 
-/// Runs [ActionOperation] in microtask.
-ActionOperation executeMicrotask(ActionOperation execute) {
+/// Runs [Execute] in microtask.
+Execute executeMicrotask(Execute execute) {
   return (store) {
     scheduleMicrotask(() {
       execute(store);
@@ -20,32 +20,23 @@ ActionOperation executeMicrotask(ActionOperation execute) {
   };
 }
 
-/// Runs just a single [Writer].
-ActionOperation executeWriter<A, V>(
-  Writer<A, V> write,
-) {
+/// Runs just a single [Write].
+Execute executeWrite<A>(Write<A> fn) {
   return (store) {
-    store.assign(write);
+    store.write(fn);
   };
 }
 
-/// Runs just a single [WriterUnary] with provided argument.
-ActionOperation executeUnaryWriter<A, V, X>(
-  WriterUnary<A, V, X> write,
-  X x,
-) {
+/// Runs just a single [WriteUnary] with provided argument.
+Execute executeWriteUnary<A, X>(WriteUnary<A, X> fn, X x) {
   return (store) {
-    store.assignUnary(write, x);
+    store.writeUnary(fn, x);
   };
 }
 
-/// Runs just a single [WriterBinary] with provided arguments.
-ActionOperation executeBinaryWriter<A, V, X, Y>(
-  WriterBinary<A, V, X, Y> write,
-  X x,
-  Y y,
-) {
+/// Runs just a single [WriteBinary] with provided arguments.
+Execute executeWriteBinary<A, X, Y>(WriteBinary<A, X, Y> fn, X x, Y y) {
   return (store) {
-    store.assignBinary(write, x, y);
+    store.writeBinary(fn, x, y);
   };
 }

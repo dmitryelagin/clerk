@@ -1,7 +1,6 @@
 import 'action.dart';
 import 'interfaces_private.dart';
 import 'interfaces_public.dart';
-import 'interfaces_utils.dart';
 import 'state_repository.dart';
 import 'types_public.dart';
 import 'types_utils.dart';
@@ -21,35 +20,40 @@ class StoreManagerImpl implements StoreManager {
   }
 
   @override
-  V evaluate<M, V>(Selector<M, V> select) =>
-      select.isGeneric && !_repository.has<M>()
-          ? select(castEvaluator())
-          : _repository.getByModel<M>().evaluate(select);
-
-  @override
-  V evaluateUnary<M, V, X>(SelectorUnary<M, V, X> select, X x) =>
-      select.isGeneric && !_repository.has<M>()
-          ? select(castEvaluator(), x)
-          : _repository.getByModel<M>().evaluateUnary(select, x);
-
-  @override
-  V evaluateBinary<M, V, X, Y>(SelectorBinary<M, V, X, Y> select, X x, Y y) =>
-      select.isGeneric && !_repository.has<M>()
-          ? select(castEvaluator(), x, y)
-          : _repository.getByModel<M>().evaluateBinary(select, x, y);
-
-  @override
-  void assign<A, V>(Writer<A, V> write) {
-    _repository.getByAccumulator<A>().assign(write);
+  V read<M, V>(Read<M, V> fn) {
+    return fn.isGeneric && !_repository.has<M>()
+        ? fn(_getReader())
+        : _repository.getByModel<M>().read(fn);
   }
 
   @override
-  void assignUnary<A, V, X>(WriterUnary<A, V, X> write, X x) {
-    _repository.getByAccumulator<A>().assignUnary(write, x);
+  V readUnary<M, V, X>(ReadUnary<M, V, X> fn, X x) {
+    return fn.isGeneric && !_repository.has<M>()
+        ? fn(_getReader(), x)
+        : _repository.getByModel<M>().readUnary(fn, x);
   }
 
   @override
-  void assignBinary<A, V, X, Y>(WriterBinary<A, V, X, Y> write, X x, Y y) {
-    _repository.getByAccumulator<A>().assignBinary(write, x, y);
+  V readBinary<M, V, X, Y>(ReadBinary<M, V, X, Y> fn, X x, Y y) {
+    return fn.isGeneric && !_repository.has<M>()
+        ? fn(_getReader(), x, y)
+        : _repository.getByModel<M>().readBinary(fn, x, y);
   }
+
+  @override
+  void write<A>(Write<A> fn) {
+    _repository.getByAccumulator<A>().write(fn);
+  }
+
+  @override
+  void writeUnary<A, X>(WriteUnary<A, X> fn, X x) {
+    _repository.getByAccumulator<A>().writeUnary(fn, x);
+  }
+
+  @override
+  void writeBinary<A, X, Y>(WriteBinary<A, X, Y> fn, X x, Y y) {
+    _repository.getByAccumulator<A>().writeBinary(fn, x, y);
+  }
+
+  T _getReader<T>() => this as T; // ignore: avoid_as
 }

@@ -16,20 +16,20 @@ class State<M, A> {
   State(
     this.initial,
     this._getModel, [
-    AccumulatorFactory<M, A> getAccumulator,
-    ModelComparator<M> areEqualModels,
+    GetAccumulator<M, A> getAccumulator,
+    CompareModels<M> areEqualModels,
   ])  : _getAccumulator = getAccumulator ?? ((_) => initial),
         _areEqualModels = areEqualModels ?? identical;
 
   /// Initial accumulator object.
   ///
   /// It will be [State]'s permanent accumulator and will act as a single
-  /// source of truth if [AccumulatorFactory] is not provided.
+  /// source of truth if [GetAccumulator] is not provided.
   final A initial;
 
-  final AccumulatorFactory<M, A> _getAccumulator;
-  final ModelFactory<M, A> _getModel;
-  final ModelComparator<M> _areEqualModels;
+  final GetAccumulator<M, A> _getAccumulator;
+  final GetModel<M, A> _getModel;
+  final CompareModels<M> _areEqualModels;
 
   /// Returns accumulator produced from model.
   A getAccumulator(M model) => _getAccumulator(model);

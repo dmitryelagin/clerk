@@ -12,10 +12,10 @@ class StoreAccessorImpl
         StoreChangeEventBusController,
         StoreActionEventBusController {
   StoreAccessorImpl(StoreSettings settings, this._repository)
-      : change = settings.createStreamController(),
-        afterChanges = settings.createStreamController(),
-        beforeAction = settings.createStreamController(),
-        afterAction = settings.createStreamController();
+      : change = settings.getStreamController(),
+        afterChanges = settings.getStreamController(),
+        beforeAction = settings.getStreamController(),
+        afterAction = settings.getStreamController();
 
   final StateRepository _repository;
 

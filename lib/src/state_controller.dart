@@ -13,12 +13,13 @@ class StateController<M extends Object, A extends Object>
     this._getModel,
     this._areEqualModels,
   )   : _model = _getModel(_accumulator),
-        _change = settings.createStreamController(),
-        _afterChanges = settings.createStreamController();
+        _change = settings.getStreamController(),
+        _afterChanges = settings.getStreamController();
 
-  final AccumulatorFactory<M, A> _getAccumulator;
-  final ModelFactory<M, A> _getModel;
-  final ModelComparator<M> _areEqualModels;
+  final GetAccumulator<M, A> _getAccumulator;
+  final GetModel<M, A> _getModel;
+  final CompareModels<M> _areEqualModels;
+
   final StreamController<M> _change;
   final StreamController<M> _afterChanges;
 
@@ -42,39 +43,42 @@ class StateController<M extends Object, A extends Object>
   Stream<M> get onAfterChanges => _afterChanges.stream;
 
   @override
-  V evaluate<V>(Selector<M, V> select) {
-    return select(_evaluateModel());
+  V read<V>(Read<M, V> fn) {
+    return fn(_prepareModel());
   }
 
   @override
-  V evaluateUnary<V, X>(SelectorUnary<M, V, X> select, X x) {
-    return select(_evaluateModel(), x);
+  V readUnary<V, X>(ReadUnary<M, V, X> fn, X x) {
+    return fn(_prepareModel(), x);
   }
 
   @override
-  V evaluateBinary<V, X, Y>(SelectorBinary<M, V, X, Y> select, X x, Y y) {
-    return select(_evaluateModel(), x, y);
+  V readBinary<V, X, Y>(ReadBinary<M, V, X, Y> fn, X x, Y y) {
+    return fn(_prepareModel(), x, y);
   }
 
   @override
-  void assign<V>(Writer<A, V> write) {
-    _updateAccumulator(write(_prepareAssignment()));
+  void write(Write<A> fn) {
+    final accumulator = _prepareAccumulator();
+    _updateAccumulator(fn(accumulator), accumulator);
   }
 
   @override
-  void assignUnary<V, X>(WriterUnary<A, V, X> write, X x) {
-    _updateAccumulator(write(_prepareAssignment(), x));
+  void writeUnary<X>(WriteUnary<A, X> fn, X x) {
+    final accumulator = _prepareAccumulator();
+    _updateAccumulator(fn(accumulator, x), accumulator);
   }
 
   @override
-  void assignBinary<V, X, Y>(WriterBinary<A, V, X, Y> write, X x, Y y) {
-    _updateAccumulator(write(_prepareAssignment(), x, y));
+  void writeBinary<X, Y>(WriteBinary<A, X, Y> fn, X x, Y y) {
+    final accumulator = _prepareAccumulator();
+    _updateAccumulator(fn(accumulator, x, y), accumulator);
   }
 
   void endTransanction() {
     if (!_hasTransanction) return;
     _hasTransanction = false;
-    if (_areEqualModels(_prevModel, _evaluateModel())) return;
+    if (_areEqualModels(_prevModel, _prepareModel())) return;
     _hasChange = _hasDeferredChange = true;
   }
 
@@ -97,21 +101,21 @@ class StateController<M extends Object, A extends Object>
     ]);
   }
 
-  M _evaluateModel() {
+  M _prepareModel() {
     if (!_shouldRebuild) return _model;
     _shouldRebuild = false;
     return _model = _getModel(_accumulator);
   }
 
-  A _prepareAssignment() {
+  A _prepareAccumulator() {
     if (_hasTransanction) return _accumulator;
     _hasTransanction = true;
     _prevModel = _model;
     return _getAccumulator(_model);
   }
 
-  void _updateAccumulator<T>(T value) {
-    _accumulator = value != null && value is A ? value : _accumulator;
+  void _updateAccumulator(Object value, A prevAccumulator) {
+    _accumulator = value != null && value is A ? value : prevAccumulator;
     _shouldRebuild = true;
   }
 }

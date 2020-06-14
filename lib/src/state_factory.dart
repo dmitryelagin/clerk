@@ -11,13 +11,13 @@ class StateFactory {
 
   final _cache = <Type, StateManager>{};
 
-  StateManager<M, A> createManager<M, A>() {
+  StateManager<M, A> getManager<M, A>() {
     final manager = _cache[M];
     if (manager != null && manager is StateManager<M, A>) return manager;
     return _cache[M] = StateManagerNull<M, A>(_settings);
   }
 
-  StateController<M, A> createController<M, A>(State<M, A> state) {
+  StateController<M, A> getController<M, A>(State<M, A> state) {
     _cache.remove(M);
     return StateController(
       _settings,

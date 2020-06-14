@@ -1,5 +1,5 @@
 name: clerk
-version: 0.3.15
+version: 0.3.16
 description: >-
   Command-based state manager. Clerk can properly compose small
   logic parts to improve readability and reusability of state

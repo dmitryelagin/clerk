@@ -2,7 +2,7 @@ import 'package:demo_core/demo_core.dart';
 import 'package:flutter_demo/src/module_helpers/module.dart';
 
 Injector initializeTodoModule(Injector injector) => injector
-  ..registerMimic<TodoListSelector, TodoListManager>()
+  ..registerMimic<TodoListReader, TodoListManager>()
   ..registerFactory((resolve) {
     return createTodoStore()..executor.execute(resolve<Init>()());
   })

@@ -20,7 +20,7 @@ class _StoreBuilderState extends State<StoreBuilder> {
   @override
   void didChangeDependencies() {
     _store = StoreProvider.of(context);
-    _porter = StorePorter(_store.evaluator, _store.executor, _store.accessor);
+    _porter = StorePorter(_store.reader, _store.executor, _store.accessor);
     super.didChangeDependencies();
   }
 
