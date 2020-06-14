@@ -2,7 +2,7 @@ import 'state.dart';
 import 'types_public.dart';
 
 /// A simplified [State] that acts like a reducer.
-class StateReduced<T extends Object> extends State<T, T> {
+class StateReduced<T> extends State<T, T> {
   /// Creates [StateReduced].
   ///
   /// This [State] needs only initial model to operate and it may help when
