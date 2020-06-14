@@ -1,7 +1,7 @@
 import 'todo_item.dart';
 
 extension TodoItemUtils on TodoItem {
-  TodoItem update({String label, bool isDone}) =>
+  TodoItem update({String? label, bool? isDone}) =>
       TodoItem(id, label ?? this.label, isDone: isDone ?? this.isDone);
 
   bool equals(TodoItem other) =>

@@ -40,10 +40,10 @@ class ReadException implements StateException {
   final Type resultType;
 
   /// The optionaly provided first argument.
-  final Object firstArgument;
+  final Object? firstArgument;
 
   /// The optionaly provided second argument.
-  final Object secondArgument;
+  final Object? secondArgument;
 
   @override
   String toString() => 'ReadException: '
@@ -70,10 +70,10 @@ class WriteException implements StateException {
   final Type targetType;
 
   /// The optionaly provided first argument.
-  final Object firstArgument;
+  final Object? firstArgument;
 
   /// The optionaly provided second argument.
-  final Object secondArgument;
+  final Object? secondArgument;
 
   @override
   String toString() => 'WriteException: '

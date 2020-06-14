@@ -34,11 +34,11 @@ class StoreSettings {
     throw ListenChangeException(T);
   }
 
-  static T _readFallback<T>(Type m, Type v, [Object x, Object y]) {
+  static T _readFallback<T>(Type m, Type v, [Object? x, Object? y]) {
     throw ReadException(m, v, x, y);
   }
 
-  static void _writeFallback(Type a, [Object x, Object y]) {
+  static void _writeFallback(Type a, [Object? x, Object? y]) {
     throw WriteException(a, x, y);
   }
 
@@ -65,7 +65,7 @@ class StoreSettings {
   /// This method is called every time when read operation failed because
   /// no state with required model was found. It should return proper value
   /// to continue execution. Throws [ReadException] by default.
-  T onReadFailed<T>(Type m, Type v, [Object x, Object y]) =>
+  T onReadFailed<T>(Type m, Type v, [Object? x, Object? y]) =>
       _onReadFailed(m, v, x, y);
 
   /// Handles writing failure.
@@ -73,5 +73,5 @@ class StoreSettings {
   /// This method is called every time when write operation failed because
   /// no state with required accumulator was found. It should not throw
   /// to continue execution. Throws [WriteException] by default.
-  void onWriteFailed(Type a, [Object x, Object y]) => _onWriteFailed(a, x, y);
+  void onWriteFailed(Type a, [Object? x, Object? y]) => _onWriteFailed(a, x, y);
 }

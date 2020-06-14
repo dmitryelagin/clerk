@@ -3,5 +3,5 @@ class TodoItemId {
 
   static const fake = TodoItemId(null);
 
-  final int value;
+  final int? value;
 }

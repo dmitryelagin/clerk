@@ -9,8 +9,8 @@ mixin TodoListWriter<A extends TodoListAccumulator> {
   Write<A> replaceItems(Iterable<TodoItem> items) =>
       (acc) => acc..items.replaceRange(0, acc.items.length, items);
 
-  Write<A> addItem(TodoItemId id, {String label = '', bool isDone}) =>
-      (acc) => acc..items.add(TodoItem(id, label, isDone: isDone ?? false));
+  Write<A> addItem(TodoItemId id, {String label = '', bool isDone = false}) =>
+      (acc) => acc..items.add(TodoItem(id, label, isDone: isDone));
 
   Write<A> removeItem(TodoItemId id) =>
       (acc) => acc..items.removeWhere((item) => item.id.value == id.value);
@@ -18,7 +18,7 @@ mixin TodoListWriter<A extends TodoListAccumulator> {
   Write<A> changeItem(TodoItemId id, String label) =>
       updateItem(id, (item) => item.update(label: label));
 
-  Write<A> toggleItem(TodoItemId id, {bool isDone}) =>
+  Write<A> toggleItem(TodoItemId id, {bool? isDone}) =>
       updateItem(id, (item) => item.update(isDone: isDone ?? !item.isDone));
 
   Write<A> updateItem(TodoItemId id, TodoItem Function(TodoItem) update) =>

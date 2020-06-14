@@ -21,13 +21,13 @@ class Store {
     _reader = StoreReaderImpl(_manager);
   }
 
-  StateFactory _factory;
-  StateRepository _repository;
-  StoreAccessorImpl _accessor;
-  StoreComposerImpl _composer;
-  StoreManagerImpl _manager;
-  StoreExecutorImpl _executor;
-  StoreReaderImpl _reader;
+  late StateFactory _factory;
+  late StateRepository _repository;
+  late StoreAccessorImpl _accessor;
+  late StoreComposerImpl _composer;
+  late StoreManagerImpl _manager;
+  late StoreExecutorImpl _executor;
+  late StoreReaderImpl _reader;
 
   /// A [StoreAccessor] instance of this store.
   StoreAccessor get accessor => _accessor;

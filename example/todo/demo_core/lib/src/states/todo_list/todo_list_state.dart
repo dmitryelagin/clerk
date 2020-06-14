@@ -11,8 +11,8 @@ class TodoListManager = TodoListReader with TodoListWriter;
 State<TodoListModel, TodoListAccumulator> createTodoListState() {
   return State(
     TodoListAccumulator(),
-    (accumulator) => TodoListModel.fromAccumulator(accumulator),
-    (model) => TodoListAccumulator.fromModel(model),
-    (a, b) => a.equals(b),
+    getModel: (accumulator) => TodoListModel.fromAccumulator(accumulator),
+    getAccumulator: (model) => TodoListAccumulator.fromModel(model),
+    areEqualModels: (a, b) => a.equals(b),
   );
 }

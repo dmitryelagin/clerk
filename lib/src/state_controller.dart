@@ -4,8 +4,7 @@ import 'interfaces_private.dart';
 import 'store_settings.dart';
 import 'types_public.dart';
 
-class StateController<M extends Object, A extends Object>
-    implements StateManager<M, A> {
+class StateController<M, A> implements StateManager<M, A> {
   StateController(
     StoreSettings settings,
     this._accumulator,
@@ -25,7 +24,7 @@ class StateController<M extends Object, A extends Object>
 
   A _accumulator;
   M _model;
-  M _prevModel;
+  M? _prevModel;
 
   bool _hasChange = false;
   bool _hasDeferredChange = false;
@@ -43,7 +42,7 @@ class StateController<M extends Object, A extends Object>
   Stream<M> get onAfterChanges => _afterChanges.stream;
 
   bool get _hasChangeComputed =>
-      _prevModel == null || !_areEqualModels(_prevModel, _prepareModel());
+      _prevModel == null || !_areEqualModels(_prevModel!, _prepareModel());
 
   @override
   V read<V>(Read<M, V> fn) {
@@ -117,8 +116,8 @@ class StateController<M extends Object, A extends Object>
     return _getAccumulator(_model);
   }
 
-  void _updateAccumulator(Object value, A prevAccumulator) {
-    _accumulator = value != null && value is A ? value : prevAccumulator;
+  void _updateAccumulator(Object? value, A prevAccumulator) {
+    _accumulator = value is A ? value : prevAccumulator;
     _shouldRebuild = true;
   }
 }

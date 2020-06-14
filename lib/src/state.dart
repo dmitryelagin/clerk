@@ -14,11 +14,12 @@ class State<M, A> {
   ///
   /// Callbacks will be executed as if they are appropriate methods.
   State(
-    this.initial,
-    this._getModel, [
-    GetAccumulator<M, A> getAccumulator,
-    CompareModels<M> areEqualModels,
-  ])  : _getAccumulator = getAccumulator ?? ((_) => initial),
+    this.initial, {
+    required GetModel<M, A> getModel,
+    GetAccumulator<M, A>? getAccumulator,
+    CompareModels<M>? areEqualModels,
+  })  : _getModel = getModel,
+        _getAccumulator = getAccumulator ?? ((_) => initial),
         _areEqualModels = areEqualModels ?? identical;
 
   /// Initial accumulator object.

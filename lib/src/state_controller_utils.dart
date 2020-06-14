@@ -1,9 +1,9 @@
 import 'state_controller.dart';
 
 extension StateControllerMapUtils on Map<Type, StateController> {
-  Map<Type, Object> extractModels() => map(_getTypeModelEntry);
+  Map<Type, Object?> extractModels() => map(_getTypeModelEntry);
 
-  MapEntry<Type, Object> _getTypeModelEntry(Type key, StateController value) =>
+  MapEntry<Type, Object?> _getTypeModelEntry(Type key, StateController value) =>
       MapEntry(key, value.model);
 }
 

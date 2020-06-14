@@ -13,7 +13,7 @@ class StoreManagerImpl implements StoreManager {
 
   @override
   void execute(Action action) {
-    if (action == null || _repository.isEmpty) return;
+    if (_repository.isEmpty) return;
     _eventBus.beforeAction.add(action);
     action.execute(this);
     _eventBus.afterAction.add(action);

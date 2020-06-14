@@ -4,7 +4,7 @@ import 'action.dart';
 import 'interfaces_public.dart';
 import 'types_public.dart';
 
-abstract class StateManager<M extends Object, A extends Object> {
+abstract class StateManager<M, A> {
   Stream<M> get onChange;
   Stream<M> get onAfterChanges;
   V read<V>(Read<M, V> fn);

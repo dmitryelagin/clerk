@@ -12,7 +12,7 @@ abstract class StateAggregate {
   /// Returns [State] model with requested type.
   ///
   /// Returns `null` if [State] model was not found.
-  T get<T>();
+  T? get<T>();
 }
 
 /// An object that can assemble store from multiple [State].

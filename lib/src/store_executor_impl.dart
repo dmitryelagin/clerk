@@ -12,11 +12,11 @@ class StoreExecutorImpl implements StoreExecutor {
   final StoreController _controller;
   final StoreExecutor _innerExecutor;
 
-  Zone _zone;
+  late Zone _zone;
 
   @override
   void execute(Action action) {
-    if (action == null || _controller.isTeardowned) return;
+    if (_controller.isTeardowned) return;
     _zone.runUnary(_innerExecutor.execute, action);
   }
 
