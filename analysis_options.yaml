@@ -20,6 +20,7 @@ linter:
     - avoid_classes_with_only_static_members
     - avoid_double_and_int_checks
     - avoid_equals_and_hash_code_on_mutable_classes
+    - avoid_escaping_inner_quotes
     - avoid_field_initializers_in_const_classes
     - avoid_function_literals_in_foreach_calls
     - avoid_implementing_value_types
@@ -27,6 +28,7 @@ linter:
     - avoid_positional_boolean_parameters
     - avoid_print
     - avoid_private_typedef_functions
+    - avoid_redundant_argument_values
     - avoid_renaming_method_parameters
     - avoid_returning_null
     - avoid_returning_null_for_future
@@ -50,7 +52,9 @@ linter:
     - control_flow_in_finally
     - diagnostic_describe_all_properties
     - directives_ordering
+    # - do_not_use_environment # [not recognized]
     - empty_statements
+    - exhaustive_cases
     - file_names
     - flutter_style_todos
     - hash_and_equals
@@ -58,10 +62,15 @@ linter:
     - invariant_booleans
     - iterable_contains_unrelated_type
     - join_return_with_assignment
+    - leading_newlines_in_multiline_strings
     - lines_longer_than_80_chars
     - list_remove_unrelated_type
     - literal_only_boolean_expressions
+    # - missing_whitespace_between_adjacent_strings
     - no_adjacent_strings_in_list
+    - no_default_cases
+    - no_logic_in_create_state
+    - no_runtimeType_toString
     - non_constant_identifier_names
     # - one_member_abstracts
     - only_throw_errors
@@ -96,6 +105,7 @@ linter:
     - prefer_void_to_null
     - provide_deprecation_message
     # - public_member_api_docs
+    - sized_box_for_whitespace
     - sort_child_properties_last
     - sort_constructors_first
     - sort_pub_dependencies
@@ -111,9 +121,15 @@ linter:
     - unnecessary_null_aware_assignments
     - unnecessary_overrides
     - unnecessary_parenthesis
+    - unnecessary_raw_strings
     - unnecessary_statements
+    - unnecessary_string_escapes
+    - unnecessary_string_interpolations
     - unsafe_html
     - use_full_hex_values_for_flutter_colors
+    - use_is_even_rather_than_modulo
+    - use_key_in_widget_constructors
+    - use_raw_strings
     - use_setters_to_change_properties
     - use_string_buffers
     - use_to_and_as_if_applicable
