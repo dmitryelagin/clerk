@@ -4,7 +4,8 @@ import 'interfaces_private.dart';
 import 'store_settings.dart';
 import 'types_public.dart';
 
-class StateController<M, A> implements StateManager<M, A> {
+class StateController<M extends Object?, A extends Object?>
+    implements StateManager<M, A> {
   StateController(
     StoreSettings settings,
     this._accumulator,

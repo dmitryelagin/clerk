@@ -2,7 +2,8 @@ import 'interfaces_private.dart';
 import 'store_settings.dart';
 import 'types_public.dart';
 
-class StateManagerNull<M, A> implements StateManager<M, A> {
+class StateManagerNull<M extends Object?, A extends Object?>
+    implements StateManager<M, A> {
   StateManagerNull(this._settings);
 
   final StoreSettings _settings;
