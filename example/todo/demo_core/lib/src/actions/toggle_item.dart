@@ -11,7 +11,7 @@ class ToggleItem {
   final TodoListManager _todoList;
   final TodoLoader _loader;
 
-  Action call(TodoItemId id, {bool isDone}) {
+  Action call(TodoItemId id, {bool isDone = false}) {
     return Action((store) async {
       final previousItem = store.read(_todoList.getItem(id));
       store.write(_todoList.toggleItem(id, isDone: isDone));
