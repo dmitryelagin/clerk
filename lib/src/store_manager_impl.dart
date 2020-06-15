@@ -41,17 +41,17 @@ class StoreManagerImpl implements StoreManager {
   }
 
   @override
-  void write<A>(Write<A> fn) {
+  void write<A, V>(Write<A, V> fn) {
     _repository.getByAccumulator<A>().write(fn);
   }
 
   @override
-  void writeUnary<A, X>(WriteUnary<A, X> fn, X x) {
+  void writeUnary<A, V, X>(WriteUnary<A, V, X> fn, X x) {
     _repository.getByAccumulator<A>().writeUnary(fn, x);
   }
 
   @override
-  void writeBinary<A, X, Y>(WriteBinary<A, X, Y> fn, X x, Y y) {
+  void writeBinary<A, V, X, Y>(WriteBinary<A, V, X, Y> fn, X x, Y y) {
     _repository.getByAccumulator<A>().writeBinary(fn, x, y);
   }
 
