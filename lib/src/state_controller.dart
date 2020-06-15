@@ -61,19 +61,19 @@ class StateController<M extends Object?, A extends Object?>
   }
 
   @override
-  void write(Write<A> fn) {
+  void write<V>(Write<A, V> fn) {
     final accumulator = _prepareAccumulator();
     _updateAccumulator(fn(accumulator), accumulator);
   }
 
   @override
-  void writeUnary<X>(WriteUnary<A, X> fn, X x) {
+  void writeUnary<V, X>(WriteUnary<A, V, X> fn, X x) {
     final accumulator = _prepareAccumulator();
     _updateAccumulator(fn(accumulator, x), accumulator);
   }
 
   @override
-  void writeBinary<X, Y>(WriteBinary<A, X, Y> fn, X x, Y y) {
+  void writeBinary<V, X, Y>(WriteBinary<A, V, X, Y> fn, X x, Y y) {
     final accumulator = _prepareAccumulator();
     _updateAccumulator(fn(accumulator, x, y), accumulator);
   }
@@ -117,7 +117,7 @@ class StateController<M extends Object?, A extends Object?>
     return _getAccumulator(_model);
   }
 
-  void _updateAccumulator(Object? value, A prevAccumulator) {
+  void _updateAccumulator<V>(V value, A prevAccumulator) {
     _accumulator = value is A ? value : prevAccumulator;
     _shouldRebuild = true;
   }

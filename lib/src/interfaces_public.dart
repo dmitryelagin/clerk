@@ -70,19 +70,19 @@ abstract class StoreManager implements StoreExecutor, StoreReader {
   /// Modifies [State] accumulator with provided [Write].
   ///
   /// It will be called with required [State] accumulator.
-  void write<A>(Write<A> fn);
+  void write<A, V>(Write<A, V> fn);
 
   /// Modifies [State] accumulator with provided [WriteUnary].
   ///
   /// It will be called with required [State] accumulator and provided
   /// argument.
-  void writeUnary<A, X>(WriteUnary<A, X> fn, X x);
+  void writeUnary<A, V, X>(WriteUnary<A, V, X> fn, X x);
 
   /// Modifies [State] accumulator with provided [WriteBinary].
   ///
   /// It will be called with required [State] accumulator and provided
   /// arguments.
-  void writeBinary<A, X, Y>(WriteBinary<A, X, Y> fn, X x, Y y);
+  void writeBinary<A, V, X, Y>(WriteBinary<A, V, X, Y> fn, X x, Y y);
 }
 
 /// An accessor to all available store data.

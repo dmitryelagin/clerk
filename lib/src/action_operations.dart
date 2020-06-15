@@ -21,21 +21,21 @@ Execute executeMicrotask(Execute execute) {
 }
 
 /// Runs just a single [Write].
-Execute executeWrite<A>(Write<A> fn) {
+Execute executeWrite<A, V>(Write<A, V> fn) {
   return (store) {
     store.write(fn);
   };
 }
 
 /// Runs just a single [WriteUnary] with provided argument.
-Execute executeWriteUnary<A, X>(WriteUnary<A, X> fn, X x) {
+Execute executeWriteUnary<A, V, X>(WriteUnary<A, V, X> fn, X x) {
   return (store) {
     store.writeUnary(fn, x);
   };
 }
 
 /// Runs just a single [WriteBinary] with provided arguments.
-Execute executeWriteBinary<A, X, Y>(WriteBinary<A, X, Y> fn, X x, Y y) {
+Execute executeWriteBinary<A, V, X, Y>(WriteBinary<A, V, X, Y> fn, X x, Y y) {
   return (store) {
     store.writeBinary(fn, x, y);
   };
