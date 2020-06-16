@@ -14,8 +14,9 @@ int getMultipliedCounter(AppModel model, int multiplier) =>
 AppModel addToCounter(AppModel model, int count) =>
     AppModel(model.counter + count);
 
-Action incrementCounterBy(int count) =>
-    Action(executeWriteUnary(addToCounter, count));
+Action incrementCounterBy(int count) => Action((store) {
+      store.writeUnary(addToCounter, count);
+    });
 
 void main() {
   final store = Store()

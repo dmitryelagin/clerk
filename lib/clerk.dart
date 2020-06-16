@@ -5,7 +5,6 @@
 library clerk;
 
 export 'src/action.dart';
-export 'src/action_operations.dart';
 export 'src/exceptions.dart';
 export 'src/interfaces_public.dart';
 export 'src/state.dart';

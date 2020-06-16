@@ -78,7 +78,7 @@ class StateController<M extends Object?, A extends Object?>
     _updateAccumulator(fn(accumulator, x, y), accumulator);
   }
 
-  void endTransanction() {
+  void checkChange() {
     if (!_hasTransanction) return;
     _hasTransanction = false;
     if (_hasChange || !_hasChangeComputed) return;
@@ -117,7 +117,7 @@ class StateController<M extends Object?, A extends Object?>
     return _getAccumulator(_model);
   }
 
-  void _updateAccumulator<V>(V value, A prevAccumulator) {
+  void _updateAccumulator<T>(T value, A prevAccumulator) {
     _accumulator = value is A ? value : prevAccumulator;
     _shouldRebuild = true;
   }

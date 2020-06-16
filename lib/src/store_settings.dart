@@ -13,7 +13,7 @@ class StoreSettings {
   /// Provide callbacks with the same names as [StoreSettings]'s own methods
   /// to simply override corresponding behaviors.
   const StoreSettings({
-    GetStreamController getStreamController = _streamControllerFactory,
+    GetStreamController getStreamController = _createStreamController,
     GetStream onListenChangeFailed = _listenChangeFallback,
     ReadFallback onReadFailed = _readFallback,
     WriteFallback onWriteFailed = _writeFallback,
@@ -27,7 +27,7 @@ class StoreSettings {
   final ReadFallback _onReadFailed;
   final WriteFallback _onWriteFailed;
 
-  static StreamController<T> _streamControllerFactory<T>() =>
+  static StreamController<T> _createStreamController<T>() =>
       StreamController.broadcast(sync: true);
 
   static Stream<T> _listenChangeFallback<T>() {
@@ -45,7 +45,7 @@ class StoreSettings {
   /// Creates [StreamController] for store internal usage.
   ///
   /// This method will be called during store initialization to produce
-  /// [StreamController]s for standard notifications like `onBeforeAction`
+  /// [StreamController]s for standard notifications like `onAction`
   /// stream in accessor, then  every time the new state is added to store
   /// to produce [StreamController]s for specific state notifications like
   /// `onAfterChanges` stream. Returns [StreamController.broadcast(sync: true)]
