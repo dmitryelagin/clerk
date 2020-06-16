@@ -20,14 +20,14 @@ abstract class StoreComposer {
   /// Adds [State] to [StoreComposer] store.
   ///
   /// [State] model becomes available and typed stream from
-  /// [StoreChangeEventBus.onModelChange] method can be returned right after
+  /// [StoreAccessor.onModelChange] method can be returned right after
   /// this method was called.
   void add<M, A>(State<M, A> state);
 
   /// Removes state from [StoreComposer] store.
   ///
   /// [State] model becomes unavailable and typed streams from
-  /// [StoreChangeEventBus.onModelChange] method are closed right after
+  /// [StoreAccessor.onModelChange] method are closed right after
   /// this method was called.
   void remove<T>();
 }
@@ -85,24 +85,11 @@ abstract class StoreManager implements StoreExecutor, StoreReader {
   void writeBinary<A, V, X, Y>(WriteBinary<A, V, X, Y> fn, X x, Y y);
 }
 
-/// An accessor to all available store data.
-abstract class StoreAccessor
-    implements StoreChangeEventBus, StoreActionEventBus {
+/// An accessor to all available store data and events.
+abstract class StoreAccessor {
   /// The latest models of all store [State]s.
   StateAggregate get state;
-}
 
-/// A bus for [Action] related events.
-abstract class StoreActionEventBus {
-  /// A stream that emits [Action] before its execution.
-  Stream<Action> get onBeforeAction;
-
-  /// A stream that emits [Action] after its execution.
-  Stream<Action> get onAfterAction;
-}
-
-/// A bus for change related events.
-abstract class StoreChangeEventBus {
   /// A stream that emits models of store [State]s when anything changes.
   ///
   /// Emits synchronously and only when at least one of models was changed
@@ -114,6 +101,9 @@ abstract class StoreChangeEventBus {
   /// Emits in microtask and only when at least one of models was changed
   /// during all [Action] executions before microtask schedule.
   Stream<StateAggregate> get onAfterChanges;
+
+  /// A stream that emits [Action] before its execution.
+  Stream<Action> get onAction;
 
   /// Returns stream which emits specific [State] model when it changes.
   ///

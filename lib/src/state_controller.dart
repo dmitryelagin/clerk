@@ -78,7 +78,7 @@ class StateController<M extends Object, A extends Object>
     _updateAccumulator(fn(accumulator, x, y), accumulator);
   }
 
-  void endTransanction() {
+  void checkChange() {
     if (!_hasTransanction) return;
     _hasTransanction = false;
     if (_hasChange || !_hasChangeComputed) return;

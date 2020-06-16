@@ -11,9 +11,9 @@ extension StateControllerIterableUtils on Iterable<StateController> {
   bool get hasChanges => any(_hasChange);
   bool get hasDeferredChanges => any(_hasDeferredChange);
 
-  void endTransanctions() {
+  void checkChanges() {
     for (final controller in this) {
-      controller.endTransanction();
+      controller.checkChange();
     }
   }
 
