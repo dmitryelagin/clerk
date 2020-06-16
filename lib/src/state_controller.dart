@@ -117,7 +117,7 @@ class StateController<M extends Object, A extends Object>
     return _getAccumulator(_model);
   }
 
-  void _updateAccumulator<V>(V value, A prevAccumulator) {
+  void _updateAccumulator<T>(T value, A prevAccumulator) {
     _accumulator = value != null && value is A ? value : prevAccumulator;
     _shouldRebuild = true;
   }
