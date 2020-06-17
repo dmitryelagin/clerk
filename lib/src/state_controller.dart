@@ -1,25 +1,24 @@
 import 'dart:async';
 
 import 'interfaces_private.dart';
+import 'state.dart';
 import 'store_settings.dart';
 import 'types_public.dart';
 
 class StateController<M extends Object, A extends Object>
     implements StateManager<M, A> {
-  StateController(
-    StoreSettings settings,
-    this._accumulator,
-    this._getAccumulator,
-    this._getModel,
-    this._areEqualModels,
-  )   : _model = _getModel(_accumulator),
+  StateController(State<M, A> state, StoreSettings settings)
+      : _accumulator = state.initial,
+        _getAccumulator = state.getAccumulator,
+        _getModel = state.getModel,
+        _areEqualModels = state.areEqualModels,
+        _model = state.getModel(state.initial),
         _change = settings.getStreamController(),
         _afterChanges = settings.getStreamController();
 
   final GetAccumulator<M, A> _getAccumulator;
   final GetModel<M, A> _getModel;
   final CompareModels<M> _areEqualModels;
-
   final StreamController<M> _change;
   final StreamController<M> _afterChanges;
 
