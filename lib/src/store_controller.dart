@@ -28,14 +28,14 @@ class StoreController implements StoreComposer, StoreExecutor {
   }
 
   @override
-  Future<void> remove<M>() {
+  Future<void> remove<T>() {
     if (_canNotStartTransanction) return Future.value();
-    return _repository.remove<M>();
+    return _repository.remove<T>();
   }
 
   @override
   void execute(Action action) {
-    if (action == null || _repository.isTeardowned) return;
+    if (action == null || _canNotStartTransanction) return;
     _executionZone.runUnary(_innerExecutor.execute, action);
   }
 

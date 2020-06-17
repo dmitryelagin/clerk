@@ -44,6 +44,7 @@ class StateRepository {
   bool hasModel<M>() => _modelControllerMap.containsKey(M);
 
   void add<M, A>(State<M, A> state) {
+    if (isTeardowned) return;
     _addController(_factory.getController(state));
     _notifyListeners();
   }
