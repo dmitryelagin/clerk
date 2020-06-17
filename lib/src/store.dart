@@ -22,7 +22,11 @@ class Store {
   }
 
   Store._(this._repository, StoreSettings settings)
-      : _manager = StoreManagerImpl(settings, _repository);
+      : _manager = StoreManagerImpl(settings, _repository) {
+    _accessor = StoreAccessorImpl(_manager, _repository);
+    _executor = StoreExecutorImpl(_manager, _repository);
+    _reader = StoreReaderImpl(_manager);
+  }
 
   final StateRepository _repository;
   final StoreManagerImpl _manager;
@@ -32,15 +36,13 @@ class Store {
   StoreReaderImpl _reader;
 
   /// A [StoreAccessor] instance of this [Store].
-  StoreAccessor get accessor =>
-      _accessor ??= StoreAccessorImpl(_manager, _repository);
+  StoreAccessor get accessor => _accessor;
 
   /// A [StoreExecutor] instance of this [Store].
-  StoreExecutor get executor =>
-      _executor ??= StoreExecutorImpl(_manager, _repository);
+  StoreExecutor get executor => _executor;
 
   /// A [StoreReader] instance of this [Store].
-  StoreReader get reader => _reader ??= StoreReaderImpl(_manager);
+  StoreReader get reader => _reader;
 
   /// Closes [Store].
   ///
