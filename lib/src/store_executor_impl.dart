@@ -2,12 +2,11 @@ import 'dart:async';
 
 import 'action.dart';
 import 'interfaces_public.dart';
-import 'state.dart';
 import 'state_repository.dart';
 import 'types_private.dart';
 
-class StoreController implements StoreComposer, StoreExecutor {
-  StoreController(this._innerExecutor, this._repository) {
+class StoreExecutorImpl implements StoreExecutor {
+  StoreExecutorImpl(this._innerExecutor, this._repository) {
     _executionZone = _createExecutionZone();
   }
 
@@ -22,20 +21,8 @@ class StoreController implements StoreComposer, StoreExecutor {
       _hasTransanction || _repository.isTeardowned;
 
   @override
-  void add<M, A>(State<M, A> state) {
-    if (_canNotStartTransanction) return;
-    _repository.add(state);
-  }
-
-  @override
-  Future<void> remove<M>() {
-    if (_canNotStartTransanction) return Future.value();
-    return _repository.remove<M>();
-  }
-
-  @override
   void execute(Action action) {
-    if (_repository.isTeardowned) return;
+    if (_canNotStartTransanction) return;
     _executionZone.runUnary(_innerExecutor.execute, action);
   }
 
@@ -64,7 +51,7 @@ class StoreController implements StoreComposer, StoreExecutor {
   T _runTransanction<T>(GetValue<T> run) {
     _hasTransanction = true;
     final result = run();
-    _repository.checkChanges();
+    _repository.applyChanges();
     _hasTransanction = false;
     return result;
   }

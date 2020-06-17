@@ -19,9 +19,10 @@ Action incrementCounterBy(int count) => Action((store) {
     });
 
 void main() {
-  final store = Store()
-    ..composer.add(StateReduced(const AppModel(0), AppModel.areEqual))
-    ..executor.execute(incrementCounterBy(5));
+  final store = Store((builder) {
+    builder.add(StateReduced(const AppModel(0), AppModel.areEqual));
+  });
+  store.executor.execute(incrementCounterBy(5));
   final result = store.reader.readUnary(getMultipliedCounter, 2);
   // ignore: avoid_print
   print(result); // 10

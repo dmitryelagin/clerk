@@ -1,4 +1,5 @@
 import 'interfaces_public.dart';
+import 'store.dart';
 
 /// Type of a function that returns specific data from a complex object.
 typedef Read<M, V> = V Function(M);
@@ -37,3 +38,6 @@ typedef CompareModels<M> = bool Function(M, M);
 
 /// Type of a function that works with store by [StoreManager].
 typedef Execute = void Function(StoreManager);
+
+/// Type of a function that composes store with [StoreManager].
+typedef Compose = void Function(StoreBuilder);

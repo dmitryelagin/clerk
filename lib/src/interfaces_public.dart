@@ -15,23 +15,6 @@ abstract class StateAggregate {
   T? get<T>();
 }
 
-/// An object that can assemble store from multiple [State].
-abstract class StoreComposer {
-  /// Adds [State] to [StoreComposer] store.
-  ///
-  /// [State] model becomes available and typed stream from
-  /// [StoreAccessor.onModelChange] method can be returned right after
-  /// this method was called.
-  void add<M, A>(State<M, A> state);
-
-  /// Removes state from [StoreComposer] store.
-  ///
-  /// [State] model becomes unavailable and typed streams from
-  /// [StoreAccessor.onModelChange] method are closed right after
-  /// this method was called.
-  void remove<T>();
-}
-
 /// An object that can properly execute [Action].
 abstract class StoreExecutor {
   /// Immediately starts [Action] execution.

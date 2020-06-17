@@ -44,22 +44,19 @@ class StateRepository {
   bool hasModel<M>() => _modelControllerMap.containsKey(M);
 
   void add<M, A>(State<M, A> state) {
-    _addController(_factory.getController(state));
-    _notifyListeners();
+    final controller = _factory.getController(state);
+    _accumulatorControllerMap[A] = controller;
+    _modelControllerMap[M] = controller;
+    _controllers.add(controller);
   }
 
-  Future<void> remove<T>() {
-    final controller = _getController<T>();
-    if (controller == null) return Future.value();
-    _removeController(controller);
-    final teardownState = controller.teardown();
-    _notifyListeners();
-    return teardownState;
-  }
-
-  void checkChanges() {
+  void applyChanges() {
     _controllers.checkChanges();
-    _notifyListeners();
+    if (_controllers.hasChanges) _sinkChanges();
+    if (!_hasScheduledChangesSink && _controllers.hasDeferredChanges) {
+      _hasScheduledChangesSink = true;
+      _zone.scheduleMicrotask(_sinkDeferredChanges);
+    }
   }
 
   Future<void> teardown() async {
@@ -68,33 +65,6 @@ class StateRepository {
       _afterChanges.close(),
       _controllers.teardown(),
     ]);
-    _accumulatorControllerMap.clear();
-    _modelControllerMap.clear();
-    _controllers.clear();
-  }
-
-  StateController? _getController<T>() =>
-      _modelControllerMap.get(T) ?? _accumulatorControllerMap.get(T);
-
-  void _addController<M, A>(StateController<M, A> controller) {
-    _accumulatorControllerMap[A] = controller;
-    _modelControllerMap[M] = controller;
-    _controllers.add(controller);
-  }
-
-  void _removeController(StateController controller) {
-    bool isState(Type _, StateController value) => value == controller;
-    _accumulatorControllerMap.removeWhere(isState);
-    _modelControllerMap.removeWhere(isState);
-    _controllers.remove(controller);
-  }
-
-  void _notifyListeners() {
-    if (_controllers.hasChanges) _sinkChanges();
-    if (!_hasScheduledChangesSink && _controllers.hasDeferredChanges) {
-      _hasScheduledChangesSink = true;
-      _zone.scheduleMicrotask(_sinkDeferredChanges);
-    }
   }
 
   void _sinkChanges() {

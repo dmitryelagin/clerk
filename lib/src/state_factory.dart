@@ -17,18 +17,6 @@ class StateFactory {
     return _cache[M] = StateManagerNull<M, A>(_settings);
   }
 
-  StateController<M, A> getController<M, A>(State<M, A> state) {
-    _cache.remove(M);
-    return StateController(
-      _settings,
-      state.initial,
-      state.getAccumulator,
-      state.getModel,
-      state.areEqualModels,
-    );
-  }
-
-  void clear() {
-    _cache.clear();
-  }
+  StateController<M, A> getController<M, A>(State<M, A> state) =>
+      StateController(state, _settings);
 }
