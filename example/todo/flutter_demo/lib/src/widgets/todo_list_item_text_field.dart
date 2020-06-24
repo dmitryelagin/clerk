@@ -45,7 +45,7 @@ class _TodoListItemTextFieldState extends State<TodoListItemTextField> {
     return TextField(
       controller: _textController,
       decoration: InputDecoration(
-        errorText: widget.item.isValid ? null : widget.item.validity,
+        errorText: widget.item.isValid ? null : widget.item.validity.message,
         suffixIcon: widget.item.isPending
             ? const Icon(Icons.hourglass_empty, color: Colors.lightBlue)
             : null,

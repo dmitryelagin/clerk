@@ -2,10 +2,14 @@ import 'package:demo_core/demo_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/src/clerk_helpers/clerk.dart';
 import 'package:flutter_demo/src/utils/build_context_utils.dart';
+import 'package:flutter_demo/src/widgets/todo_list_item_control.dart';
 import 'package:flutter_demo/src/widgets/todo_list_item_text_field.dart';
 
 class TodoListItem extends StatelessWidget {
-  const TodoListItem({this.item, Key key}) : super(key: key);
+  const TodoListItem({
+    @required this.item,
+    Key key,
+  }) : super(key: key);
 
   final TodoItem item;
 
@@ -14,7 +18,7 @@ class TodoListItem extends StatelessWidget {
     return StoreBuilder(
       builder: (context, store) {
         final toggleItem = context.resolve<ToggleItem>();
-        final commitItemChange = context.resolve<CommitItemChange>();
+        final commitItem = context.resolve<CommitItem>();
         final removeItem = context.resolve<RemoveItem>();
         final resetItemValidity = context.resolve<ResetItemValidity>();
 
@@ -32,13 +36,17 @@ class TodoListItem extends StatelessWidget {
               child: TodoListItemTextField(
                 item: item,
                 onFocus: store.bind(() => [resetItemValidity(item.id)]),
-                onSubmitted: store
-                    .bindUnary((value) => [commitItemChange(item.id, value)]),
+                onSubmitted:
+                    store.bindUnary((value) => [commitItem(item.id, value)]),
               ),
             ),
-            IconButton(
-              icon: Icon(Icons.remove_circle_outline),
-              onPressed: store.bind(() => [
+            TodoListItemControl(
+              item: item,
+              onRetry: store.bind(() => [
+                    resetItemValidity(item.id),
+                    commitItem(item.id),
+                  ]),
+              onRemove: store.bind(() => [
                     resetItemValidity(item.id),
                     removeItem(item.id),
                   ]),

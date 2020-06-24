@@ -3,6 +3,7 @@ import 'package:clerk/clerk.dart';
 import '../../models/todo_item.dart';
 import '../../models/todo_item_id.dart';
 import '../../models/todo_item_utils.dart';
+import '../../models/todo_validity.dart';
 import 'todo_list_accumulator.dart';
 
 mixin TodoListWriter<A extends TodoListAccumulator> {
@@ -16,7 +17,7 @@ mixin TodoListWriter<A extends TodoListAccumulator> {
     String label = '',
     bool isDone = false,
   }) =>
-      (acc) => acc..items.add(TodoItem(id, label, '', isDone: isDone));
+      (acc) => acc..items.add(TodoItem(id, label, isDone: isDone));
 
   Write<A, A> removeItem(
     TodoItemId id,
@@ -31,7 +32,7 @@ mixin TodoListWriter<A extends TodoListAccumulator> {
 
   Write<A, A> changeItemValidity(
     TodoItemId id, [
-    String validity = '',
+    TodoValidity validity = const TodoValidity(),
   ]) =>
       updateItem(id, (item) => item.update(validity: validity));
 

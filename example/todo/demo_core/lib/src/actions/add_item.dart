@@ -1,21 +1,22 @@
 import 'package:clerk/clerk.dart';
 
 import '../models/todo_item_id.dart';
+import '../models/todo_validity.dart';
 import '../services/todo_loader.dart';
 import '../states/todo_list/todo_list_state.dart';
 
 class AddItem {
   const AddItem(this._todoList, this._loader);
 
-  static const addFailMessage = 'Failed to add item. Please, try again.';
-
   final TodoListManager _todoList;
   final TodoLoader _loader;
 
-  Action call(String label) {
+  Action call([String updatedLabel]) {
     return Action((store) async {
       const fakeId = TodoItemId.fake;
-      final isDone = store.read(_todoList.getItem(fakeId)).isDone;
+      final previousItem = store.read(_todoList.getItem(fakeId));
+      final label = updatedLabel ?? previousItem.label;
+      final isDone = previousItem.isDone;
       store
         ..write(_todoList.changeItemLabel(fakeId, label))
         ..write(_todoList.setItemIsPending(fakeId));
@@ -27,7 +28,7 @@ class AddItem {
           ..write(_todoList.addItem(createdId, label: label, isDone: isDone));
       } on Exception catch (_) {
         store
-          ..write(_todoList.changeItemValidity(fakeId, addFailMessage))
+          ..write(_todoList.changeItemValidity(fakeId, const AddItemFailure()))
           ..write(_todoList.setItemIsSynchronized(fakeId));
       }
     });

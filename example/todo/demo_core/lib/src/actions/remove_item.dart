@@ -2,13 +2,12 @@ import 'package:clerk/clerk.dart';
 
 import '../models/todo_item_id.dart';
 import '../models/todo_item_id_utils.dart';
+import '../models/todo_validity.dart';
 import '../services/todo_loader.dart';
 import '../states/todo_list/todo_list_state.dart';
 
 class RemoveItem {
   const RemoveItem(this._todoList, this._loader);
-
-  static const removeFailMessage = 'Failed to remove item. Please, try again.';
 
   final TodoListManager _todoList;
   final TodoLoader _loader;
@@ -26,7 +25,7 @@ class RemoveItem {
         store.write(_todoList.removeItem(id));
       } on Exception catch (_) {
         store
-          ..write(_todoList.changeItemValidity(id, removeFailMessage))
+          ..write(_todoList.changeItemValidity(id, const RemoveItemFailure()))
           ..write(_todoList.setItemIsSynchronized(id));
       }
     });
