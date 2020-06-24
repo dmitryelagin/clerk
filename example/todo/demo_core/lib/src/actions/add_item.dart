@@ -18,7 +18,7 @@ class AddItem {
       final label = updatedLabel ?? previousItem.label;
       final isDone = previousItem.isDone;
       store
-        ..write(_todoList.changeItemLabel(fakeId, label))
+        ..write(_todoList.changeItem(fakeId, label))
         ..write(_todoList.setItemIsPending(fakeId));
 
       try {
@@ -28,7 +28,7 @@ class AddItem {
           ..write(_todoList.addItem(createdId, label: label, isDone: isDone));
       } on Exception catch (_) {
         store
-          ..write(_todoList.changeItemValidity(fakeId, const AddItemFailure()))
+          ..write(_todoList.validateItem(fakeId, const AddItemFailure()))
           ..write(_todoList.setItemIsSynchronized(fakeId));
       }
     });

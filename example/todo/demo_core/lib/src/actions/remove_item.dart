@@ -25,7 +25,7 @@ class RemoveItem {
         store.write(_todoList.removeItem(id));
       } on Exception catch (_) {
         store
-          ..write(_todoList.changeItemValidity(id, const RemoveItemFailure()))
+          ..write(_todoList.validateItem(id, const RemoveItemFailure()))
           ..write(_todoList.setItemIsSynchronized(id));
       }
     });

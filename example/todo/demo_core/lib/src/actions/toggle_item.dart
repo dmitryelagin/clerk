@@ -26,7 +26,7 @@ class ToggleItem {
       } on Exception catch (_) {
         store
           ..write(_todoList.toggleItem(id, isDone: previousItem.isDone))
-          ..write(_todoList.changeItemValidity(id, const ToggleItemFailure()));
+          ..write(_todoList.validateItem(id, const ToggleItemFailure()));
       } finally {
         store.write(_todoList.setItemIsSynchronized(id));
       }

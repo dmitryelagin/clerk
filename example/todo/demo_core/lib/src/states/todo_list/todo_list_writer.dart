@@ -24,13 +24,13 @@ mixin TodoListWriter<A extends TodoListAccumulator> {
   ) =>
       (acc) => acc..items.removeWhere((item) => item.id.value == id.value);
 
-  Write<A, A> changeItemLabel(
+  Write<A, A> changeItem(
     TodoItemId id,
     String label,
   ) =>
       updateItem(id, (item) => item.update(label: label));
 
-  Write<A, A> changeItemValidity(
+  Write<A, A> validateItem(
     TodoItemId id, [
     TodoValidity validity = const TodoValidity(),
   ]) =>
