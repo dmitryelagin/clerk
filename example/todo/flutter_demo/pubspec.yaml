@@ -13,5 +13,7 @@ dependencies:
     path: ../demo_core
   flutter:
     sdk: flutter
+dev_dependencies:
+  pedantic: ^1.9.0
 flutter:
   uses-material-design: true
