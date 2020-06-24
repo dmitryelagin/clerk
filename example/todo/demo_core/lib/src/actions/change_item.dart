@@ -15,12 +15,13 @@ class ChangeItem {
     return Action((store) async {
       final previousItem = store.read(_todoList.getItem(id));
 
-      if (updatedLabel != null && previousItem.label == updatedLabel) return;
+      if (updatedLabel != null) {
+        if (previousItem.label == updatedLabel) return;
+        store.write(_todoList.changeItem(id, updatedLabel));
+      }
 
       final label = updatedLabel ?? previousItem.label;
-      store
-        ..write(_todoList.changeItem(id, label))
-        ..write(_todoList.setItemIsPending(id));
+      store.write(_todoList.setItemIsPending(id));
 
       try {
         await _loader.changeItem(id, label: label);
