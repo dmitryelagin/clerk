@@ -5,7 +5,7 @@ import 'package:clerk/clerk.dart';
 class StorePorter implements StoreExecutor, StoreReader {
   StorePorter(this._reader, this._executor, this._accessor) {
     _subscriptions[StateAggregate] =
-        _accessor.onChange.listen(null, onDone: teardown);
+        _accessor.onAfterChanges.listen(null, onDone: teardown);
   }
 
   final StoreReader _reader;
@@ -13,9 +13,9 @@ class StorePorter implements StoreExecutor, StoreReader {
   final StoreAccessor _accessor;
 
   final _subscriptions = <Type, StreamSubscription<Object>>{};
-  final _change = StreamController<Object>(sync: true);
+  final _afterChanges = StreamController<Object>(sync: true);
 
-  Stream<Object> get onChange => _change.stream;
+  Stream<Object> get onAfterChanges => _afterChanges.stream;
 
   @override
   void execute(Action action) => _executor.execute(action);
@@ -42,12 +42,13 @@ class StorePorter implements StoreExecutor, StoreReader {
     for (final subscription in _subscriptions.values) {
       subscription.cancel();
     }
-    _change.close();
+    _afterChanges.close();
   }
 
   void _checkSubscription<M>() {
     if (_subscriptions.containsKey(M)) return;
-    _subscriptions[M] =
-        _accessor.onModelChange<M>().listen(_change.add, onDone: teardown);
+    _subscriptions[M] = _accessor
+        .onAfterModelChanges<M>()
+        .listen(_afterChanges.add, onDone: teardown);
   }
 }

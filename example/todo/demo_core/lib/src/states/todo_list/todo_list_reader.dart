@@ -9,9 +9,8 @@ class TodoListReader<M extends TodoListModel> {
   Read<M, TodoItem> getItem(TodoItemId id) =>
       (model) => model.items.firstWhere((item) => item.id.value == id.value);
 
-  Read<M, Iterable<TodoItemId>> getItemsIds() =>
-      (model) => model.items.map((item) => item.id);
+  Read<M, Iterable<TodoItem>> getItems() => (model) => List.of(model.items);
 
   Read<M, bool> isAddingAvailable() =>
-      (model) => getItemsIds()(model).every((id) => !id.isFake);
+      (model) => getItems()(model).every((item) => !item.id.isFake);
 }

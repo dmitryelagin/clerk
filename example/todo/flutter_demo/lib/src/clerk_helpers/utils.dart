@@ -4,23 +4,23 @@ import 'types.dart';
 
 extension StoreExecutorUtils on StoreExecutor {
   Callback bind(
-    ActionFactory createAction,
+    ActionsFactory createActions,
   ) =>
       ([_, __]) {
-        execute(createAction());
+        createActions().forEach(execute);
       };
 
   CallbackUnary<X> bindUnary<X>(
-    ActionFactoryUnary<X> createAction,
+    ActionsFactoryUnary<X> createActions,
   ) =>
       (x, [_]) {
-        execute(createAction(x));
+        createActions(x).forEach(execute);
       };
 
   CallbackBinary<X, Y> bindBinary<X, Y>(
-    ActionFactoryBinary<X, Y> createAction,
+    ActionsFactoryBinary<X, Y> createActions,
   ) =>
       (x, y) {
-        execute(createAction(x, y));
+        createActions(x, y).forEach(execute);
       };
 }

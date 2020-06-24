@@ -3,6 +3,7 @@ export 'src/actions/change_item.dart';
 export 'src/actions/commit_item_change.dart';
 export 'src/actions/init.dart';
 export 'src/actions/remove_item.dart';
+export 'src/actions/reset_item_validity.dart';
 export 'src/actions/start_item_add.dart';
 export 'src/actions/toggle_item.dart';
 export 'src/factories/todo_store_factory.dart';

@@ -12,6 +12,7 @@ Injector initializeTodoModule(Injector injector) => injector
   ..registerSingleton((resolve) => AddItem(resolve(), resolve()))
   ..registerSingleton((resolve) => ChangeItem(resolve(), resolve()))
   ..registerSingleton((resolve) => RemoveItem(resolve(), resolve()))
+  ..registerSingleton((resolve) => ResetItemValidity(resolve()))
   ..registerSingleton((resolve) => StartItemAdd(resolve()))
   ..registerSingleton((resolve) => ToggleItem(resolve(), resolve()))
   ..registerSingleton((resolve) {

@@ -14,7 +14,7 @@ class TodoList extends StatelessWidget {
         final todoList = context.resolve<TodoListReader>();
         final startItemAdd = context.resolve<StartItemAdd>();
 
-        final itemsIds = store.read(todoList.getItemsIds());
+        final items = store.read(todoList.getItems());
         final isAddingAvailable = store.read(todoList.isAddingAvailable());
 
         return Scaffold(
@@ -23,14 +23,14 @@ class TodoList extends StatelessWidget {
           ),
           body: ListView(
             children: [
-              for (final id in itemsIds)
-                TodoListItem(key: Key(id.value.toString()), id: id),
+              for (final item in items)
+                TodoListItem(key: Key(item.id.value.toString()), item: item),
             ],
           ),
           floatingActionButton: isAddingAvailable
               ? FloatingActionButton(
                   tooltip: 'Increment',
-                  onPressed: store.bind(startItemAdd),
+                  onPressed: store.bind(() => [startItemAdd()]),
                   child: Icon(Icons.add),
                 )
               : null,

@@ -20,12 +20,16 @@ class ToggleItem {
 
       if (id.isFake || previousItem.isDone == isDone) return;
 
+      store.write(_todoList.setItemIsPending(id));
+
       try {
         await _loader.changeItem(id, isDone: isDone);
       } on Exception catch (_) {
         store
           ..write(_todoList.toggleItem(id, isDone: previousItem.isDone))
           ..write(_todoList.changeItemValidity(id, toggleFailMessage));
+      } finally {
+        store.write(_todoList.setItemIsSynchronized(id));
       }
     });
   }

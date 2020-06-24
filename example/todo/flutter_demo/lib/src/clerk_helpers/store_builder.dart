@@ -33,7 +33,7 @@ class _StoreBuilderState extends State<StoreBuilder> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: _porter.onChange,
+      stream: _porter.onAfterChanges,
       builder: (context, snapshot) => widget.builder(context, _porter),
     );
   }

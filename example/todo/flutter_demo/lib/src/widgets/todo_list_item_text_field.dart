@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class TodoListItemTextField extends StatefulWidget {
   const TodoListItemTextField({
     @required this.item,
+    @required this.onFocus,
     @required this.onSubmitted,
     Key key,
   }) : super(key: key);
 
   final TodoItem item;
+  final void Function() onFocus;
   final void Function(String) onSubmitted;
 
   @override
@@ -23,7 +25,7 @@ class _TodoListItemTextFieldState extends State<TodoListItemTextField> {
   void initState() {
     _syncTextWithModel();
     _focusNode.addListener(() {
-      if (_focusNode.hasFocus) return;
+      if (_focusNode.hasFocus) return widget.onFocus();
       if (_textController.text.isEmpty) _syncTextWithModel();
       widget.onSubmitted(_textController.text);
     });
@@ -44,6 +46,9 @@ class _TodoListItemTextFieldState extends State<TodoListItemTextField> {
       controller: _textController,
       decoration: InputDecoration(
         errorText: widget.item.isValid ? null : widget.item.validity,
+        suffixIcon: widget.item.isPending
+            ? const Icon(Icons.hourglass_empty, color: Colors.lightBlue)
+            : null,
       ),
       focusNode: _focusNode,
       style: const TextStyle(fontSize: 20),

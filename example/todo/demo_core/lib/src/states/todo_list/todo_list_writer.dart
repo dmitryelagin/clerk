@@ -42,6 +42,16 @@ mixin TodoListWriter<A extends TodoListAccumulator> {
   }) =>
       updateItem(id, (item) => item.update(isDone: isDone ?? !item.isDone));
 
+  Write<A, A> setItemIsPending(
+    TodoItemId id,
+  ) =>
+      updateItem(id, (item) => item.update(isPending: true));
+
+  Write<A, A> setItemIsSynchronized(
+    TodoItemId id,
+  ) =>
+      updateItem(id, (item) => item.update(isPending: false));
+
   Write<A, A> updateItem(
     TodoItemId id,
     TodoItem Function(TodoItem) update,

@@ -16,7 +16,9 @@ class AddItem {
     return Action((store) async {
       const fakeId = TodoItemId.fake;
       final isDone = store.read(_todoList.getItem(fakeId)).isDone;
-      store.write(_todoList.changeItemLabel(fakeId, label));
+      store
+        ..write(_todoList.changeItemLabel(fakeId, label))
+        ..write(_todoList.setItemIsPending(fakeId));
 
       try {
         final createdId = await _loader.addItem(label, isDone: isDone);
@@ -25,6 +27,8 @@ class AddItem {
           ..write(_todoList.addItem(createdId, label: label, isDone: isDone));
       } on Exception catch (_) {
         store.write(_todoList.changeItemValidity(fakeId, addFailMessage));
+      } finally {
+        store.write(_todoList.setItemIsSynchronized(fakeId));
       }
     });
   }
