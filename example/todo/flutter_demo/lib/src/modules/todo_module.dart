@@ -15,5 +15,5 @@ Injector initializeTodoModule(Injector injector) => injector
   ..registerSingleton((resolve) => StartItemAdd(resolve()))
   ..registerSingleton((resolve) => ToggleItem(resolve(), resolve()))
   ..registerSingleton((resolve) {
-    return CommitItemChange(resolve(), resolve(), resolve(), resolve());
+    return CommitItemChange(resolve(), resolve(), resolve());
   });

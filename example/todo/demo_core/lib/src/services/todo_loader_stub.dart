@@ -15,7 +15,7 @@ class _TodoLoaderStub implements TodoLoader {
     final milliseconds = (random.nextDouble() * 200 + minResponseLag).round();
     final duration = Duration(milliseconds: milliseconds);
     return Future<void>.delayed(duration).then((_) {
-      final shouldReturnData = random.nextDouble() > 0.2;
+      final shouldReturnData = random.nextDouble() > 0.25;
       if (!canReturnError || shouldReturnData) return data;
       throw Exception();
     });
@@ -25,17 +25,17 @@ class _TodoLoaderStub implements TodoLoader {
   Future<TodoInitResponse> initApp() => _requestData(
         'initApp',
         TodoInitResponse([
-          TodoItem(_nextItemId, 'Test label 1'),
-          TodoItem(_nextItemId, 'Test label 2', isDone: true),
-          TodoItem(_nextItemId, 'Test label 3'),
-          TodoItem(_nextItemId, 'Test label 4', isDone: true),
+          TodoItem(_nextItemId, 'Test label 1', ''),
+          TodoItem(_nextItemId, 'Test label 2', '', isDone: true),
+          TodoItem(_nextItemId, 'Test label 3', ''),
+          TodoItem(_nextItemId, 'Test label 4', '', isDone: true),
         ]),
         minResponseLag: 300,
       );
 
   @override
   Future<TodoItemId> addItem(String label, {bool isDone}) =>
-      _requestData('addItem', _nextItemId);
+      _requestData('addItem', _nextItemId, canReturnError: true);
 
   @override
   Future<void> changeItem(TodoItemId id, {String label, bool isDone}) =>

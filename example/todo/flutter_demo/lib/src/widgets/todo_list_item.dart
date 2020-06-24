@@ -21,6 +21,7 @@ class TodoListItem extends StatelessWidget {
         final item = store.read(todoList.getItem(id));
 
         return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Checkbox(
               value: item.isDone,

@@ -42,6 +42,9 @@ class _TodoListItemTextFieldState extends State<TodoListItemTextField> {
   Widget build(BuildContext _) {
     return TextField(
       controller: _textController,
+      decoration: InputDecoration(
+        errorText: widget.item.isValid ? null : widget.item.validity,
+      ),
       focusNode: _focusNode,
       style: const TextStyle(fontSize: 20),
     );

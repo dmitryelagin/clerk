@@ -6,22 +6,46 @@ import '../../models/todo_item_utils.dart';
 import 'todo_list_accumulator.dart';
 
 mixin TodoListWriter<A extends TodoListAccumulator> {
-  Write<A, A> replaceItems(Iterable<TodoItem> items) =>
+  Write<A, A> replaceItems(
+    Iterable<TodoItem> items,
+  ) =>
       (acc) => acc..items.replaceRange(0, acc.items.length, items);
 
-  Write<A, A> addItem(TodoItemId id, {String label = '', bool isDone}) =>
-      (acc) => acc..items.add(TodoItem(id, label, isDone: isDone ?? false));
+  Write<A, A> addItem(
+    TodoItemId id, {
+    String label = '',
+    String validity = '',
+    bool isDone = false,
+  }) =>
+      (acc) => acc..items.add(TodoItem(id, label, validity, isDone: isDone));
 
-  Write<A, A> removeItem(TodoItemId id) =>
+  Write<A, A> removeItem(
+    TodoItemId id,
+  ) =>
       (acc) => acc..items.removeWhere((item) => item.id.value == id.value);
 
-  Write<A, A> changeItem(TodoItemId id, String label) =>
+  Write<A, A> changeItemLabel(
+    TodoItemId id,
+    String label,
+  ) =>
       updateItem(id, (item) => item.update(label: label));
 
-  Write<A, A> toggleItem(TodoItemId id, {bool isDone}) =>
+  Write<A, A> changeItemValidity(
+    TodoItemId id, [
+    String validity = '',
+  ]) =>
+      updateItem(id, (item) => item.update(validity: validity));
+
+  Write<A, A> toggleItem(
+    TodoItemId id, {
+    bool isDone,
+  }) =>
       updateItem(id, (item) => item.update(isDone: isDone ?? !item.isDone));
 
-  Write<A, A> updateItem(TodoItemId id, TodoItem Function(TodoItem) update) =>
+  Write<A, A> updateItem(
+    TodoItemId id,
+    TodoItem Function(TodoItem) update,
+  ) =>
       (acc) {
         final item = acc.items.firstWhere((item) => item.id.value == id.value);
         final index = acc.items.indexOf(item);
