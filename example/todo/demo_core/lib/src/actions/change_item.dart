@@ -1,6 +1,7 @@
 import 'package:clerk/clerk.dart';
 
 import '../models/todo_item_id.dart';
+import '../models/todo_validity.dart';
 import '../services/todo_loader.dart';
 import '../states/todo_list/todo_list_state.dart';
 
@@ -10,17 +11,23 @@ class ChangeItem {
   final TodoListManager _todoList;
   final TodoLoader _loader;
 
-  Action call(TodoItemId id, String label) {
+  Action call(TodoItemId id, [String updatedLabel]) {
     return Action((store) async {
       final previousItem = store.read(_todoList.getItem(id));
-      store.write(_todoList.changeItemLabel(id, label));
 
-      if (previousItem.label == label) return;
+      if (updatedLabel != null && previousItem.label == updatedLabel) return;
+
+      final label = updatedLabel ?? previousItem.label;
+      store
+        ..write(_todoList.changeItem(id, label))
+        ..write(_todoList.setItemIsPending(id));
 
       try {
         await _loader.changeItem(id, label: label);
-      } on Exception catch (e) {
-        print(e);
+      } on Exception catch (_) {
+        store.write(_todoList.validateItem(id, const ChangeItemFailure()));
+      } finally {
+        store.write(_todoList.setItemIsSynchronized(id));
       }
     });
   }

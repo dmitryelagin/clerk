@@ -46,9 +46,12 @@ class _TodoListItemTextFieldState extends State<TodoListItemTextField> {
       controller: _textController,
       decoration: InputDecoration(
         errorText: widget.item.isValid ? null : widget.item.validity.message,
-        suffixIcon: widget.item.isPending
-            ? const Icon(Icons.hourglass_empty, color: Colors.lightBlue)
-            : null,
+        suffixIcon: Visibility(
+          visible: widget.item.isPending,
+          child: const IgnorePointer(
+            child: const Icon(Icons.hourglass_empty, color: Colors.lightBlue),
+          ),
+        ),
       ),
       focusNode: _focusNode,
       style: const TextStyle(fontSize: 20),
