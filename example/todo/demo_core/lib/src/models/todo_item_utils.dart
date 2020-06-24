@@ -1,7 +1,7 @@
 import 'todo_item.dart';
 
 extension TodoItemUtils on TodoItem {
-  TodoItem update({String label, String validity, bool isDone}) {
+  TodoItem update({String label, String validity = '', bool isDone}) {
     return TodoItem(
       id,
       label ?? this.label,

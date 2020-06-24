@@ -8,6 +8,8 @@ import '../states/todo_list/todo_list_state.dart';
 class ToggleItem {
   const ToggleItem(this._todoList, this._loader);
 
+  static const toggleFailMessage = 'Failed to toggle item. Please, try again.';
+
   final TodoListManager _todoList;
   final TodoLoader _loader;
 
@@ -20,8 +22,10 @@ class ToggleItem {
 
       try {
         await _loader.changeItem(id, isDone: isDone);
-      } on Exception catch (e) {
-        print(e);
+      } on Exception catch (_) {
+        store
+          ..write(_todoList.toggleItem(id, isDone: previousItem.isDone))
+          ..write(_todoList.changeItemValidity(id, toggleFailMessage));
       }
     });
   }
