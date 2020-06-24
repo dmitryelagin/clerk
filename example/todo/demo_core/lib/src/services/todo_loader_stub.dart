@@ -42,5 +42,6 @@ class _TodoLoaderStub implements TodoLoader {
       _requestData('changeItem', canReturnError: true);
 
   @override
-  Future<void> removeItem(TodoItemId id) => _requestData('removeItem');
+  Future<void> removeItem(TodoItemId id) =>
+      _requestData('removeItem', canReturnError: true);
 }

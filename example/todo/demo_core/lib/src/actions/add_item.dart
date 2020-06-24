@@ -26,9 +26,9 @@ class AddItem {
           ..write(_todoList.removeItem(fakeId))
           ..write(_todoList.addItem(createdId, label: label, isDone: isDone));
       } on Exception catch (_) {
-        store.write(_todoList.changeItemValidity(fakeId, addFailMessage));
-      } finally {
-        store.write(_todoList.setItemIsSynchronized(fakeId));
+        store
+          ..write(_todoList.changeItemValidity(fakeId, addFailMessage))
+          ..write(_todoList.setItemIsSynchronized(fakeId));
       }
     });
   }

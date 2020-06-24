@@ -14,10 +14,9 @@ mixin TodoListWriter<A extends TodoListAccumulator> {
   Write<A, A> addItem(
     TodoItemId id, {
     String label = '',
-    String validity = '',
     bool isDone = false,
   }) =>
-      (acc) => acc..items.add(TodoItem(id, label, validity, isDone: isDone));
+      (acc) => acc..items.add(TodoItem(id, label, '', isDone: isDone));
 
   Write<A, A> removeItem(
     TodoItemId id,

@@ -8,19 +8,26 @@ import '../states/todo_list/todo_list_state.dart';
 class RemoveItem {
   const RemoveItem(this._todoList, this._loader);
 
+  static const removeFailMessage = 'Failed to remove item. Please, try again.';
+
   final TodoListManager _todoList;
   final TodoLoader _loader;
 
   Action call(TodoItemId id) {
     return Action((store) async {
-      store.write(_todoList.removeItem(id));
-
-      if (id.isFake) return;
+      if (id.isFake) {
+        store.write(_todoList.removeItem(id));
+        return;
+      }
 
       try {
+        store.write(_todoList.setItemIsPending(id));
         await _loader.removeItem(id);
-      } on Exception catch (e) {
-        print(e);
+        store.write(_todoList.removeItem(id));
+      } on Exception catch (_) {
+        store
+          ..write(_todoList.changeItemValidity(id, removeFailMessage))
+          ..write(_todoList.setItemIsSynchronized(id));
       }
     });
   }
