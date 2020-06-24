@@ -49,7 +49,7 @@ class _TodoListItemTextFieldState extends State<TodoListItemTextField> {
         suffixIcon: Visibility(
           visible: widget.item.isPending,
           child: const IgnorePointer(
-            child: const Icon(Icons.sync, color: Colors.lightBlue),
+            child: Icon(Icons.sync, color: Colors.lightBlue),
           ),
         ),
       ),
