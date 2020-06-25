@@ -14,20 +14,17 @@ class TodoList extends StatelessWidget {
         final todoList = context.resolve<TodoListReader>();
         final startItemAdd = context.resolve<StartItemAdd>();
 
-        final items = store.read(todoList.getItems());
-        final isAddingAvailable = store.read(todoList.isAddingAvailable());
-
         return Scaffold(
           appBar: AppBar(
             title: const Text('TODO'),
           ),
           body: ListView(
             children: [
-              for (final item in items)
+              for (final item in store.read(todoList.getItems()))
                 TodoListItem(key: Key(item.id.value.toString()), item: item),
             ],
           ),
-          floatingActionButton: isAddingAvailable
+          floatingActionButton: store.read(todoList.isAddingAvailable())
               ? FloatingActionButton(
                   tooltip: 'Add new TODO',
                   onPressed: store.bind(startItemAdd),
