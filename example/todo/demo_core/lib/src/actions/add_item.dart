@@ -28,7 +28,7 @@ class AddItem {
         final createdId = await _loader.addItem(label, isDone: isDone);
         store
           ..write(_todoList.removeItem(fakeId))
-          ..write(_todoList.addItem(createdId, label: label, isDone: isDone));
+          ..write(_todoList.addItem(createdId, label, isDone: isDone));
       } on Exception catch (_) {
         store
           ..write(_todoList.validateItem(fakeId, const AddItemFailure()))
