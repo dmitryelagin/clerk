@@ -25,20 +25,25 @@ class TodoListItemControl extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (_canRevert)
-          IconButton(
-            icon: const Icon(Icons.undo),
-            onPressed: onRevert,
-          ),
         if (_canRetry)
           IconButton(
             icon: const Icon(Icons.refresh),
+            splashColor: Colors.transparent,
+            tooltip: 'Retry',
             onPressed: onRetry,
           ),
-        IconButton(
-          icon: Icon(Icons.remove_circle_outline),
-          onPressed: onRemove,
-        ),
+        if (_canRevert)
+          IconButton(
+            icon: const Icon(Icons.undo),
+            tooltip: 'Revert',
+            onPressed: onRevert,
+          ),
+        if (!_canRevert)
+          IconButton(
+            icon: Icon(Icons.remove_circle_outline),
+            tooltip: 'Remove',
+            onPressed: onRemove,
+          ),
       ],
     );
   }

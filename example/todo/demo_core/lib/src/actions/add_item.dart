@@ -14,11 +14,13 @@ class AddItem {
   Action call([String updatedLabel]) {
     return Action((store) async {
       const fakeId = TodoItemId.fake;
+      if (store.read(_todoList.isPendingItem(fakeId))) return;
+
       final previousItem = store.read(_todoList.getItem(fakeId));
       final label = updatedLabel ?? previousItem.label;
       final isDone = previousItem.isDone;
       store
-        ..write(_todoList.validateItem(fakeId))
+        ..write(_todoList.resetItemValidity(fakeId))
         ..write(_todoList.changeItem(fakeId, label))
         ..write(_todoList.setItemIsPending(fakeId));
 

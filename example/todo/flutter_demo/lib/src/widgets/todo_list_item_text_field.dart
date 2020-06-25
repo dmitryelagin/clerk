@@ -46,10 +46,15 @@ class _TodoListItemTextFieldState extends State<TodoListItemTextField> {
       controller: _textController,
       decoration: InputDecoration(
         errorText: widget.item.isValid ? null : widget.item.validity.message,
+        hintText: 'Enter what to do',
         suffixIcon: Visibility(
           visible: widget.item.isPending,
           child: const IgnorePointer(
-            child: Icon(Icons.sync, color: Colors.lightBlue),
+            child: Icon(
+              Icons.sync,
+              color: Colors.lightBlue,
+              semanticLabel: 'Synchronizing data...',
+            ),
           ),
         ),
       ),

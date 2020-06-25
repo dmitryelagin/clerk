@@ -31,10 +31,15 @@ mixin TodoListWriter<A extends TodoListAccumulator> {
       updateItem(id, (item) => item.update(label: label));
 
   Write<A, A> validateItem(
-    TodoItemId id, [
-    TodoValidity validity = const TodoValidity(),
-  ]) =>
+    TodoItemId id,
+    TodoValidity validity,
+  ) =>
       updateItem(id, (item) => item.update(validity: validity));
+
+  Write<A, A> resetItemValidity(
+    TodoItemId id,
+  ) =>
+      updateItem(id, (item) => item.update(validity: const TodoValidity()));
 
   Write<A, A> toggleItem(
     TodoItemId id, {

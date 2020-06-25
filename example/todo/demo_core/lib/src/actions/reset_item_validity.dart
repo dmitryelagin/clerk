@@ -10,5 +10,5 @@ class ResetItemValidity {
   final TodoListManager _todoList;
 
   Action call(TodoItemId id) =>
-      Action(executeWrite(_todoList.validateItem(id)));
+      Action(executeWrite(_todoList.resetItemValidity(id)));
 }

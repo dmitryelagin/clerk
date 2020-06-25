@@ -29,7 +29,7 @@ class TodoList extends StatelessWidget {
           ),
           floatingActionButton: isAddingAvailable
               ? FloatingActionButton(
-                  tooltip: 'Increment',
+                  tooltip: 'Add new TODO',
                   onPressed: store.bind(startItemAdd),
                   child: Icon(Icons.add),
                 )
