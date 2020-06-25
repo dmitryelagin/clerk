@@ -1,27 +1,14 @@
 import 'package:clerk/clerk.dart';
 
-class AppModel {
-  const AppModel(this.counter);
+int getMultipliedCounter(int value, int multiplier) => value * multiplier;
 
-  final int counter;
+int addToCounter(int value, int count) => value + count;
 
-  static bool areEqual(AppModel a, AppModel b) => a.counter == b.counter;
-}
-
-int getMultipliedCounter(AppModel model, int multiplier) =>
-    model.counter * multiplier;
-
-AppModel addToCounter(AppModel model, int count) =>
-    AppModel(model.counter + count);
-
-Action incrementCounterBy(int count) => Action((store) {
-      store.writeUnary(addToCounter, count);
-    });
+Action incrementCounterBy(int count) =>
+    Action((store) => store.writeUnary(addToCounter, count));
 
 void main() {
-  final store = Store((builder) {
-    builder.add(StateReduced(const AppModel(0), AppModel.areEqual));
-  });
+  final store = Store((builder) => builder.add(StateReduced(0)));
   store.executor.execute(incrementCounterBy(5));
   final result = store.reader.readUnary(getMultipliedCounter, 2);
   // ignore: avoid_print
