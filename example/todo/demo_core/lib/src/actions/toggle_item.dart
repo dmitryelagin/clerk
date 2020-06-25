@@ -15,7 +15,9 @@ class ToggleItem {
   Action call(TodoItemId id, {bool isDone = false}) {
     return Action((store) async {
       final previousItem = store.read(_todoList.getItem(id));
-      store.write(_todoList.toggleItem(id, isDone: isDone));
+      store
+        ..write(_todoList.validateItem(id))
+        ..write(_todoList.toggleItem(id, isDone: isDone));
 
       if (id.isFake || previousItem.isDone == isDone) return;
 

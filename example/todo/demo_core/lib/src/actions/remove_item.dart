@@ -14,6 +14,8 @@ class RemoveItem {
 
   Action call(TodoItemId id) {
     return Action((store) async {
+      store.write(_todoList.validateItem(id));
+
       if (id.isFake) {
         store.write(_todoList.removeItem(id));
         return;

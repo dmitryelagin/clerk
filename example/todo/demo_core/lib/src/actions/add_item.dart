@@ -18,6 +18,7 @@ class AddItem {
       final label = updatedLabel ?? previousItem.label;
       final isDone = previousItem.isDone;
       store
+        ..write(_todoList.validateItem(fakeId))
         ..write(_todoList.changeItem(fakeId, label))
         ..write(_todoList.setItemIsPending(fakeId));
 

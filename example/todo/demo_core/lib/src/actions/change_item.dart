@@ -14,6 +14,7 @@ class ChangeItem {
   Action call(TodoItemId id, [String updatedLabel]) {
     return Action((store) async {
       final previousItem = store.read(_todoList.getItem(id));
+      store.write(_todoList.validateItem(id));
 
       if (updatedLabel != null) {
         if (previousItem.label == updatedLabel) return;

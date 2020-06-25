@@ -27,29 +27,21 @@ class TodoListItem extends StatelessWidget {
           children: [
             Checkbox(
               value: item.isDone,
-              onChanged: store.bindUnary((isDone) => [
-                    resetItemValidity(item.id),
-                    toggleItem(item.id, isDone: isDone),
-                  ]),
+              onChanged: store
+                  .bindUnary((isDone) => toggleItem(item.id, isDone: isDone)),
             ),
             Expanded(
               child: TodoListItemTextField(
                 item: item,
-                onFocus: store.bind(() => [resetItemValidity(item.id)]),
+                onFocus: store.bind(() => resetItemValidity(item.id)),
                 onSubmitted:
-                    store.bindUnary((value) => [commitItem(item.id, value)]),
+                    store.bindUnary((value) => commitItem(item.id, value)),
               ),
             ),
             TodoListItemControl(
               item: item,
-              onRetry: store.bind(() => [
-                    resetItemValidity(item.id),
-                    commitItem(item.id),
-                  ]),
-              onRemove: store.bind(() => [
-                    resetItemValidity(item.id),
-                    removeItem(item.id),
-                  ]),
+              onRetry: store.bind(() => commitItem(item.id)),
+              onRemove: store.bind(() => removeItem(item.id)),
             ),
           ],
         );
