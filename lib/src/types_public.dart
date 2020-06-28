@@ -49,5 +49,5 @@ typedef GetModel<M, A> = M Function(A);
 /// Type of a callback that compares two models.
 typedef CompareModels<M> = bool Function(M, M);
 
-/// Type of a function that composes store with [StoreManager].
+/// Type of a function that composes store with [StoreBuilder].
 typedef Compose = void Function(StoreBuilder);
