@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'action.dart';
 import 'state.dart';
 import 'types_public.dart';
 
@@ -15,13 +14,27 @@ abstract class StateAggregate {
   T get<T>();
 }
 
-/// An object that can properly execute [Action].
+/// An object that can properly run [Execute].
 abstract class StoreExecutor {
-  /// Immediately starts [Action] execution.
+  /// Immediately runs [Execute].
   ///
-  /// Every [Action] will be executed in the execution zone; it is forked
+  /// Every [Execute] will be run in the execution zone; it is forked
   /// from the zone in which the whole store was created.
-  void execute(Action action);
+  void execute(Execute fn);
+
+  /// Immediately runs [ExecuteUnary].
+  ///
+  /// Every [ExecuteUnary] will be run with the provided argument in the
+  /// execution zone; it is forked from the zone in which the whole store
+  /// was created.
+  void executeUnary<X>(ExecuteUnary<X> fn, X x);
+
+  /// Immediately runs [ExecuteBinary].
+  ///
+  /// Every [ExecuteBinary] will be run with the provided argument in the
+  /// execution zone; it is forked from the zone in which the whole store
+  /// was created.
+  void executeBinary<X, Y>(ExecuteBinary<X, Y> fn, X x, Y y);
 }
 
 /// An object that gets value from store [State] model by provided callback.
@@ -75,28 +88,25 @@ abstract class StoreAccessor {
 
   /// A stream that emits models of store [State]s when anything changes.
   ///
-  /// Emits synchronously and only when at least one of models was changed
-  /// during [Action] execution.
+  /// Emits synchronously and only after any model was changed during
+  /// [Execute] run.
   Stream<StateAggregate> get onChange;
 
   /// A stream that emits models of store [State]s when anything changes.
   ///
-  /// Emits in microtask and only when at least one of models was changed
-  /// during all [Action] executions before microtask schedule.
+  /// Emits in microtask and only after any model was changed during all
+  /// [Execute] runs before microtask schedule.
   Stream<StateAggregate> get onAfterChanges;
-
-  /// A stream that emits [Action] before its execution.
-  Stream<Action> get onAction;
 
   /// Returns stream which emits specific [State] model when it changes.
   ///
   /// Emits synchronously and only when [State] model was changed during
-  /// [Action] execution.
+  /// [Execute] run.
   Stream<M> onModelChange<M>();
 
   /// Returns stream which emits specific [State] model when it changes.
   ///
   /// Emits in microtask and only when [State] model was changed during all
-  /// [Action] executions before microtask schedule.
+  /// [Execute] runs before microtask schedule.
   Stream<M> onAfterModelChanges<M>();
 }

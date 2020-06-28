@@ -9,14 +9,14 @@ class Init {
   final TodoListManager _todoList;
   final TodoLoader _loader;
 
-  Action call() {
-    return Action((store) async {
+  Execute call() {
+    return (store) async {
       try {
         final data = await _loader.initApp();
         store.write(_todoList.replaceItems(data.items));
       } on Exception catch (e) {
         print(e);
       }
-    });
+    };
   }
 }

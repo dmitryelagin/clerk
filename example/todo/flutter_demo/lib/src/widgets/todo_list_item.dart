@@ -1,51 +1,65 @@
 import 'package:demo_core/demo_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/src/clerk_helpers/clerk.dart';
-import 'package:flutter_demo/src/utils/build_context_utils.dart';
-import 'package:flutter_demo/src/widgets/todo_list_item_control.dart';
 import 'package:flutter_demo/src/widgets/todo_list_item_text_field.dart';
 
 class TodoListItem extends StatelessWidget {
   const TodoListItem({
     @required this.item,
+    @required this.action,
     Key key,
   }) : super(key: key);
 
   final TodoItem item;
+  final TodoListItemAction action;
+
+  bool get _canRetry =>
+      item.validity is AddItemFailure || item.validity is ChangeItemFailure;
 
   @override
   Widget build(BuildContext _) {
-    return StoreBuilder(
-      builder: (context, store) {
-        final toggleItem = context.resolve<ToggleItem>();
-        final commitItem = context.resolve<CommitItem>();
-        final removeItem = context.resolve<RemoveItem>();
-        final resetItemValidity = context.resolve<ResetItemValidity>();
-
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Checkbox(
-              value: item.isDone,
-              onChanged: store
-                  .bindUnary((isDone) => toggleItem(item.id, isDone: isDone)),
-            ),
-            Expanded(
-              child: TodoListItemTextField(
-                item: item,
-                onFocus: store.bind(() => resetItemValidity(item.id)),
-                onSubmitted:
-                    store.bindUnary((value) => commitItem(item.id, value)),
-              ),
-            ),
-            TodoListItemControl(
-              item: item,
-              onRetry: store.bind(() => commitItem(item.id)),
-              onRemove: store.bind(() => removeItem(item.id)),
-            ),
-          ],
-        );
-      },
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Checkbox(
+          value: item.isDone,
+          onChanged: action.onToggle,
+        ),
+        Expanded(
+          child: TodoListItemTextField(
+            item: item,
+            onFocus: action.onFocus,
+            onChange: action.onChange,
+          ),
+        ),
+        if (_canRetry)
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            splashColor: Colors.transparent,
+            tooltip: 'Retry',
+            onPressed: action.onRetry,
+          ),
+        IconButton(
+          icon: const Icon(Icons.remove_circle_outline),
+          tooltip: 'Remove',
+          onPressed: action.onRemove,
+        ),
+      ],
     );
   }
+}
+
+class TodoListItemAction {
+  const TodoListItemAction({
+    @required this.onChange,
+    @required this.onToggle,
+    @required this.onRemove,
+    @required this.onFocus,
+    @required this.onRetry,
+  });
+
+  final void Function(String) onChange;
+  final void Function(bool) onToggle;
+  final void Function() onRemove;
+  final void Function() onFocus;
+  final void Function() onRetry;
 }

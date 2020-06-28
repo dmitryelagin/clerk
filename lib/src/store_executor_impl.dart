@@ -1,17 +1,17 @@
 import 'dart:async';
 
-import 'action.dart';
 import 'interfaces_public.dart';
 import 'state_repository.dart';
 import 'types_private.dart';
+import 'types_public.dart';
 
 class StoreExecutorImpl implements StoreExecutor {
-  StoreExecutorImpl(this._innerExecutor, this._repository) {
+  StoreExecutorImpl(this._repository, this._innerExecutor) {
     _executionZone = _createExecutionZone();
   }
 
-  final StoreExecutor _innerExecutor;
   final StateRepository _repository;
+  final StoreExecutor _innerExecutor;
 
   Zone _executionZone;
 
@@ -21,9 +21,27 @@ class StoreExecutorImpl implements StoreExecutor {
       _hasTransanction || _repository.isTeardowned;
 
   @override
-  void execute(Action action) {
-    if (action == null || _canNotStartTransanction) return;
-    _executionZone.runUnary(_innerExecutor.execute, action);
+  void execute(Execute fn) {
+    if (_canNotStartTransanction) return;
+    _executionZone.run(() {
+      _innerExecutor.execute(fn);
+    });
+  }
+
+  @override
+  void executeUnary<X>(ExecuteUnary<X> fn, X x) {
+    if (_canNotStartTransanction) return;
+    _executionZone.run(() {
+      _innerExecutor.executeUnary(fn, x);
+    });
+  }
+
+  @override
+  void executeBinary<X, Y>(ExecuteBinary<X, Y> fn, X x, Y y) {
+    if (_canNotStartTransanction) return;
+    _executionZone.run(() {
+      _innerExecutor.executeBinary(fn, x, y);
+    });
   }
 
   Zone _createExecutionZone() {

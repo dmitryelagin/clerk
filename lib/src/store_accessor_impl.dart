@@ -1,14 +1,11 @@
 import 'dart:async';
 
-import 'action.dart';
-import 'interfaces_private.dart';
 import 'interfaces_public.dart';
 import 'state_repository.dart';
 
 class StoreAccessorImpl implements StoreAccessor {
-  StoreAccessorImpl(this._eventBus, this._repository);
+  const StoreAccessorImpl(this._repository);
 
-  final StoreActionEventBus _eventBus;
   final StateRepository _repository;
 
   @override
@@ -19,9 +16,6 @@ class StoreAccessorImpl implements StoreAccessor {
 
   @override
   Stream<StateAggregate> get onAfterChanges => _repository.onAfterChanges;
-
-  @override
-  Stream<Action> get onAction => _eventBus.onAction;
 
   @override
   Stream<M> onModelChange<M>() => _repository.getByModel<M>().onChange;

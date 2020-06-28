@@ -5,7 +5,6 @@ Injector initializeTodoModule(Injector injector) => injector
   ..registerFactory((resolve) {
     return createTodoStore()..executor.execute(resolve<Init>()());
   })
-  ..registerMimic<TodoListReader, TodoListManager>()
   ..registerSingleton((_) => TodoLoader())
   ..registerSingleton((_) => TodoListManager())
   ..registerSingleton((resolve) => Init(resolve(), resolve()))
@@ -15,4 +14,5 @@ Injector initializeTodoModule(Injector injector) => injector
   ..registerSingleton((resolve) => ResetItemValidity(resolve()))
   ..registerSingleton((resolve) => StartItemAdd(resolve()))
   ..registerSingleton((resolve) => ToggleItem(resolve(), resolve()))
-  ..registerSingleton((resolve) => CommitItem(resolve(), resolve(), resolve()));
+  ..registerSingleton((resolve) => CommitItem(resolve(), resolve(), resolve()))
+  ..registerMimic<TodoListReader, TodoListManager>();

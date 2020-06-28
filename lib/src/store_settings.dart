@@ -45,7 +45,7 @@ class StoreSettings {
   /// Creates [StreamController] for store internal usage.
   ///
   /// This method will be called during store initialization to produce
-  /// [StreamController]s for standard notifications like `onAction`
+  /// [StreamController]s for standard notifications like main `onChange`
   /// stream in accessor, then  every time the new state is added to store
   /// to produce [StreamController]s for specific state notifications like
   /// `onAfterChanges` stream. Returns [StreamController.broadcast(sync: true)]

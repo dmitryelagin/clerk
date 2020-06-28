@@ -5,13 +5,13 @@ class TodoListItemTextField extends StatefulWidget {
   const TodoListItemTextField({
     @required this.item,
     @required this.onFocus,
-    @required this.onSubmitted,
+    @required this.onChange,
     Key key,
   }) : super(key: key);
 
   final TodoItem item;
   final void Function() onFocus;
-  final void Function(String) onSubmitted;
+  final void Function(String) onChange;
 
   @override
   _TodoListItemTextFieldState createState() => _TodoListItemTextFieldState();
@@ -27,7 +27,7 @@ class _TodoListItemTextFieldState extends State<TodoListItemTextField> {
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) return widget.onFocus();
       if (_textController.text.isEmpty) _syncTextWithModel();
-      widget.onSubmitted(_textController.text);
+      widget.onChange(_textController.text);
     });
     if (widget.item.id.isFake) _focusNode.requestFocus();
     super.initState();

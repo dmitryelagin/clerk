@@ -14,13 +14,17 @@ class CommitItem {
   final ChangeItem _changeItem;
   final RemoveItem _removeItem;
 
-  Action call(TodoItemId id, [String label]) {
-    return Action((store) async {
+  Execute call(TodoItemId id, [String label]) {
+    return (store) async {
       if (label != null && label.isEmpty) {
         if (id.isFake) store.execute(_removeItem(id));
       } else {
-        store.execute(id.isFake ? _addItem(label) : _changeItem(id, label));
+        if (id.isFake) {
+          store.execute(_addItem(label));
+        } else {
+          store.execute(_changeItem(id, label));
+        }
       }
-    });
+    };
   }
 }

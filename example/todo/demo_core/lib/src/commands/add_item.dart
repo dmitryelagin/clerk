@@ -11,29 +11,29 @@ class AddItem {
   final TodoListManager _todoList;
   final TodoLoader _loader;
 
-  Action call([String updatedLabel]) {
-    return Action((store) async {
+  Execute call([String label]) {
+    return (store) async {
       const fakeId = TodoItemId.fake;
       if (store.read(_todoList.isPendingItem(fakeId))) return;
 
       final previousItem = store.read(_todoList.getItem(fakeId));
-      final label = updatedLabel ?? previousItem.label;
+      final updatedLabel = label ?? previousItem.label;
       final isDone = previousItem.isDone;
       store
         ..write(_todoList.resetItemValidity(fakeId))
-        ..write(_todoList.changeItem(fakeId, label))
+        ..write(_todoList.changeItem(fakeId, updatedLabel))
         ..write(_todoList.setItemIsPending(fakeId));
 
       try {
-        final createdId = await _loader.addItem(label, isDone: isDone);
+        final createdId = await _loader.addItem(updatedLabel, isDone: isDone);
         store
           ..write(_todoList.removeItem(fakeId))
-          ..write(_todoList.addItem(createdId, label, isDone: isDone));
+          ..write(_todoList.addItem(createdId, updatedLabel, isDone: isDone));
       } on Exception catch (_) {
         store
           ..write(_todoList.validateItem(fakeId, const AddItemFailure()))
           ..write(_todoList.setItemIsSynchronized(fakeId));
       }
-    });
+    };
   }
 }

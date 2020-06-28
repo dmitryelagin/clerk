@@ -1,28 +1,26 @@
-import 'dart:async';
-
-import 'action.dart';
-import 'interfaces_private.dart';
 import 'interfaces_public.dart';
 import 'state_repository.dart';
-import 'store_settings.dart';
 import 'types_public.dart';
 import 'types_utils.dart';
 
-class StoreManagerImpl implements StoreManager, StoreActionEventBus {
-  StoreManagerImpl(StoreSettings settings, this._repository)
-      : _action = settings.getStreamController();
+class StoreManagerImpl implements StoreManager {
+  const StoreManagerImpl(this._repository);
 
   final StateRepository _repository;
-  final StreamController<Action> _action;
 
   @override
-  Stream<Action> get onAction => _action.stream;
+  void execute(Execute fn) {
+    if (!_repository.isTeardowned) fn(this);
+  }
 
   @override
-  void execute(Action action) {
-    if (action == null || _repository.isTeardowned) return;
-    _action.add(action);
-    action.execute(this);
+  void executeUnary<X>(ExecuteUnary<X> fn, X x) {
+    if (!_repository.isTeardowned) fn(this, x);
+  }
+
+  @override
+  void executeBinary<X, Y>(ExecuteBinary<X, Y> fn, X x, Y y) {
+    if (!_repository.isTeardowned) fn(this, x, y);
   }
 
   @override
@@ -60,8 +58,6 @@ class StoreManagerImpl implements StoreManager, StoreActionEventBus {
   void writeBinary<A, V, X, Y>(WriteBinary<A, V, X, Y> fn, X x, Y y) {
     _repository.getByAccumulator<A>().writeBinary(fn, x, y);
   }
-
-  Future<void> teardown() => _action.close();
 
   T _getReader<T>() => this as T; // ignore: avoid_as
 }

@@ -2,7 +2,7 @@ import 'interfaces_public.dart';
 import 'types_public.dart';
 
 class StoreReaderImpl implements StoreReader {
-  StoreReaderImpl(this._innerReader);
+  const StoreReaderImpl(this._innerReader);
 
   final StoreReader _innerReader;
 

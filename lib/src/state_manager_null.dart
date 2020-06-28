@@ -4,7 +4,7 @@ import 'types_public.dart';
 
 class StateManagerNull<M extends Object, A extends Object>
     implements StateManager<M, A> {
-  StateManagerNull(this._settings);
+  const StateManagerNull(this._settings);
 
   final StoreSettings _settings;
 

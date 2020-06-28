@@ -12,8 +12,8 @@ class ToggleItem {
   final TodoListManager _todoList;
   final TodoLoader _loader;
 
-  Action call(TodoItemId id, {bool isDone = false}) {
-    return Action((store) async {
+  Execute call(TodoItemId id, {bool isDone = false}) {
+    return (store) async {
       if (store.read(_todoList.isPendingItem(id))) return;
 
       final previousItem = store.read(_todoList.getItem(id));
@@ -34,6 +34,6 @@ class ToggleItem {
       } finally {
         store.write(_todoList.setItemIsSynchronized(id));
       }
-    });
+    };
   }
 }

@@ -12,8 +12,8 @@ class RemoveItem {
   final TodoListManager _todoList;
   final TodoLoader _loader;
 
-  Action call(TodoItemId id) {
-    return Action((store) async {
+  Execute call(TodoItemId id) {
+    return (store) async {
       if (store.read(_todoList.isPendingItem(id))) return;
 
       store.write(_todoList.resetItemValidity(id));
@@ -32,6 +32,6 @@ class RemoveItem {
           ..write(_todoList.validateItem(id, const RemoveItemFailure()))
           ..write(_todoList.setItemIsSynchronized(id));
       }
-    });
+    };
   }
 }

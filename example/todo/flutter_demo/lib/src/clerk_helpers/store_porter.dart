@@ -18,7 +18,15 @@ class StorePorter implements StoreExecutor, StoreReader {
   Stream<Object> get onAfterChanges => _afterChanges.stream;
 
   @override
-  void execute(Action action) => _executor.execute(action);
+  void execute(Execute fn) => _executor.execute(fn);
+
+  @override
+  void executeUnary<X>(ExecuteUnary<X> fn, X x) =>
+      _executor.executeUnary(fn, x);
+
+  @override
+  void executeBinary<X, Y>(ExecuteBinary<X, Y> fn, X x, Y y) =>
+      _executor.executeBinary(fn, x, y);
 
   @override
   V read<M, V>(Read<M, V> fn) {
