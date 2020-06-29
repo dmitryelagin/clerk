@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/src/clerk_helpers/clerk.dart';
 import 'package:flutter_demo/src/module_helpers/module.dart';
 import 'package:flutter_demo/src/modules/todo_module.dart';
-import 'package:flutter_demo/src/utils/build_context_utils.dart';
 import 'package:flutter_demo/src/widgets/todo_list_smart.dart';
 
 class TodoApp extends StatelessWidget {
@@ -22,12 +20,7 @@ class TodoApp extends StatelessWidget {
       ),
       home: ModuleProvider(
         initializers: const [initializeTodoModule],
-        builder: (context) {
-          return StoreProvider(
-            store: context.resolve(),
-            child: const TodoList(),
-          );
-        },
+        builder: (_) => const TodoList(),
       ),
     );
   }

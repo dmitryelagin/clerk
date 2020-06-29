@@ -21,8 +21,7 @@ class Store {
     return Store._(builder._repository);
   }
 
-  Store._(this._repository)
-      : _manager = StoreManagerImpl(_repository) {
+  Store._(this._repository) : _manager = StoreManagerImpl(_repository) {
     _accessor = StoreAccessorImpl(_repository);
     _executor = StoreExecutorImpl(_repository, _manager);
     _reader = StoreReaderImpl(_manager);

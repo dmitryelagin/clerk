@@ -17,17 +17,26 @@ class Locator implements Module, Injector {
   }
 
   @override
-  void registerSingleton<T>(CreateInstance<T> create) =>
-      register(SingletonProvider(create));
+  void registerSingleton<T>(
+    CreateInstance<T> create, {
+    ResetInstance<T> onReset,
+  }) =>
+      register(SingletonProvider(create, onReset: onReset));
 
   @override
-  void registerFactory<T>(CreateInstance<T> create) =>
-      register(FactoryProvider(create));
+  void registerFactory<T>(
+    CreateInstance<T> create, {
+    ResetInstance<T> onReset,
+  }) =>
+      register(FactoryProvider(create, onReset: onReset));
 
   @override
   void registerMimic<T, S extends T>() => register(MimicProvider<T, S>());
 
   void reset() {
+    for (final provider in _providers.values) {
+      provider.reset();
+    }
     _providers.clear();
   }
 }
