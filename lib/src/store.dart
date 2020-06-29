@@ -18,13 +18,13 @@ class Store {
   }) {
     final builder = StoreBuilder._(settings);
     compose(builder);
-    return Store._(builder._repository, settings);
+    return Store._(builder._repository);
   }
 
-  Store._(this._repository, StoreSettings settings)
-      : _manager = StoreManagerImpl(settings, _repository) {
-    _accessor = StoreAccessorImpl(_manager, _repository);
-    _executor = StoreExecutorImpl(_manager, _repository);
+  Store._(this._repository)
+      : _manager = StoreManagerImpl(_repository) {
+    _accessor = StoreAccessorImpl(_repository);
+    _executor = StoreExecutorImpl(_repository, _manager);
     _reader = StoreReaderImpl(_manager);
   }
 
@@ -48,12 +48,7 @@ class Store {
   ///
   /// All internal streams will be closed and some internal info may be lost
   /// after calling this method. Use only when you don't need [Store] any more.
-  Future<void> teardown() async {
-    await Future.wait([
-      _manager.teardown(),
-      _repository.teardown(),
-    ]);
-  }
+  Future<void> teardown() => _repository.teardown();
 }
 
 /// An object that can assemble [State]s.

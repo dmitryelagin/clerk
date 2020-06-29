@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'action.dart';
 import 'types_public.dart';
 
 abstract class StateManager<M extends Object?, A extends Object?> {
@@ -12,8 +11,4 @@ abstract class StateManager<M extends Object?, A extends Object?> {
   void write<V>(Write<A, V> fn);
   void writeUnary<V, X>(WriteUnary<A, V, X> fn, X x);
   void writeBinary<V, X, Y>(WriteBinary<A, V, X, Y> fn, X x, Y y);
-}
-
-abstract class StoreActionEventBus {
-  Stream<Action> get onAction;
 }

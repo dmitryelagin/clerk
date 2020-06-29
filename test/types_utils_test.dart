@@ -3,8 +3,8 @@ import 'package:clerk/src/types_utils.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Generic read function can be determined from', () {
-    test('[Read] function', () {
+  group('[Read] function types:', () {
+    test('can determine generic function subset from [Read]', () {
       expect(_getRead<StoreReader>().isGeneric, true);
       expect(_getRead<dynamic>().isGeneric, true);
       expect(_getRead<Object>().isGeneric, true);
@@ -14,7 +14,7 @@ void main() {
       expect(_getRead<String>().isGeneric, false);
     });
 
-    test('[ReadUnary] function', () {
+    test('can determine generic function subset from [ReadUnary]', () {
       expect(_getReadUnary<StoreReader>().isGeneric, true);
       expect(_getReadUnary<dynamic>().isGeneric, true);
       expect(_getReadUnary<Object>().isGeneric, true);
@@ -24,7 +24,7 @@ void main() {
       expect(_getReadUnary<String>().isGeneric, false);
     });
 
-    test('[ReadBinary] function', () {
+    test('can determine generic function subset from [ReadBinary]', () {
       expect(_getReadBinary<StoreReader>().isGeneric, true);
       expect(_getReadBinary<dynamic>().isGeneric, true);
       expect(_getReadBinary<Object>().isGeneric, true);

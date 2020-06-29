@@ -4,7 +4,6 @@
 /// reusability of state management in your project.
 library clerk;
 
-export 'src/action.dart';
 export 'src/exceptions.dart';
 export 'src/interfaces_public.dart';
 export 'src/state.dart';

@@ -15,7 +15,7 @@ class _TodoLoaderStub implements TodoLoader {
     final milliseconds = (random.nextDouble() * 200 + minResponseLag).round();
     final duration = Duration(milliseconds: milliseconds);
     return Future<void>.delayed(duration).then((_) {
-      final shouldReturnData = random.nextDouble() > 0.2;
+      final shouldReturnData = random.nextDouble() > 0.25;
       if (!canReturnError || shouldReturnData) return data;
       throw Exception();
     });
@@ -35,12 +35,13 @@ class _TodoLoaderStub implements TodoLoader {
 
   @override
   Future<TodoItemId> addItem(String label, {bool? isDone}) =>
-      _requestData('addItem', _nextItemId);
+      _requestData('addItem', _nextItemId, canReturnError: true);
 
   @override
   Future<void> changeItem(TodoItemId id, {String? label, bool? isDone}) =>
-      _requestData('changeItem', null);
+      _requestData('changeItem', null, canReturnError: true);
 
   @override
-  Future<void> removeItem(TodoItemId id) => _requestData('removeItem', null);
+  Future<void> removeItem(TodoItemId id) =>
+      _requestData('removeItem', null, canReturnError: true);
 }

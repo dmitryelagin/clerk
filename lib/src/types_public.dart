@@ -1,6 +1,19 @@
 import 'interfaces_public.dart';
 import 'store.dart';
 
+/// Type of a function that works with store by [StoreManager].
+typedef Execute = void Function(StoreManager);
+
+/// Type of a function that works with store by [StoreManager].
+///
+/// Accepts an additional argument.
+typedef ExecuteUnary<X> = void Function(StoreManager, X);
+
+/// Type of a function that works with store by [StoreManager].
+///
+/// Accepts an additional arguments.
+typedef ExecuteBinary<X, Y> = void Function(StoreManager, X, Y);
+
 /// Type of a function that returns specific data from a complex object.
 typedef Read<M, V> = V Function(M);
 
@@ -36,8 +49,5 @@ typedef GetModel<M, A> = M Function(A);
 /// Type of a callback that compares two models.
 typedef CompareModels<M> = bool Function(M, M);
 
-/// Type of a function that works with store by [StoreManager].
-typedef Execute = void Function(StoreManager);
-
-/// Type of a function that composes store with [StoreManager].
+/// Type of a function that composes store with [StoreBuilder].
 typedef Compose = void Function(StoreBuilder);
