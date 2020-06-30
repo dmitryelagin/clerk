@@ -4,15 +4,16 @@ import 'package:flutter_demo/src/widgets/todo_list_item_smart.dart';
 
 class TodoList extends StatelessWidget {
   const TodoList({
-    @required this.items,
+    @required this.itemsIds,
     @required this.isAddingAvailable,
-    @required this.action,
+    @required this.onAdd,
     Key key,
   }) : super(key: key);
 
-  final Iterable<TodoItem> items;
+  final Iterable<TodoItemId> itemsIds;
   final bool isAddingAvailable;
-  final TodoListAction action;
+
+  final void Function() onAdd;
 
   @override
   Widget build(BuildContext _) {
@@ -22,25 +23,17 @@ class TodoList extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          for (final item in items)
-            TodoListItem(key: Key(item.id.value.toString()), item: item),
+          for (final id in itemsIds)
+            TodoListItem(key: Key(id.value.toString()), id: id),
         ],
       ),
       floatingActionButton: isAddingAvailable
           ? FloatingActionButton(
               tooltip: 'Add new TODO',
-              onPressed: action.onAdd,
+              onPressed: onAdd,
               child: Icon(Icons.add),
             )
           : null,
     );
   }
-}
-
-class TodoListAction {
-  const TodoListAction({
-    @required this.onAdd,
-  });
-
-  final void Function() onAdd;
 }

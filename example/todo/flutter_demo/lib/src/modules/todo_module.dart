@@ -1,10 +1,14 @@
+import 'package:clerk/clerk.dart';
 import 'package:demo_core/demo_core.dart';
 import 'package:flutter_demo/src/module_helpers/module.dart';
 
 Injector initializeTodoModule(Injector injector) => injector
-  ..registerFactory((resolve) {
-    return createTodoStore()..executor.execute(resolve<Init>()());
-  })
+  ..registerSingleton<Store>(
+    (resolve) => createTodoStore()..executor.execute(resolve<Init>()()),
+    onReset: (store) {
+      store.teardown();
+    },
+  )
   ..registerSingleton((_) => TodoLoader())
   ..registerSingleton((_) => TodoListManager())
   ..registerSingleton((resolve) => Init(resolve(), resolve()))

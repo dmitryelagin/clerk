@@ -6,7 +6,7 @@ import 'types.dart';
 
 class ModuleProvider extends StatefulWidget {
   ModuleProvider({
-    @required Iterable<Initialize> initializers,
+    @required Iterable<InitializeInjector> initializers,
     @required this.builder,
     Key key,
   }) : super(key: key) {

@@ -1,11 +1,15 @@
 import 'dart:async';
 
+import 'package:clerk/clerk.dart' show Store;
 import 'package:flutter/widgets.dart';
 
 import 'store_porter.dart';
-import 'store_provider.dart';
 
 abstract class StoreState<T extends StatefulWidget> extends State<T> {
+  StoreState(this._getStore);
+
+  final Store Function(BuildContext) _getStore;
+
   StorePorter _store;
   StreamSubscription<Object> _subscription;
 
@@ -19,11 +23,9 @@ abstract class StoreState<T extends StatefulWidget> extends State<T> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_isInitialized) return;
-    final store = StoreProvider.of(context);
+    final store = _getStore(context);
     _store = StorePorter(store.reader, store.executor, store.accessor);
-    _subscription = _store.onAfterChanges.listen((event) {
-      setState(_noop);
-    });
+    _subscription = _store.onAfterChanges.listen(_update);
   }
 
   @override
@@ -31,5 +33,9 @@ abstract class StoreState<T extends StatefulWidget> extends State<T> {
     _subscription?.cancel();
     _store?.teardown();
     super.dispose();
+  }
+
+  void _update(Object _) {
+    setState(_noop);
   }
 }

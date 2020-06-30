@@ -6,7 +6,8 @@ import '../../models/todo_item_id_utils.dart';
 import 'todo_list_model.dart';
 
 class TodoListReader<M extends TodoListModel> {
-  Read<M, Iterable<TodoItem>> getItems() => (model) => List.of(model.items);
+  Read<M, Iterable<TodoItemId>> getItemsIds() =>
+      (model) => model.items.map((item) => item.id);
 
   Read<M, TodoItem> getItem(TodoItemId id) =>
       (model) => model.items.firstWhere((item) => item.id.value == id.value);
@@ -15,5 +16,5 @@ class TodoListReader<M extends TodoListModel> {
       (model) => getItem(id)(model).isPending;
 
   Read<M, bool> isAddingAvailable() =>
-      (model) => getItems()(model).every((item) => !item.id.isFake);
+      (model) => getItemsIds()(model).every((id) => !id.isFake);
 }
