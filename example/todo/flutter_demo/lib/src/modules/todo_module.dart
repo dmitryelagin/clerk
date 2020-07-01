@@ -1,22 +1,27 @@
 import 'package:clerk/clerk.dart';
 import 'package:demo_core/demo_core.dart';
-import 'package:flutter_demo/src/module_helpers/module.dart';
+import 'package:flutter_demo/src/module_helpers/index.dart';
 
-Injector initializeTodoModule(Injector injector) => injector
-  ..registerSingleton<Store>(
-    (resolve) => createTodoStore()..executor.execute(resolve<Init>()()),
-    onReset: (store) {
-      store.teardown();
-    },
-  )
-  ..registerSingleton((_) => TodoLoader())
-  ..registerSingleton((_) => TodoListManager())
-  ..registerSingleton((resolve) => Init(resolve(), resolve()))
-  ..registerSingleton((resolve) => AddItem(resolve(), resolve()))
-  ..registerSingleton((resolve) => ChangeItem(resolve(), resolve()))
-  ..registerSingleton((resolve) => RemoveItem(resolve(), resolve()))
-  ..registerSingleton((resolve) => ResetItemValidity(resolve()))
-  ..registerSingleton((resolve) => StartItemAdd(resolve()))
-  ..registerSingleton((resolve) => ToggleItem(resolve(), resolve()))
-  ..registerSingleton((resolve) => CommitItem(resolve(), resolve(), resolve()))
-  ..registerMimic<TodoListReader, TodoListManager>();
+void initializeTodoModule(Locator locator) {
+  final resolve = locator.resolve;
+  locator
+    ..registerSingleton<Store>(
+      () => createTodoStore()..executor.execute(resolve<Init>()()),
+      onReset: (store) {
+        store.teardown();
+      },
+    )
+    ..registerSingleton<TodoListReader>(
+      () => resolve<TodoListManager>(), // ignore: unnecessary_lambdas
+    )
+    ..registerSingleton(() => TodoLoader())
+    ..registerSingleton(() => TodoListManager())
+    ..registerSingleton(() => Init(resolve(), resolve()))
+    ..registerSingleton(() => AddItem(resolve(), resolve()))
+    ..registerSingleton(() => ChangeItem(resolve(), resolve()))
+    ..registerSingleton(() => RemoveItem(resolve(), resolve()))
+    ..registerSingleton(() => ResetItemValidity(resolve()))
+    ..registerSingleton(() => StartItemAdd(resolve()))
+    ..registerSingleton(() => ToggleItem(resolve(), resolve()))
+    ..registerSingleton(() => CommitItem(resolve(), resolve(), resolve()));
+}

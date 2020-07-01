@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_demo/src/clerk_helpers/clerk.dart';
-import 'package:flutter_demo/src/module_helpers/module.dart';
+import 'package:flutter_demo/src/clerk_helpers/index.dart';
+import 'package:flutter_demo/src/module_helpers/index.dart';
 
 abstract class AppStoreState<T extends StatefulWidget> extends StoreState<T> {
   AppStoreState() : super((context) => ModuleProvider.of(context).resolve());

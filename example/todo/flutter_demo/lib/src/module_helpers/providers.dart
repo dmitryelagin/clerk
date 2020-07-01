@@ -13,7 +13,7 @@ class SingletonProvider<T> implements Provider<T> {
   bool get _canReset => _onReset != null && _instance != null;
 
   @override
-  T getInstance(ResolveInstance resolve) => _instance ??= _create(resolve);
+  T getInstance() => _instance ??= _create();
 
   @override
   void reset() {
@@ -34,9 +34,9 @@ class FactoryProvider<T> implements Provider<T> {
   bool get _canReset => _onReset != null && _instance != null;
 
   @override
-  T getInstance(ResolveInstance resolve) {
+  T getInstance() {
     if (_canReset) _onReset(_instance);
-    return _instance = _create(resolve);
+    return _instance = _create();
   }
 
   @override
@@ -44,12 +44,4 @@ class FactoryProvider<T> implements Provider<T> {
     if (_canReset) _onReset(_instance);
     _instance = null;
   }
-}
-
-class MimicProvider<T, S extends T> implements Provider<T> {
-  @override
-  T getInstance(ResolveInstance resolve) => resolve<S>();
-
-  @override
-  void reset() {}
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/src/module_helpers/module.dart';
+import 'package:flutter_demo/src/module_helpers/index.dart';
 import 'package:flutter_demo/src/modules/todo_module.dart';
 import 'package:flutter_demo/src/widgets/todo_list_smart.dart';
 
@@ -18,9 +18,9 @@ class TodoApp extends StatelessWidget {
       darkTheme: ThemeData(
         brightness: Brightness.dark,
       ),
-      home: ModuleProvider(
-        initializers: const [initializeTodoModule],
-        builder: (_) => const TodoList(),
+      home: const ModuleProvider(
+        initialize: initializeTodoModule,
+        child: TodoList(),
       ),
     );
   }

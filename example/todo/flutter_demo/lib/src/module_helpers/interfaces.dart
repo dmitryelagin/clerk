@@ -1,15 +1,7 @@
+import 'module.dart';
 import 'types.dart';
 
-abstract class Provider<T> {
-  T getInstance(ResolveInstance resolve);
-  void reset();
-}
-
-abstract class Module {
-  T resolve<T>();
-}
-
-abstract class Injector {
+abstract class Locator implements Module {
   void registerSingleton<T>(
     CreateInstance<T> create, {
     ResetInstance<T> onReset,
@@ -20,6 +12,10 @@ abstract class Injector {
     ResetInstance<T> onReset,
   });
 
-  void registerMimic<T, S extends T>();
   void register<T>(Provider<T> provider);
+}
+
+abstract class Provider<T extends Object> {
+  T getInstance();
+  void reset();
 }
