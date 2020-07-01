@@ -5,7 +5,7 @@ class DependencyNotFoundError extends StateError {
 
   static String _getMessage(Type targetType) =>
       'Dependency with type ${targetType.toString()} was not found in '
-      'available modules. This error occurs when dependency was not '
-      'registered or the widgets hierarchy has not have ModuleProvider '
-      'for required module.';
+      'available injectors. This error occurs when dependency was not '
+      'registered or the widgets hierarchy has not have InjectorProvider '
+      'for required injector.';
 }

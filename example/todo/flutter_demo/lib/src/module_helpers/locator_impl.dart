@@ -1,13 +1,13 @@
+import 'injector.dart';
+import 'injector_null.dart';
 import 'interfaces.dart';
-import 'module.dart';
-import 'module_null.dart';
 import 'providers.dart';
 import 'types.dart';
 
-class LocatorImpl extends Module implements Locator {
-  LocatorImpl({Module parent}) : _parent = parent ?? const ModuleNull();
+class LocatorImpl extends Locator {
+  LocatorImpl({Injector parent}) : _parent = parent ?? const InjectorNull();
 
-  final Module _parent;
+  final Injector _parent;
 
   final _providers = <Type, Set<Provider>>{};
 
@@ -15,17 +15,17 @@ class LocatorImpl extends Module implements Locator {
   bool get isEmpty => _providers.isEmpty && _parent.isEmpty;
 
   @override
-  T tryResolve<T>() {
+  T tryGet<T>() {
     final providers = _providers[T] ?? const {};
-    if (providers?.isEmpty ?? true) return _parent.tryResolve();
+    if (providers?.isEmpty ?? true) return _parent.tryGet();
     final instance = providers.first.getInstance();
     return instance is T ? instance : null;
   }
 
   @override
-  Iterable<T> resolveAll<T>() {
+  Iterable<T> getAll<T>() {
     final providers = _providers[T] ?? const {};
-    final parentInstances = _parent.resolveAll<T>();
+    final parentInstances = _parent.getAll<T>();
     if (providers?.isEmpty ?? true) return parentInstances;
     final instances = providers.map((provider) => provider.getInstance());
     return instances is Iterable<T>
@@ -34,23 +34,19 @@ class LocatorImpl extends Module implements Locator {
   }
 
   @override
-  void register<T>(Provider<T> provider) {
-    _providers[T] = (_providers[T] ?? {})..add(provider);
+  void bindSingleton<T>(CreateInstance<T> create, {ResetInstance<T> onReset}) {
+    bind(SingletonProvider(create, onReset: onReset));
   }
 
   @override
-  void registerSingleton<T>(
-    CreateInstance<T> create, {
-    ResetInstance<T> onReset,
-  }) =>
-      register(SingletonProvider(create, onReset: onReset));
+  void bindFactory<T>(CreateInstance<T> create, {ResetInstance<T> onReset}) {
+    bind(FactoryProvider(create, onReset: onReset));
+  }
 
   @override
-  void registerFactory<T>(
-    CreateInstance<T> create, {
-    ResetInstance<T> onReset,
-  }) =>
-      register(FactoryProvider(create, onReset: onReset));
+  void bind<T>(Provider<T> provider) {
+    _providers[T] = (_providers[T] ?? {})..add(provider);
+  }
 
   void reset() {
     final providers = [

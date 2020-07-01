@@ -1,6 +1,6 @@
 import 'package:demo_core/demo_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/src/utils/app_store_state.dart';
+import 'package:flutter_demo/src/utils/injector_state.dart';
 import 'package:flutter_demo/src/widgets/todo_list.dart' as simple;
 
 class TodoList extends StatefulWidget {
@@ -10,15 +10,15 @@ class TodoList extends StatefulWidget {
   _TodoListState createState() => _TodoListState();
 }
 
-class _TodoListState extends AppStoreState<TodoList> {
+class _TodoListState extends InjectorState<TodoList> {
   TodoListReader _todoList;
   StartItemAdd _startItemAdd;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _todoList = module.resolve();
-    _startItemAdd = module.resolve();
+    _todoList = injector.get();
+    _startItemAdd = injector.get();
   }
 
   @override

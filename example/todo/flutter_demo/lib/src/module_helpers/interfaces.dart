@@ -1,18 +1,18 @@
-import 'module.dart';
+import 'injector.dart';
 import 'types.dart';
 
-abstract class Locator implements Module {
-  void registerSingleton<T>(
+abstract class Locator extends Injector {
+  void bindSingleton<T>(
     CreateInstance<T> create, {
     ResetInstance<T> onReset,
   });
 
-  void registerFactory<T>(
+  void bindFactory<T>(
     CreateInstance<T> create, {
     ResetInstance<T> onReset,
   });
 
-  void register<T>(Provider<T> provider);
+  void bind<T>(Provider<T> provider);
 }
 
 abstract class Provider<T extends Object> {

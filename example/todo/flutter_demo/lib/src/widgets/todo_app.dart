@@ -18,7 +18,7 @@ class TodoApp extends StatelessWidget {
       darkTheme: ThemeData(
         brightness: Brightness.dark,
       ),
-      home: const ModuleProvider(
+      home: const InjectorProvider(
         initialize: initializeTodoModule,
         child: TodoList(),
       ),
