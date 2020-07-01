@@ -1,4 +1,4 @@
-import 'interfaces.dart';
+import 'provider.dart';
 import 'types.dart';
 
 class FactoryProvider<T> implements Provider<T> {

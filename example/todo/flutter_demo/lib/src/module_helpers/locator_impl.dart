@@ -1,7 +1,8 @@
 import 'factory_provider.dart';
 import 'injector.dart';
 import 'injector_null.dart';
-import 'interfaces.dart';
+import 'locator.dart';
+import 'provider.dart';
 import 'singleton_provider.dart';
 import 'types.dart';
 

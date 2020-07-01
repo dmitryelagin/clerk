@@ -1,4 +1,5 @@
 import 'injector.dart';
+import 'provider.dart';
 import 'types.dart';
 
 abstract class Locator extends Injector {
@@ -13,10 +14,4 @@ abstract class Locator extends Injector {
   });
 
   void bind<T>(Provider<T> provider);
-}
-
-abstract class Provider<T extends Object> {
-  bool get isLazy;
-  T getInstance();
-  void reset();
 }
