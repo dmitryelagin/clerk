@@ -11,15 +11,8 @@ class TodoList extends StatefulWidget {
 }
 
 class _TodoListState extends InjectorState<TodoList> {
-  TodoListReader _todoList;
-  StartItemAdd _startItemAdd;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _todoList = injector.get();
-    _startItemAdd = injector.get();
-  }
+  TodoListReader get _todoList => resolve();
+  StartItemAdd get _startItemAdd => resolve();
 
   @override
   Widget build(BuildContext _) {

@@ -16,21 +16,11 @@ class TodoListItem extends StatefulWidget {
 }
 
 class _TodoListItemState extends InjectorState<TodoListItem> {
-  TodoListReader _todoList;
-  ToggleItem _toggleItem;
-  CommitItem _commitItem;
-  RemoveItem _removeItem;
-  ResetItemValidity _resetItemValidity;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _todoList = injector.get();
-    _toggleItem = injector.get();
-    _commitItem = injector.get();
-    _removeItem = injector.get();
-    _resetItemValidity = injector.get();
-  }
+  TodoListReader get _todoList => resolve();
+  ToggleItem get _toggleItem => resolve();
+  CommitItem get _commitItem => resolve();
+  RemoveItem get _removeItem => resolve();
+  ResetItemValidity get _resetItemValidity => resolve();
 
   @override
   Widget build(BuildContext _) {

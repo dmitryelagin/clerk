@@ -31,14 +31,14 @@ class _InjectorProviderState extends State<InjectorProvider> {
   @override
   void initState() {
     super.initState();
-    _initLocator();
+    _initializeLocator();
   }
 
   @override
   void didUpdateWidget(InjectorProvider previous) {
     super.didUpdateWidget(previous);
     _locator.reset();
-    _initLocator();
+    _initializeLocator();
   }
 
   @override
@@ -51,9 +51,10 @@ class _InjectorProviderState extends State<InjectorProvider> {
     super.dispose();
   }
 
-  void _initLocator() {
+  void _initializeLocator() {
     _locator = LocatorImpl(parent: InjectorProvider.of(context));
     widget.initialize(_locator);
+    _locator.initialize();
   }
 }
 
