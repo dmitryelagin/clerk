@@ -1,6 +1,6 @@
 import 'package:clerk/clerk.dart';
 import 'package:demo_core/demo_core.dart';
-import 'package:flutter_demo/src/module_helpers/index.dart';
+import 'package:summon/summon.dart';
 
 void initializeTodoModule(Locator locator) {
   final get = locator.get;

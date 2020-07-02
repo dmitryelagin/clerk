@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:clerk/clerk.dart' show Store;
 import 'package:flutter/widgets.dart';
-import 'package:flutter_demo/src/module_helpers/index.dart';
+import 'package:summon/summon.dart';
 
 import 'store_porter.dart';
 
