@@ -1,6 +1,6 @@
 # Clerk
 
-### Command-based state manager
+### A command-based state management for Dart projects
 
 Clerk can properly compose small logic parts to improve readability and reusability of state management in your project.
 

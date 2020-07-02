@@ -1,7 +1,7 @@
 name: clerk
 version: 0.3.19
 description: >-
-  Command-based state manager. Clerk can properly compose small
+  A command-based state manager. Clerk can properly compose small
   logic parts to improve readability and reusability of state
   management in your project.
 environment:
