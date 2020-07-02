@@ -5,6 +5,8 @@ abstract class Injector {
 
   bool get isEmpty;
 
+  bool has<T>() => tryGet<T>() != null;
+
   T get<T>() {
     final result = tryGet<T>();
     if (result != null) return result;

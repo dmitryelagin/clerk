@@ -1,6 +1,7 @@
 import 'package:demo_core/demo_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/src/utils/injector_state.dart';
+import 'package:flutter_demo/src/module_helpers/index.dart';
+import 'package:flutter_demo/src/utils/store_state.dart';
 import 'package:flutter_demo/src/widgets/todo_list.dart' as simple;
 
 class TodoList extends StatefulWidget {
@@ -10,9 +11,9 @@ class TodoList extends StatefulWidget {
   _TodoListState createState() => _TodoListState();
 }
 
-class _TodoListState extends InjectorState<TodoList> {
-  TodoListReader get _todoList => resolve();
-  StartItemAdd get _startItemAdd => resolve();
+class _TodoListState extends StoreState<TodoList> with InjectorState {
+  TodoListReader get _todoList => get();
+  StartItemAdd get _startItemAdd => get();
 
   @override
   Widget build(BuildContext _) {
