@@ -4,4 +4,7 @@ class TodoItemId {
   static const fake = TodoItemId(null);
 
   final int value;
+
+  @override
+  String toString() => value?.toString() ?? '';
 }

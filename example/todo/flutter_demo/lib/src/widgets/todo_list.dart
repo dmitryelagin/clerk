@@ -21,12 +21,23 @@ class TodoList extends StatelessWidget {
       appBar: AppBar(
         title: const Text('TODO'),
       ),
-      body: ListView(
-        children: [
-          for (final id in itemsIds)
-            TodoListItem(key: Key(id.value.toString()), id: id),
-        ],
-      ),
+      body: itemsIds.isNotEmpty
+          ? ListView(
+              children: [
+                for (final id in itemsIds)
+                  TodoListItem(key: Key(id.toString()), id: id),
+              ],
+            )
+          : const Center(
+              child: Text(
+                'You do not have any TODOs',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
       floatingActionButton: isAddingAvailable
           ? FloatingActionButton(
               tooltip: 'Add new TODO',
