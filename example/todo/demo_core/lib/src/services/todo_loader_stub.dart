@@ -2,22 +2,28 @@ part of 'todo_loader.dart';
 
 class _TodoLoaderStub implements TodoLoader {
   static Random _random = Random();
-
   static int _lastItemId = 0;
+
+  static TodoItem get _randomItem {
+    return TodoItem(
+      _nextItemId,
+      List.generate(_random.nextInt(3) + 2, (_) => _randomWord).join(' '),
+      isDone: _random.nextBool(),
+    );
+  }
 
   static String get _randomWord {
     const words = 'jellyfish meat cuddly hot influence inquisitive earthquake '
         'cap button tap whirl blade graceful juice tall dark cart unnatural '
         'close kneel visit chance sprout wretched natural unbiased actor fuel';
     final shuffledWords = words.split(' ')..shuffle(_random);
-    return shuffledWords.first;
+    final word = _random.nextDouble() < 0.05
+        ? shuffledWords.first.toUpperCase()
+        : shuffledWords.first;
+    return _random.nextDouble() > 0.75
+        ? word[0].toUpperCase() + word.substring(1)
+        : word;
   }
-
-  static TodoItem get _randomItem => TodoItem(
-        _nextItemId,
-        List.generate(_random.nextInt(3) + 2, (_) => _randomWord).join(' '),
-        isDone: _random.nextBool(),
-      );
 
   static TodoItemId get _nextItemId => TodoItemId(_lastItemId += 1);
 
@@ -37,13 +43,15 @@ class _TodoLoaderStub implements TodoLoader {
   }
 
   @override
-  Future<TodoInitResponse> initApp() => _requestData(
-        'initApp',
-        data: TodoInitResponse(
-          List.generate(_random.nextInt(8), (_) => _randomItem),
-        ),
-        minResponseLag: 500,
-      );
+  Future<TodoInitResponse> initApp() {
+    return _requestData(
+      'initApp',
+      data: TodoInitResponse(
+        List.generate(_random.nextInt(8), (_) => _randomItem),
+      ),
+      minResponseLag: 500,
+    );
+  }
 
   @override
   Future<TodoItemId> addItem(String label, {bool isDone}) =>

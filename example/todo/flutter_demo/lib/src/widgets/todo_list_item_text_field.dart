@@ -44,22 +44,21 @@ class _TodoListItemTextFieldState extends State<TodoListItemTextField> {
   Widget build(BuildContext _) {
     return TextField(
       controller: _textController,
+      focusNode: _focusNode,
+      style: const TextStyle(fontSize: 20),
       decoration: InputDecoration(
         errorText: widget.item.isValid ? null : widget.item.validity.message,
         hintText: 'Enter what to do',
-        suffixIcon: Visibility(
-          visible: widget.item.isPending,
-          child: const IgnorePointer(
-            child: Icon(
-              Icons.sync,
-              color: Colors.lightBlue,
-              semanticLabel: 'Synchronizing data...',
-            ),
-          ),
-        ),
+        suffixIcon: widget.item.isPending
+            ? const IgnorePointer(
+                child: Icon(
+                  Icons.sync,
+                  color: Colors.lightBlue,
+                  semanticLabel: 'Synchronizing data...',
+                ),
+              )
+            : null,
       ),
-      focusNode: _focusNode,
-      style: const TextStyle(fontSize: 20),
     );
   }
 
