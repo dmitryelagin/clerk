@@ -26,38 +26,38 @@ class StoreManagerImpl implements StoreManager {
   @override
   V read<M, V>(Read<M, V> fn) {
     return fn.isGeneric && !_repository.hasModel<M>()
-        ? fn(_getReader())
+        ? fn(_getTypedThis())
         : _repository.getByModel<M>().read(fn);
   }
 
   @override
   V readUnary<M, V, X>(ReadUnary<M, V, X> fn, X x) {
     return fn.isGeneric && !_repository.hasModel<M>()
-        ? fn(_getReader(), x)
+        ? fn(_getTypedThis(), x)
         : _repository.getByModel<M>().readUnary(fn, x);
   }
 
   @override
   V readBinary<M, V, X, Y>(ReadBinary<M, V, X, Y> fn, X x, Y y) {
     return fn.isGeneric && !_repository.hasModel<M>()
-        ? fn(_getReader(), x, y)
+        ? fn(_getTypedThis(), x, y)
         : _repository.getByModel<M>().readBinary(fn, x, y);
   }
 
   @override
-  void write<A, V>(Write<A, V> fn) {
+  void write<A>(Write<A> fn) {
     _repository.getByAccumulator<A>().write(fn);
   }
 
   @override
-  void writeUnary<A, V, X>(WriteUnary<A, V, X> fn, X x) {
+  void writeUnary<A, X>(WriteUnary<A, X> fn, X x) {
     _repository.getByAccumulator<A>().writeUnary(fn, x);
   }
 
   @override
-  void writeBinary<A, V, X, Y>(WriteBinary<A, V, X, Y> fn, X x, Y y) {
+  void writeBinary<A, X, Y>(WriteBinary<A, X, Y> fn, X x, Y y) {
     _repository.getByAccumulator<A>().writeBinary(fn, x, y);
   }
 
-  T _getReader<T>() => this as T; // ignore: avoid_as
+  T _getTypedThis<T>() => this as T; // ignore: avoid_as
 }
