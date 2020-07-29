@@ -42,6 +42,7 @@ class StateRepository {
       _modelControllerMap.get(M) ?? _factory.getManager();
 
   bool hasModel<M>() => _modelControllerMap.containsKey(M);
+  bool hasAccumulator<A>() => _accumulatorControllerMap.containsKey(A);
 
   void add<M, A>(State<M, A> state) {
     final controller = _factory.getController(state);

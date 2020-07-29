@@ -11,7 +11,7 @@ class AddItem {
   final TodoListManager _todoList;
   final TodoLoader _loader;
 
-  Execute call([String label]) {
+  Run call([String label]) {
     return (store) async {
       const fakeId = TodoItemId.fake;
       if (store.read(_todoList.isPendingItem(fakeId))) return;
@@ -20,19 +20,19 @@ class AddItem {
       final updatedLabel = label ?? previousItem.label;
       final isDone = previousItem.isDone;
       store
-        ..write(_todoList.resetItemValidity(fakeId))
-        ..write(_todoList.changeItem(fakeId, updatedLabel))
-        ..write(_todoList.setItemIsPending(fakeId));
+        ..apply(_todoList.resetItemValidity(fakeId))
+        ..apply(_todoList.changeItem(fakeId, updatedLabel))
+        ..apply(_todoList.setItemIsPending(fakeId));
 
       try {
         final createdId = await _loader.addItem(updatedLabel, isDone: isDone);
         store
-          ..write(_todoList.removeItem(fakeId))
-          ..write(_todoList.addItem(createdId, updatedLabel, isDone: isDone));
+          ..apply(_todoList.removeItem(fakeId))
+          ..apply(_todoList.addItem(createdId, updatedLabel, isDone: isDone));
       } on Exception catch (_) {
         store
-          ..write(_todoList.validateItem(fakeId, const AddItemFailure()))
-          ..write(_todoList.setItemIsSynchronized(fakeId));
+          ..apply(_todoList.validateItem(fakeId, const AddItemFailure()))
+          ..apply(_todoList.setItemIsSynchronized(fakeId));
       }
     };
   }

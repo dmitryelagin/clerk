@@ -25,6 +25,6 @@ class _TodoListState extends StoreState<TodoList> with InjectorState {
   }
 
   void _onAdd() {
-    store.execute(_startItemAdd());
+    store.run(_startItemAdd());
   }
 }

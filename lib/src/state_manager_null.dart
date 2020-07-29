@@ -30,17 +30,17 @@ class StateManagerNull<M extends Object, A extends Object>
   }
 
   @override
-  void write(Write<A> fn) {
-    _settings.onWriteFailed(A);
+  void apply(Apply<A> fn) {
+    _settings.onApplyFailed(A);
   }
 
   @override
-  void writeUnary<X>(WriteUnary<A, X> fn, X x) {
-    _settings.onWriteFailed(A, x);
+  void applyUnary<X>(ApplyUnary<A, X> fn, X x) {
+    _settings.onApplyFailed(A, x);
   }
 
   @override
-  void writeBinary<X, Y>(WriteBinary<A, X, Y> fn, X x, Y y) {
-    _settings.onWriteFailed(A, x, y);
+  void applyBinary<X, Y>(ApplyBinary<A, X, Y> fn, X x, Y y) {
+    _settings.onApplyFailed(A, x, y);
   }
 }

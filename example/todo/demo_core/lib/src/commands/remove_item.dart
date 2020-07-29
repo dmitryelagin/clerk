@@ -12,25 +12,25 @@ class RemoveItem {
   final TodoListManager _todoList;
   final TodoLoader _loader;
 
-  Execute call(TodoItemId id) {
+  Run call(TodoItemId id) {
     return (store) async {
       if (store.read(_todoList.isPendingItem(id))) return;
 
-      store.write(_todoList.resetItemValidity(id));
+      store.apply(_todoList.resetItemValidity(id));
 
       if (id.isFake) {
-        store.write(_todoList.removeItem(id));
+        store.apply(_todoList.removeItem(id));
         return;
       }
 
       try {
-        store.write(_todoList.setItemIsPending(id));
+        store.apply(_todoList.setItemIsPending(id));
         await _loader.removeItem(id);
-        store.write(_todoList.removeItem(id));
+        store.apply(_todoList.removeItem(id));
       } on Exception catch (_) {
         store
-          ..write(_todoList.validateItem(id, const RemoveItemFailure()))
-          ..write(_todoList.setItemIsSynchronized(id));
+          ..apply(_todoList.validateItem(id, const RemoveItemFailure()))
+          ..apply(_todoList.setItemIsSynchronized(id));
       }
     };
   }

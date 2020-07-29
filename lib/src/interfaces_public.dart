@@ -14,34 +14,34 @@ abstract class StateAggregate {
   T get<T>();
 }
 
-/// An object that can properly run [Execute].
+/// An object that can properly run [Run].
 abstract class StoreExecutor {
-  /// Immediately runs [Execute].
+  /// Immediately runs [Run].
   ///
-  /// Every [Execute] will be run in the execution zone; it is forked
+  /// Every [Run] will be run in the execution zone; it is forked
   /// from the zone in which the whole store was created.
-  void execute(Execute fn);
+  void run(Run fn);
 
-  /// Immediately runs [ExecuteUnary].
+  /// Immediately runs [RunUnary].
   ///
-  /// Every [ExecuteUnary] will be run with the provided argument in the
+  /// Every [RunUnary] will be run with the provided argument in the
   /// execution zone; it is forked from the zone in which the whole store
   /// was created.
-  void executeUnary<X>(ExecuteUnary<X> fn, X x);
+  void runUnary<X>(RunUnary<X> fn, X x);
 
-  /// Immediately runs [ExecuteBinary].
+  /// Immediately runs [RunBinary].
   ///
-  /// Every [ExecuteBinary] will be run with the provided argument in the
+  /// Every [RunBinary] will be run with the provided argument in the
   /// execution zone; it is forked from the zone in which the whole store
   /// was created.
-  void executeBinary<X, Y>(ExecuteBinary<X, Y> fn, X x, Y y);
+  void runBinary<X, Y>(RunBinary<X, Y> fn, X x, Y y);
 }
 
 /// An object that gets value from store [State] model by provided callback.
 abstract class StoreReader {
   /// Returns the result of [Read] execution.
   ///
-  /// It will be called with required [State] model. [Read] can have
+  /// It will be called with required [State] model. [Read] can require
   /// [StoreReader] as the first argument, so [StoreReader] will be
   /// provided instead of model.
   V read<M, V>(Read<M, V> fn);
@@ -49,36 +49,40 @@ abstract class StoreReader {
   /// Returns the result of [ReadUnary] execution.
   ///
   /// It will be called with required [State] model and provided
-  /// additional argument. [ReadUnary] can have [StoreReader] as the
+  /// additional argument. [ReadUnary] can require [StoreReader] as the
   /// first argument, so [StoreReader] will be provided instead of model.
   V readUnary<M, V, X>(ReadUnary<M, V, X> fn, X x);
 
   /// Returns the result of [ReadBinary] execution.
   ///
   /// It will be called with required [State] model and provided
-  /// additional arguments. [ReadBinary] can have [StoreReader] as the
+  /// additional arguments. [ReadBinary] can require [StoreReader] as the
   /// first argument, so [StoreReader] will be provided instead of model.
   V readBinary<M, V, X, Y>(ReadBinary<M, V, X, Y> fn, X x, Y y);
 }
 
-/// An object that can execute most available operations over store.
-abstract class StoreManager implements StoreExecutor, StoreReader {
-  /// Modifies [State] accumulator with provided [Write].
+/// An object that can execute main operations over store.
+abstract class StoreManager implements StoreReader {
+  /// Modifies [State] accumulator with provided [Apply].
   ///
-  /// It will be called with required [State] accumulator.
-  void write<A>(Write<A> fn);
+  /// It will be called with required [State] accumulator. [Apply] can require
+  /// [StoreManager] as the first argument, so [StoreManager] will be
+  /// provided instead of accumulator.
+  void apply<A>(Apply<A> fn);
 
-  /// Modifies [State] accumulator with provided [WriteUnary].
+  /// Modifies [State] accumulator with provided [ApplyUnary].
   ///
   /// It will be called with required [State] accumulator and provided
-  /// argument.
-  void writeUnary<A, X>(WriteUnary<A, X> fn, X x);
+  /// argument. [ApplyUnary] can require [StoreManager] as the first argument,
+  /// so [StoreManager] will be provided instead of accumulator.
+  void applyUnary<A, X>(ApplyUnary<A, X> fn, X x);
 
-  /// Modifies [State] accumulator with provided [WriteBinary].
+  /// Modifies [State] accumulator with provided [ApplyBinary].
   ///
   /// It will be called with required [State] accumulator and provided
-  /// arguments.
-  void writeBinary<A, X, Y>(WriteBinary<A, X, Y> fn, X x, Y y);
+  /// arguments. [ApplyBinary] can require [StoreManager] as the first
+  /// argument, so [StoreManager] will be provided instead of accumulator.
+  void applyBinary<A, X, Y>(ApplyBinary<A, X, Y> fn, X x, Y y);
 }
 
 /// An accessor to all available store data and events.
@@ -89,24 +93,24 @@ abstract class StoreAccessor {
   /// A stream that emits models of store [State]s when anything changes.
   ///
   /// Emits synchronously and only after any model was changed during
-  /// [Execute] run.
+  /// [Run] run.
   Stream<StateAggregate> get onChange;
 
   /// A stream that emits models of store [State]s when anything changes.
   ///
   /// Emits in microtask and only after any model was changed during all
-  /// [Execute] runs before microtask schedule.
+  /// [Run] runs before microtask schedule.
   Stream<StateAggregate> get onAfterChanges;
 
   /// Returns stream which emits specific [State] model when it changes.
   ///
   /// Emits synchronously and only when [State] model was changed during
-  /// [Execute] run.
+  /// [Run] run.
   Stream<M> onModelChange<M>();
 
   /// Returns stream which emits specific [State] model when it changes.
   ///
   /// Emits in microtask and only when [State] model was changed during all
-  /// [Execute] runs before microtask schedule.
+  /// [Run] runs before microtask schedule.
   Stream<M> onAfterModelChanges<M>();
 }

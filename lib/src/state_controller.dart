@@ -60,19 +60,19 @@ class StateController<M extends Object, A extends Object>
   }
 
   @override
-  void write(Write<A> fn) {
+  void apply(Apply<A> fn) {
     final accumulator = _prepareAccumulator();
     _updateAccumulator(fn(accumulator), accumulator);
   }
 
   @override
-  void writeUnary<X>(WriteUnary<A, X> fn, X x) {
+  void applyUnary<X>(ApplyUnary<A, X> fn, X x) {
     final accumulator = _prepareAccumulator();
     _updateAccumulator(fn(accumulator, x), accumulator);
   }
 
   @override
-  void writeBinary<X, Y>(WriteBinary<A, X, Y> fn, X x, Y y) {
+  void applyBinary<X, Y>(ApplyBinary<A, X, Y> fn, X x, Y y) {
     final accumulator = _prepareAccumulator();
     _updateAccumulator(fn(accumulator, x, y), accumulator);
   }

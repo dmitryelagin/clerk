@@ -8,9 +8,9 @@ class ResetItemValidity {
 
   final TodoListManager _todoList;
 
-  Execute call(TodoItemId id) {
+  Run call(TodoItemId id) {
     return (store) {
-      store.write(_todoList.resetItemValidity(id));
+      store.apply(_todoList.resetItemValidity(id));
     };
   }
 }

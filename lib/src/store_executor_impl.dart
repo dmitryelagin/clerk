@@ -6,12 +6,12 @@ import 'types_private.dart';
 import 'types_public.dart';
 
 class StoreExecutorImpl implements StoreExecutor {
-  StoreExecutorImpl(this._repository, this._innerExecutor) {
+  StoreExecutorImpl(this._repository, this._manager) {
     _executionZone = _createExecutionZone();
   }
 
   final StateRepository _repository;
-  final StoreExecutor _innerExecutor;
+  final StoreManager _manager;
 
   Zone _executionZone;
 
@@ -21,34 +21,34 @@ class StoreExecutorImpl implements StoreExecutor {
       !_hasTransanction && !_repository.isTeardowned;
 
   @override
-  void execute(Execute fn) {
+  void run(Run fn) {
     if (_hasTransanction) {
-      _innerExecutor.execute(fn);
+      _manager.apply(fn);
     } else if (_canStartTransanction) {
       _executionZone.run(() {
-        _innerExecutor.execute(fn);
+        _manager.apply(fn);
       });
     }
   }
 
   @override
-  void executeUnary<X>(ExecuteUnary<X> fn, X x) {
+  void runUnary<X>(RunUnary<X> fn, X x) {
     if (_hasTransanction) {
-      _innerExecutor.executeUnary(fn, x);
+      _manager.applyUnary(fn, x);
     } else if (_canStartTransanction) {
       _executionZone.run(() {
-        _innerExecutor.executeUnary(fn, x);
+        _manager.applyUnary(fn, x);
       });
     }
   }
 
   @override
-  void executeBinary<X, Y>(ExecuteBinary<X, Y> fn, X x, Y y) {
+  void runBinary<X, Y>(RunBinary<X, Y> fn, X x, Y y) {
     if (_hasTransanction) {
-      _innerExecutor.executeBinary(fn, x, y);
+      _manager.applyBinary(fn, x, y);
     } else if (_canStartTransanction) {
       _executionZone.run(() {
-        _innerExecutor.executeBinary(fn, x, y);
+        _manager.applyBinary(fn, x, y);
       });
     }
   }

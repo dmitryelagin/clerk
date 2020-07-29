@@ -36,22 +36,22 @@ class _TodoListItemState extends StoreState<TodoListItem> with InjectorState {
   }
 
   void _onChange(String label) {
-    store.execute(_commitItem(widget.id, label));
+    store.run(_commitItem(widget.id, label));
   }
 
   void _onToggle(bool isDone) {
-    store.execute(_toggleItem(widget.id, isDone: isDone));
+    store.run(_toggleItem(widget.id, isDone: isDone));
   }
 
   void _onRemove() {
-    store.execute(_removeItem(widget.id));
+    store.run(_removeItem(widget.id));
   }
 
   void _onFocus() {
-    store.execute(_resetItemValidity(widget.id));
+    store.run(_resetItemValidity(widget.id));
   }
 
   void _onRetry() {
-    store.execute(_commitItem(widget.id));
+    store.run(_commitItem(widget.id));
   }
 }

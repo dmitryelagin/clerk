@@ -6,7 +6,7 @@ void initializeTodoModule(Locator locator) {
   final get = locator.get;
   locator
     ..bindSingleton<Store>(
-      () => createTodoStore()..executor.execute(get<Init>()()),
+      () => createTodoStore()..executor.run(get<Init>()()),
       onReset: (store) {
         store.teardown();
       },

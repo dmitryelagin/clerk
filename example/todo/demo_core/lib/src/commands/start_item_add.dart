@@ -8,9 +8,9 @@ class StartItemAdd {
 
   final TodoListManager _todoList;
 
-  Execute call() {
+  Run call() {
     return (store) {
-      store.write(_todoList.addItem(TodoItemId.fake, ''));
+      store.apply(_todoList.addItem(TodoItemId.fake, ''));
     };
   }
 }

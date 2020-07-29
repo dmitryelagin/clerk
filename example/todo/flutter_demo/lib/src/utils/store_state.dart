@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:clerk/clerk.dart' show Store;
 import 'package:flutter/widgets.dart';
 import 'package:summon/summon.dart';
 
@@ -20,8 +19,7 @@ abstract class StoreState<T extends StatefulWidget> extends State<T> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_isInitialized) return;
-    final store = InjectorProvider.of(context).get<Store>();
-    _store = StorePorter(store.reader, store.executor, store.accessor);
+    _store = StorePorter(InjectorProvider.of(context).get());
     _subscription = _store.onAfterChanges.listen(_update);
   }
 

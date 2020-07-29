@@ -9,21 +9,6 @@ class StoreManagerImpl implements StoreManager {
   final StateRepository _repository;
 
   @override
-  void execute(Execute fn) {
-    fn(this);
-  }
-
-  @override
-  void executeUnary<X>(ExecuteUnary<X> fn, X x) {
-    fn(this, x);
-  }
-
-  @override
-  void executeBinary<X, Y>(ExecuteBinary<X, Y> fn, X x, Y y) {
-    fn(this, x, y);
-  }
-
-  @override
   V read<M, V>(Read<M, V> fn) {
     return fn.isGeneric && !_repository.hasModel<M>()
         ? fn(_getTypedThis())
@@ -45,18 +30,30 @@ class StoreManagerImpl implements StoreManager {
   }
 
   @override
-  void write<A>(Write<A> fn) {
-    _repository.getByAccumulator<A>().write(fn);
+  void apply<A>(Apply<A> fn) {
+    if (fn.isExecution && !_repository.hasAccumulator<A>()) {
+      fn(_getTypedThis());
+    } else {
+      _repository.getByAccumulator<A>().apply(fn);
+    }
   }
 
   @override
-  void writeUnary<A, X>(WriteUnary<A, X> fn, X x) {
-    _repository.getByAccumulator<A>().writeUnary(fn, x);
+  void applyUnary<A, X>(ApplyUnary<A, X> fn, X x) {
+    if (fn.isExecution && !_repository.hasAccumulator<A>()) {
+      fn(_getTypedThis(), x);
+    } else {
+      _repository.getByAccumulator<A>().applyUnary(fn, x);
+    }
   }
 
   @override
-  void writeBinary<A, X, Y>(WriteBinary<A, X, Y> fn, X x, Y y) {
-    _repository.getByAccumulator<A>().writeBinary(fn, x, y);
+  void applyBinary<A, X, Y>(ApplyBinary<A, X, Y> fn, X x, Y y) {
+    if (fn.isExecution && !_repository.hasAccumulator<A>()) {
+      fn(_getTypedThis(), x, y);
+    } else {
+      _repository.getByAccumulator<A>().applyBinary(fn, x, y);
+    }
   }
 
   T _getTypedThis<T>() => this as T; // ignore: avoid_as

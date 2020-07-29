@@ -7,34 +7,34 @@ import '../../models/todo_validity.dart';
 import 'todo_list_accumulator.dart';
 
 mixin TodoListWriter<A extends TodoListAccumulator> {
-  Write<A> replaceItems(Iterable<TodoItem> items) =>
+  Apply<A> replaceItems(Iterable<TodoItem> items) =>
       (acc) => acc..items.replaceRange(0, acc.items.length, items);
 
-  Write<A> addItem(TodoItemId id, String label, {bool isDone = false}) =>
+  Apply<A> addItem(TodoItemId id, String label, {bool isDone = false}) =>
       (acc) => acc..items.add(TodoItem(id, label, isDone: isDone));
 
-  Write<A> removeItem(TodoItemId id) =>
+  Apply<A> removeItem(TodoItemId id) =>
       (acc) => acc..items.removeWhere((item) => item.id.value == id.value);
 
-  Write<A> changeItem(TodoItemId id, String label) =>
+  Apply<A> changeItem(TodoItemId id, String label) =>
       updateItem(id, (item) => item.update(label: label));
 
-  Write<A> validateItem(TodoItemId id, TodoValidity validity) =>
+  Apply<A> validateItem(TodoItemId id, TodoValidity validity) =>
       updateItem(id, (item) => item.update(validity: validity));
 
-  Write<A> resetItemValidity(TodoItemId id) =>
+  Apply<A> resetItemValidity(TodoItemId id) =>
       updateItem(id, (item) => item.update(validity: const TodoValidity()));
 
-  Write<A> toggleItem(TodoItemId id, {bool isDone}) =>
+  Apply<A> toggleItem(TodoItemId id, {bool isDone}) =>
       updateItem(id, (item) => item.update(isDone: isDone ?? !item.isDone));
 
-  Write<A> setItemIsPending(TodoItemId id) =>
+  Apply<A> setItemIsPending(TodoItemId id) =>
       updateItem(id, (item) => item.update(isPending: true));
 
-  Write<A> setItemIsSynchronized(TodoItemId id) =>
+  Apply<A> setItemIsSynchronized(TodoItemId id) =>
       updateItem(id, (item) => item.update(isPending: false));
 
-  Write<A> updateItem(TodoItemId id, TodoItem Function(TodoItem) update) =>
+  Apply<A> updateItem(TodoItemId id, TodoItem Function(TodoItem) update) =>
       (acc) {
         final item = acc.items.firstWhere((item) => item.id.value == id.value);
         final index = acc.items.indexOf(item);
