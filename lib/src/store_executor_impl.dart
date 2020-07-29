@@ -17,50 +17,59 @@ class StoreExecutorImpl implements StoreExecutor {
 
   var _hasTransanction = false;
 
-  bool get _canNotStartTransanction =>
-      _hasTransanction || _repository.isTeardowned;
+  bool get _canStartTransanction =>
+      !_hasTransanction && !_repository.isTeardowned;
 
   @override
   void execute(Execute fn) {
-    if (_canNotStartTransanction) return;
-    _executionZone.run(() {
+    if (_hasTransanction) {
       _innerExecutor.execute(fn);
-    });
+    } else if (_canStartTransanction) {
+      _executionZone.run(() {
+        _innerExecutor.execute(fn);
+      });
+    }
   }
 
   @override
   void executeUnary<X>(ExecuteUnary<X> fn, X x) {
-    if (_canNotStartTransanction) return;
-    _executionZone.run(() {
+    if (_hasTransanction) {
       _innerExecutor.executeUnary(fn, x);
-    });
+    } else if (_canStartTransanction) {
+      _executionZone.run(() {
+        _innerExecutor.executeUnary(fn, x);
+      });
+    }
   }
 
   @override
   void executeBinary<X, Y>(ExecuteBinary<X, Y> fn, X x, Y y) {
-    if (_canNotStartTransanction) return;
-    _executionZone.run(() {
+    if (_hasTransanction) {
       _innerExecutor.executeBinary(fn, x, y);
-    });
+    } else if (_canStartTransanction) {
+      _executionZone.run(() {
+        _innerExecutor.executeBinary(fn, x, y);
+      });
+    }
   }
 
   Zone _createExecutionZone() {
     return Zone.current.fork(
       specification: ZoneSpecification(
         run: <R>(source, parent, zone, fn) {
-          return _canNotStartTransanction
-              ? parent.run(zone, fn)
-              : _runTransanction(() => parent.run(zone, fn));
+          return _canStartTransanction
+              ? _runTransanction(() => parent.run(zone, fn))
+              : parent.run(zone, fn);
         },
         runUnary: <R, X>(source, parent, zone, fn, x) {
-          return _canNotStartTransanction
-              ? parent.runUnary(zone, fn, x)
-              : _runTransanction(() => parent.runUnary(zone, fn, x));
+          return _canStartTransanction
+              ? _runTransanction(() => parent.runUnary(zone, fn, x))
+              : parent.runUnary(zone, fn, x);
         },
         runBinary: <R, X, Y>(source, parent, zone, fn, x, y) {
-          return _canNotStartTransanction
-              ? parent.runBinary(zone, fn, x, y)
-              : _runTransanction(() => parent.runBinary(zone, fn, x, y));
+          return _canStartTransanction
+              ? _runTransanction(() => parent.runBinary(zone, fn, x, y))
+              : parent.runBinary(zone, fn, x, y);
         },
       ),
     );

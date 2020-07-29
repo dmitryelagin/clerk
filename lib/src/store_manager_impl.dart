@@ -10,17 +10,17 @@ class StoreManagerImpl implements StoreManager {
 
   @override
   void execute(Execute fn) {
-    if (!_repository.isTeardowned) fn(this);
+    fn(this);
   }
 
   @override
   void executeUnary<X>(ExecuteUnary<X> fn, X x) {
-    if (!_repository.isTeardowned) fn(this, x);
+    fn(this, x);
   }
 
   @override
   void executeBinary<X, Y>(ExecuteBinary<X, Y> fn, X x, Y y) {
-    if (!_repository.isTeardowned) fn(this, x, y);
+    fn(this, x, y);
   }
 
   @override
