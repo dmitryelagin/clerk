@@ -45,19 +45,14 @@ class StateController<M extends Object, A extends Object>
       _prevModel == null || !_areEqualModels(_prevModel, _prepareModel());
 
   @override
-  V read<V>(Read<M, V> fn) {
-    return fn(_prepareModel());
-  }
+  V read<V>(Read<M, V> fn) => fn(_prepareModel());
 
   @override
-  V readUnary<V, X>(ReadUnary<M, V, X> fn, X x) {
-    return fn(_prepareModel(), x);
-  }
+  V readUnary<V, X>(ReadUnary<M, V, X> fn, X x) => fn(_prepareModel(), x);
 
   @override
-  V readBinary<V, X, Y>(ReadBinary<M, V, X, Y> fn, X x, Y y) {
-    return fn(_prepareModel(), x, y);
-  }
+  V readBinary<V, X, Y>(ReadBinary<M, V, X, Y> fn, X x, Y y) =>
+      fn(_prepareModel(), x, y);
 
   @override
   void apply(Apply<A> fn) {
