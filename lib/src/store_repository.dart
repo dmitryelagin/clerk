@@ -10,8 +10,8 @@ import 'state_controller_utils.dart';
 import 'state_factory.dart';
 import 'store_settings.dart';
 
-class StateRepository {
-  StateRepository(StoreSettings settings, this._factory)
+class StoreRepository implements StoreAccessor {
+  StoreRepository(StoreSettings settings, this._factory)
       : _change = settings.getStreamController(),
         _afterChanges = settings.getStreamController();
 
@@ -27,13 +27,23 @@ class StateRepository {
 
   var _hasScheduledChangesSink = false;
 
+  bool get isTeardowned => _change.isClosed;
+
+  @override
   StateAggregate get state =>
       StateAggregateImpl(_modelControllerMap.extractModels());
 
+  @override
   Stream<StateAggregate> get onChange => _change.stream;
+
+  @override
   Stream<StateAggregate> get onAfterChanges => _afterChanges.stream;
 
-  bool get isTeardowned => _change.isClosed;
+  @override
+  Stream<M> onModelChange<M>() => getByModel<M>().onChange;
+
+  @override
+  Stream<M> onAfterModelChanges<M>() => getByModel<M>().onAfterChanges;
 
   StateManager<Object, A> getByAccumulator<A>() =>
       _accumulatorControllerMap.get(A) ?? _factory.getManager();
