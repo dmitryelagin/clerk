@@ -1,5 +1,5 @@
-import 'interfaces_public.dart';
-import 'types_public.dart';
+import 'interfaces.dart';
+import 'types.dart';
 
 extension ReadUtils<M, V> on Read<M, V> {
   bool get isGeneric => this is Read<StoreReader, V>;

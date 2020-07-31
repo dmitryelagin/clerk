@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'exceptions.dart';
-import 'types_private.dart';
+import 'types.dart';
 
 /// An object that can influence some store behavior.
 ///

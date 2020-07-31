@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'interfaces_public.dart';
+import 'interfaces.dart';
 import 'store_repository.dart';
-import 'types_private.dart';
-import 'types_public.dart';
+import 'types.dart';
 import 'types_utils.dart';
 
 class StoreManagerImpl implements StoreExecutor, StoreManager {
@@ -123,7 +122,7 @@ class StoreManagerImpl implements StoreExecutor, StoreManager {
     );
   }
 
-  T _runTransanction<T>(GetValue<T> run) {
+  T _runTransanction<T>(T Function() run) {
     _hasTransanction = true;
     final result = run();
     _repository.applyChanges();

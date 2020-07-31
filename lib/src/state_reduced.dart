@@ -1,5 +1,5 @@
 import 'state.dart';
-import 'types_public.dart';
+import 'types.dart';
 
 /// A simplified [State] that acts like a reducer.
 class StateReduced<T> extends State<T, T> {

@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'interfaces_private.dart';
+import 'interfaces.dart';
 import 'state.dart';
 import 'store_settings.dart';
-import 'types_public.dart';
+import 'types.dart';
 
 class StateController<M extends Object, A extends Object>
     implements StateManager<M, A> {

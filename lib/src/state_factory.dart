@@ -1,4 +1,4 @@
-import 'interfaces_private.dart';
+import 'interfaces.dart';
 import 'state.dart';
 import 'state_controller.dart';
 import 'state_manager_null.dart';

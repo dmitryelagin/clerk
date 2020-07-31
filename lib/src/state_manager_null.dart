@@ -1,6 +1,6 @@
-import 'interfaces_private.dart';
+import 'interfaces.dart';
 import 'store_settings.dart';
-import 'types_public.dart';
+import 'types.dart';
 
 class StateManagerNull<M extends Object, A extends Object>
     implements StateManager<M, A> {

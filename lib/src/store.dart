@@ -1,16 +1,15 @@
-import 'interfaces_public.dart';
+import 'interfaces.dart';
 import 'state.dart';
 import 'state_factory.dart';
 import 'store_manager_impl.dart';
 import 'store_repository.dart';
 import 'store_settings.dart';
-import 'types_public.dart';
 
 /// An object that stores states and provides instruments to manage them.
 class Store {
   /// Creates an assembled [Store].
   factory Store(
-    Compose compose, {
+    void Function(StoreBuilder) compose, {
     StoreSettings settings = const StoreSettings(),
   }) {
     final builder = StoreBuilder._(settings);

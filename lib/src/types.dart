@@ -1,5 +1,6 @@
-import 'interfaces_public.dart';
-import 'store.dart';
+import 'dart:async';
+
+import 'interfaces.dart';
 
 /// Type of a function that works with store by [StoreManager].
 typedef Run = void Function(StoreManager);
@@ -49,5 +50,7 @@ typedef GetModel<M, A> = M Function(A);
 /// Type of a callback that compares two models.
 typedef CompareModels<M> = bool Function(M, M);
 
-/// Type of a function that composes store with [StoreBuilder].
-typedef Compose = void Function(StoreBuilder);
+typedef GetStream = Stream<T> Function<T>();
+typedef GetStreamController = StreamController<T> Function<T>();
+typedef ReadFallback = T Function<T>(Type, Type, [Object, Object]);
+typedef ApplyFallback = void Function(Type, [Object, Object]);
