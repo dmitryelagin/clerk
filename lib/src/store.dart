@@ -1,6 +1,7 @@
 import 'interfaces.dart';
 import 'state.dart';
 import 'state_factory.dart';
+import 'store_executor_impl.dart';
 import 'store_manager_impl.dart';
 import 'store_repository.dart';
 import 'store_settings.dart';
@@ -17,16 +18,20 @@ class Store {
     return Store._(builder._repository);
   }
 
-  Store._(this._repository) : _manager = StoreManagerImpl(_repository);
+  Store._(this._repository) : _manager = StoreManagerImpl(_repository) {
+    _executor = StoreExecutorImpl(_repository, _manager);
+  }
 
   final StoreManagerImpl _manager;
   final StoreRepository _repository;
+
+  StoreExecutorImpl _executor;
 
   /// A [StoreAccessor] instance of this [Store].
   StoreAccessor get accessor => _repository;
 
   /// A [StoreExecutor] instance of this [Store].
-  StoreExecutor get executor => _manager;
+  StoreExecutor get executor => _executor;
 
   /// A [StoreReader] instance of this [Store].
   StoreReader get reader => _manager;
