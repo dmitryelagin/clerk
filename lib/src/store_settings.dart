@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'exceptions.dart';
-import 'types_private.dart';
+import 'types.dart';
 
 /// An object that can influence some store behavior.
 ///
@@ -16,16 +16,16 @@ class StoreSettings {
     GetStreamController getStreamController = _createStreamController,
     GetStream onListenChangeFailed = _listenChangeFallback,
     ReadFallback onReadFailed = _readFallback,
-    WriteFallback onWriteFailed = _writeFallback,
+    ApplyFallback onApplyFailed = _applyFallback,
   })  : _getStreamController = getStreamController,
         _onListenChangeFailed = onListenChangeFailed,
         _onReadFailed = onReadFailed,
-        _onWriteFailed = onWriteFailed;
+        _onApplyFailed = onApplyFailed;
 
   final GetStreamController _getStreamController;
   final GetStream _onListenChangeFailed;
   final ReadFallback _onReadFailed;
-  final WriteFallback _onWriteFailed;
+  final ApplyFallback _onApplyFailed;
 
   static StreamController<T> _createStreamController<T>() =>
       StreamController.broadcast(sync: true);
@@ -38,17 +38,17 @@ class StoreSettings {
     throw ReadException(m, v, x, y);
   }
 
-  static void _writeFallback(Type a, [Object? x, Object? y]) {
-    throw WriteException(a, x, y);
+  static void _applyFallback(Type a, [Object? x, Object? y]) {
+    throw ApplyException(a, x, y);
   }
 
   /// Creates [StreamController] for store internal usage.
   ///
   /// This method will be called during store initialization to produce
   /// [StreamController]s for standard notifications like main `onChange`
-  /// stream in accessor, then  every time the new state is added to store
-  /// to produce [StreamController]s for specific state notifications like
-  /// `onAfterChanges` stream. Returns [StreamController.broadcast(sync: true)]
+  /// stream in accessor, then every time the new state is added to store to
+  /// produce [StreamController]s for specific state notifications like thier
+  /// own `onChange` streams. Returns [StreamController.broadcast(sync: true)]
   /// by default.
   StreamController<T> getStreamController<T>() => _getStreamController();
 
@@ -70,8 +70,8 @@ class StoreSettings {
 
   /// Handles writing failure.
   ///
-  /// This method is called every time when write operation failed because
+  /// This method is called every time when apply operation failed because
   /// no state with required accumulator was found. It should not throw
-  /// to continue execution. Throws [WriteException] by default.
-  void onWriteFailed(Type a, [Object? x, Object? y]) => _onWriteFailed(a, x, y);
+  /// to continue execution. Throws [ApplyException] by default.
+  void onApplyFailed(Type a, [Object? x, Object? y]) => _onApplyFailed(a, x, y);
 }

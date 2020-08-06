@@ -1,47 +1,44 @@
-import 'interfaces_public.dart';
+import 'context_manager_impl.dart';
+import 'interfaces.dart';
 import 'state.dart';
 import 'state_factory.dart';
-import 'state_repository.dart';
-import 'store_accessor_impl.dart';
 import 'store_executor_impl.dart';
 import 'store_manager_impl.dart';
-import 'store_reader_impl.dart';
+import 'store_repository.dart';
 import 'store_settings.dart';
-import 'types_public.dart';
 
 /// An object that stores states and provides instruments to manage them.
 class Store {
   /// Creates an assembled [Store].
   factory Store(
-    Compose compose, {
+    void Function(StoreBuilder) compose, {
     StoreSettings settings = const StoreSettings(),
   }) {
-    final builder = StoreBuilder._(settings);
-    compose(builder);
-    return Store._(builder._repository);
+    const context = ContextManagerImpl();
+    final repository =
+        StoreRepository(settings, StateFactory(settings, context), context);
+    compose(StoreBuilder._(repository));
+    return Store._(repository, context);
   }
 
-  Store._(this._repository) : _manager = StoreManagerImpl(_repository) {
-    _accessor = StoreAccessorImpl(_repository);
-    _executor = StoreExecutorImpl(_repository, _manager);
-    _reader = StoreReaderImpl(_manager);
+  Store._(this._repository, ExecutionHelper helper)
+      : _manager = StoreManagerImpl(_repository) {
+    _executor = StoreExecutorImpl(_repository, _manager, helper);
   }
 
-  final StateRepository _repository;
   final StoreManagerImpl _manager;
+  final StoreRepository _repository;
 
-  late StoreAccessorImpl _accessor;
   late StoreExecutorImpl _executor;
-  late StoreReaderImpl _reader;
 
   /// A [StoreAccessor] instance of this [Store].
-  StoreAccessor get accessor => _accessor;
+  StoreAccessor get accessor => _repository;
 
   /// A [StoreExecutor] instance of this [Store].
   StoreExecutor get executor => _executor;
 
   /// A [StoreReader] instance of this [Store].
-  StoreReader get reader => _reader;
+  StoreReader get reader => _manager;
 
   /// Closes [Store].
   ///
@@ -52,10 +49,9 @@ class Store {
 
 /// An object that can assemble [State]s.
 class StoreBuilder {
-  StoreBuilder._(StoreSettings settings)
-      : _repository = StateRepository(settings, StateFactory(settings));
+  StoreBuilder._(this._repository);
 
-  final StateRepository _repository;
+  final StoreRepository _repository;
 
   /// Adds [State] to [StoreBuilder].
   void add<M, A>(State<M, A> state) {

@@ -1,16 +1,10 @@
-import 'package:clerk/clerk.dart';
-
 import '../models/todo_item_id.dart';
-import '../states/todo_list/todo_list_state.dart';
+import '../states/todo_list/todo_list.dart';
 
 class StartItemAdd {
-  const StartItemAdd(this._todoList);
+  const StartItemAdd();
 
-  final TodoListManager _todoList;
-
-  Execute call() {
-    return (store) {
-      store.write(_todoList.addItem(TodoItemId.fake, ''));
-    };
+  void call(TodoList todoList) {
+    todoList.addItem(TodoItemId.fake, '');
   }
 }

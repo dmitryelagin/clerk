@@ -1,6 +1,6 @@
-import 'interfaces_private.dart';
+import 'interfaces.dart';
 import 'store_settings.dart';
-import 'types_public.dart';
+import 'types.dart';
 
 class StateManagerNull<M extends Object?, A extends Object?>
     implements StateManager<M, A> {
@@ -12,35 +12,28 @@ class StateManagerNull<M extends Object?, A extends Object?>
   Stream<M> get onChange => _settings.onListenChangeFailed();
 
   @override
-  Stream<M> get onAfterChanges => _settings.onListenChangeFailed();
+  V read<V>(Read<M, V> fn) => _settings.onReadFailed(M, V);
 
   @override
-  V read<V>(Read<M, V> fn) {
-    return _settings.onReadFailed(M, V);
+  V readUnary<V, X>(ReadUnary<M, V, X> fn, X x) =>
+      _settings.onReadFailed(M, V, x);
+
+  @override
+  V readBinary<V, X, Y>(ReadBinary<M, V, X, Y> fn, X x, Y y) =>
+      _settings.onReadFailed(M, V, x, y);
+
+  @override
+  void apply(Apply<A> fn) {
+    _settings.onApplyFailed(A);
   }
 
   @override
-  V readUnary<V, X>(ReadUnary<M, V, X> fn, X x) {
-    return _settings.onReadFailed(M, V, x);
+  void applyUnary<X>(ApplyUnary<A, X> fn, X x) {
+    _settings.onApplyFailed(A, x);
   }
 
   @override
-  V readBinary<V, X, Y>(ReadBinary<M, V, X, Y> fn, X x, Y y) {
-    return _settings.onReadFailed(M, V, x, y);
-  }
-
-  @override
-  void write<V>(Write<A, V> fn) {
-    _settings.onWriteFailed(A);
-  }
-
-  @override
-  void writeUnary<V, X>(WriteUnary<A, V, X> fn, X x) {
-    _settings.onWriteFailed(A, x);
-  }
-
-  @override
-  void writeBinary<V, X, Y>(WriteBinary<A, V, X, Y> fn, X x, Y y) {
-    _settings.onWriteFailed(A, x, y);
+  void applyBinary<X, Y>(ApplyBinary<A, X, Y> fn, X x, Y y) {
+    _settings.onApplyFailed(A, x, y);
   }
 }

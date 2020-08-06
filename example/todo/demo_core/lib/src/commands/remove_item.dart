@@ -1,37 +1,32 @@
-import 'package:clerk/clerk.dart';
-
 import '../models/todo_item_id.dart';
 import '../models/todo_item_id_utils.dart';
 import '../models/todo_validity.dart';
 import '../services/todo_loader.dart';
-import '../states/todo_list/todo_list_state.dart';
+import '../states/todo_list/todo_list.dart';
 
 class RemoveItem {
-  const RemoveItem(this._todoList, this._loader);
+  const RemoveItem(this._loader);
 
-  final TodoListManager _todoList;
   final TodoLoader _loader;
 
-  Execute call(TodoItemId id) {
-    return (store) async {
-      if (store.read(_todoList.isPendingItem(id))) return;
+  Future<void> call(TodoList todoList, TodoItemId id) async {
+    if (todoList.isPendingItem(id)) return;
 
-      store.write(_todoList.resetItemValidity(id));
+    todoList.resetItemValidity(id);
 
-      if (id.isFake) {
-        store.write(_todoList.removeItem(id));
-        return;
-      }
+    if (id.isFake) {
+      todoList.removeItem(id);
+      return;
+    }
 
-      try {
-        store.write(_todoList.setItemIsPending(id));
-        await _loader.removeItem(id);
-        store.write(_todoList.removeItem(id));
-      } on Exception catch (_) {
-        store
-          ..write(_todoList.validateItem(id, const RemoveItemFailure()))
-          ..write(_todoList.setItemIsSynchronized(id));
-      }
-    };
+    try {
+      todoList.setItemIsPending(id);
+      await _loader.removeItem(id);
+      todoList.removeItem(id);
+    } on Exception catch (_) {
+      todoList
+        ..validateItem(id, const RemoveItemFailure())
+        ..setItemIsSynchronized(id);
+    }
   }
 }

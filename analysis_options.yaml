@@ -54,7 +54,7 @@ linter:
     - control_flow_in_finally
     - diagnostic_describe_all_properties
     - directives_ordering
-    # - do_not_use_environment # [not recognized]
+    - do_not_use_environment
     - empty_statements
     - exhaustive_cases
     - file_names

@@ -1,7 +1,8 @@
 import 'package:demo_core/demo_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/src/utils/app_store_state.dart';
+import 'package:flutter_demo/src/utils/store_state.dart';
 import 'package:flutter_demo/src/widgets/todo_list_item.dart' as simple;
+import 'package:summon/summon.dart';
 
 class TodoListItem extends StatefulWidget {
   const TodoListItem({
@@ -15,27 +16,17 @@ class TodoListItem extends StatefulWidget {
   _TodoListItemState createState() => _TodoListItemState();
 }
 
-class _TodoListItemState extends AppStoreState<TodoListItem> {
-  TodoListReader _todoList;
-  ToggleItem _toggleItem;
-  CommitItem _commitItem;
-  RemoveItem _removeItem;
-  ResetItemValidity _resetItemValidity;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _todoList = module.resolve();
-    _toggleItem = module.resolve();
-    _commitItem = module.resolve();
-    _removeItem = module.resolve();
-    _resetItemValidity = module.resolve();
-  }
+class _TodoListItemState extends StoreState<TodoListItem> with InjectorState {
+  TodoListReader get _todoList => get();
+  ToggleItem get _toggleItem => get();
+  CommitItem get _commitItem => get();
+  RemoveItem get _removeItem => get();
+  ResetItemValidity get _resetItemValidity => get();
 
   @override
   Widget build(BuildContext _) {
     return simple.TodoListItem(
-      item: store.read(_todoList.getItem(widget.id)),
+      item: store.readUnary(_todoList.getItem, widget.id),
       onChange: _onChange,
       onToggle: _onToggle,
       onRemove: _onRemove,
@@ -45,22 +36,22 @@ class _TodoListItemState extends AppStoreState<TodoListItem> {
   }
 
   void _onChange(String label) {
-    store.execute(_commitItem(widget.id, label));
+    store.applyBinary(_commitItem.call, widget.id, label);
   }
 
   void _onToggle(bool isDone) {
-    store.execute(_toggleItem(widget.id, isDone: isDone));
+    store.applyBinary(_toggleItem.call, widget.id, isDone);
   }
 
   void _onRemove() {
-    store.execute(_removeItem(widget.id));
+    store.applyUnary(_removeItem.call, widget.id);
   }
 
   void _onFocus() {
-    store.execute(_resetItemValidity(widget.id));
+    store.applyUnary(_resetItemValidity.call, widget.id);
   }
 
   void _onRetry() {
-    store.execute(_commitItem(widget.id));
+    store.applyUnary(_commitItem.call, widget.id);
   }
 }

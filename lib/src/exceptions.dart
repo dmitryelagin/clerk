@@ -47,26 +47,26 @@ class ReadException implements StateException {
 
   @override
   String toString() => 'ReadException: '
-      'Failed to read $resultType value from $targetType model'
+      'Failed to read $resultType value from $targetType'
       '${firstArgument == null ? '' : ', first argument: $firstArgument'}'
       '${secondArgument == null ? '' : ', second argument: $secondArgument'}'
-      ' - appropriate state was not found.';
+      ' - appropriate state or type was not found.';
 }
 
-/// Exception thrown when specific write operation can not be executed.
+/// Exception thrown when specific apply operation can not be executed.
 ///
 /// This can happen because there is no required state accumulator was found.
 /// Add state to store before writing to its accumulator. This exception can
 /// be influenced by changing store behavior with settings.
-class WriteException implements StateException {
-  /// Creates a new [WriteException].
-  const WriteException(
+class ApplyException implements StateException {
+  /// Creates a new [ApplyException].
+  const ApplyException(
     this.targetType, [
     this.firstArgument,
     this.secondArgument,
   ]);
 
-  /// The type of accumulator that is required to write.
+  /// The type of accumulator that is required to apply.
   final Type targetType;
 
   /// The optionaly provided first argument.
@@ -76,9 +76,23 @@ class WriteException implements StateException {
   final Object? secondArgument;
 
   @override
-  String toString() => 'WriteException: '
-      'Failed to write to $targetType accumulator'
+  String toString() => 'ApplyException: '
+      'Failed to apply to $targetType'
       '${firstArgument == null ? '' : ', first argument: $firstArgument'}'
       '${secondArgument == null ? '' : ', second argument: $secondArgument'}'
-      ' - appropriate state was not found.';
+      ' - appropriate state or type was not found.';
+}
+
+/// Exception thrown when specific apply operation can not be executed.
+///
+/// This can happen because some apply operation was started outside of store
+/// execution zone. Execute apply operations only by store `apply*` methods,
+/// this helps store to properly handle possible changes in async operations.
+class WrongZoneApplyException implements StateException {
+  /// Creates a new [WrongZoneApplyException].
+  const WrongZoneApplyException();
+
+  @override
+  String toString() => 'WrongZoneApplyException: '
+      'Failed to apply - operation started outside of store execution zone.';
 }

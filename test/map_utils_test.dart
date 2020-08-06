@@ -1,4 +1,4 @@
-import 'package:clerk/src/map_type_utils.dart';
+import 'package:clerk/src/map_utils.dart';
 import 'package:test/test.dart';
 
 void main() {

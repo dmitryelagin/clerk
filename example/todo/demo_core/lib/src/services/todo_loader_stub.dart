@@ -1,7 +1,29 @@
 part of 'todo_loader.dart';
 
 class _TodoLoaderStub implements TodoLoader {
+  static Random _random = Random();
   static int _lastItemId = 0;
+
+  static TodoItem get _randomItem {
+    return TodoItem(
+      _nextItemId,
+      List.generate(_random.nextInt(3) + 2, (_) => _randomWord).join(' '),
+      isDone: _random.nextBool(),
+    );
+  }
+
+  static String get _randomWord {
+    const words = 'jellyfish meat cuddly hot influence inquisitive earthquake '
+        'cap button tap whirl blade graceful juice tall dark cart unnatural '
+        'close kneel visit chance sprout wretched natural unbiased actor fuel';
+    final shuffledWords = words.split(' ')..shuffle(_random);
+    final word = _random.nextDouble() < 0.05
+        ? shuffledWords.first.toUpperCase()
+        : shuffledWords.first;
+    return _random.nextDouble() > 0.75
+        ? word[0].toUpperCase() + word.substring(1)
+        : word;
+  }
 
   static TodoItemId get _nextItemId => TodoItemId(_lastItemId += 1);
 
@@ -11,27 +33,25 @@ class _TodoLoaderStub implements TodoLoader {
     bool canReturnError = false,
     int minResponseLag = 100,
   }) {
-    final random = Random();
-    final milliseconds = (random.nextDouble() * 200 + minResponseLag).round();
+    final milliseconds = (_random.nextDouble() * 200 + minResponseLag).round();
     final duration = Duration(milliseconds: milliseconds);
     return Future<void>.delayed(duration).then((_) {
-      final shouldReturnData = random.nextDouble() > 0.25;
+      final shouldReturnData = _random.nextDouble() > 0.25;
       if (!canReturnError || shouldReturnData) return data;
       throw Exception();
     });
   }
 
   @override
-  Future<TodoInitResponse> initApp() => _requestData(
-        'initApp',
-        TodoInitResponse([
-          TodoItem(_nextItemId, 'Test label 1'),
-          TodoItem(_nextItemId, 'Test label 2', isDone: true),
-          TodoItem(_nextItemId, 'Test label 3'),
-          TodoItem(_nextItemId, 'Test label 4', isDone: true),
-        ]),
-        minResponseLag: 300,
-      );
+  Future<TodoInitResponse> initApp() {
+    return _requestData(
+      'initApp',
+      TodoInitResponse(
+        List.generate(_random.nextInt(8), (_) => _randomItem),
+      ),
+      minResponseLag: 500,
+    );
+  }
 
   @override
   Future<TodoItemId> addItem(String label, {bool? isDone}) =>

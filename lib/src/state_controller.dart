@@ -1,123 +1,72 @@
 import 'dart:async';
 
-import 'interfaces_private.dart';
+import 'interfaces.dart';
 import 'state.dart';
 import 'store_settings.dart';
-import 'types_public.dart';
+import 'types.dart';
 
 class StateController<M extends Object?, A extends Object?>
     implements StateManager<M, A> {
-  StateController(State<M, A> state, StoreSettings settings)
-      : _accumulator = state.initial,
-        _getAccumulator = state.getAccumulator,
+  StateController(State<M, A> state, StoreSettings settings, this._context)
+      : _accumulator = state.accumulator,
         _getModel = state.getModel,
         _areEqualModels = state.areEqualModels,
-        _model = state.getModel(state.initial),
-        _change = settings.getStreamController(),
-        _afterChanges = settings.getStreamController();
+        _change = settings.getStreamController() {
+    _model = state.getModel(_accumulator);
+  }
 
-  final GetAccumulator<M, A> _getAccumulator;
+  final A _accumulator;
+  final ContextManager _context;
   final GetModel<M, A> _getModel;
   final CompareModels<M> _areEqualModels;
   final StreamController<M> _change;
-  final StreamController<M> _afterChanges;
 
-  A _accumulator;
-  M _model;
-  M? _prevModel;
+  late M _model;
 
-  bool _hasChange = false;
-  bool _hasDeferredChange = false;
-  bool _hasTransanction = false;
-  bool _shouldRebuild = false;
+  @override
+  Stream<M> get onChange => _change.stream.distinct(_areEqualModels);
 
   M get model => _prepareModel();
-  bool get hasChange => _hasChange;
-  bool get hasDeferredChange => _hasDeferredChange;
+
+  bool get _hasPossibleChange => _context.hasPossibleChange(A);
 
   @override
-  Stream<M> get onChange => _change.stream;
+  V read<V>(Read<M, V> fn) => fn(_prepareModel());
 
   @override
-  Stream<M> get onAfterChanges => _afterChanges.stream;
-
-  bool get _hasChangeComputed =>
-      _prevModel == null || !_areEqualModels(_prevModel!, _prepareModel());
+  V readUnary<V, X>(ReadUnary<M, V, X> fn, X x) => fn(_prepareModel(), x);
 
   @override
-  V read<V>(Read<M, V> fn) {
-    return fn(_prepareModel());
+  V readBinary<V, X, Y>(ReadBinary<M, V, X, Y> fn, X x, Y y) =>
+      fn(_prepareModel(), x, y);
+
+  @override
+  void apply(Apply<A> fn) {
+    fn(_prepareAccumulator());
   }
 
   @override
-  V readUnary<V, X>(ReadUnary<M, V, X> fn, X x) {
-    return fn(_prepareModel(), x);
+  void applyUnary<X>(ApplyUnary<A, X> fn, X x) {
+    fn(_prepareAccumulator(), x);
   }
 
   @override
-  V readBinary<V, X, Y>(ReadBinary<M, V, X, Y> fn, X x, Y y) {
-    return fn(_prepareModel(), x, y);
-  }
-
-  @override
-  void write<V>(Write<A, V> fn) {
-    final accumulator = _prepareAccumulator();
-    _updateAccumulator(fn(accumulator), accumulator);
-  }
-
-  @override
-  void writeUnary<V, X>(WriteUnary<A, V, X> fn, X x) {
-    final accumulator = _prepareAccumulator();
-    _updateAccumulator(fn(accumulator, x), accumulator);
-  }
-
-  @override
-  void writeBinary<V, X, Y>(WriteBinary<A, V, X, Y> fn, X x, Y y) {
-    final accumulator = _prepareAccumulator();
-    _updateAccumulator(fn(accumulator, x, y), accumulator);
-  }
-
-  void checkChange() {
-    if (!_hasTransanction) return;
-    _hasTransanction = false;
-    if (_hasChange || !_hasChangeComputed) return;
-    _hasChange = _hasDeferredChange = true;
+  void applyBinary<X, Y>(ApplyBinary<A, X, Y> fn, X x, Y y) {
+    fn(_prepareAccumulator(), x, y);
   }
 
   void sinkChange() {
-    if (!_hasChange) return;
+    if (!_hasPossibleChange) return;
     _change.add(_prepareModel());
-    _hasChange = false;
   }
 
-  void sinkDeferredChange() {
-    if (!_hasDeferredChange) return;
-    _afterChanges.add(_prepareModel());
-    _hasDeferredChange = false;
-  }
+  Future<void> teardown() => _change.close();
 
-  Future<void> teardown() async {
-    await Future.wait<void>([
-      _change.close(),
-      _afterChanges.close(),
-    ]);
-  }
-
-  M _prepareModel() {
-    if (!_shouldRebuild) return _model;
-    _shouldRebuild = false;
-    return _model = _getModel(_accumulator);
-  }
+  M _prepareModel() =>
+      _model = _hasPossibleChange ? _getModel(_accumulator) : _model;
 
   A _prepareAccumulator() {
-    if (_hasTransanction) return _accumulator;
-    _hasTransanction = true;
-    _prevModel = _model;
-    return _getAccumulator(_model);
-  }
-
-  void _updateAccumulator<T>(T value, A prevAccumulator) {
-    _accumulator = value is A ? value : prevAccumulator;
-    _shouldRebuild = true;
+    if (!_hasPossibleChange) _context.registerPossibleChange(A);
+    return _accumulator;
   }
 }

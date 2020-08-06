@@ -28,7 +28,9 @@
 .packages
 .pub-cache/
 .pub/
+android/
 build/
+ios/
 pubspec.lock
 
 # Web related

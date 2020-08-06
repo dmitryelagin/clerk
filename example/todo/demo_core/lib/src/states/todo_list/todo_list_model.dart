@@ -1,9 +1,9 @@
 import '../../models/todo_item.dart';
-import 'todo_list_accumulator.dart';
+import 'todo_list.dart';
 
 class TodoListModel {
-  TodoListModel.fromAccumulator(TodoListAccumulator accumulator)
-      : items = List.unmodifiable(accumulator.items);
+  TodoListModel.fromAccumulator(TodoList accumulator)
+      : items = accumulator.getItems();
 
   final Iterable<TodoItem> items;
 }
