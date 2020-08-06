@@ -3,7 +3,6 @@ import 'dart:async';
 import 'interfaces.dart';
 import 'map_utils.dart';
 import 'state.dart';
-import 'state_aggregate_impl.dart';
 import 'state_controller.dart';
 import 'state_factory.dart';
 import 'store_settings.dart';
@@ -22,7 +21,7 @@ class StoreRepository implements StoreAccessor {
 
   @override
   StateAggregate get state {
-    return StateAggregateImpl({
+    return _factory.getAggregate({
       for (final key in _modelControllerMap.keys)
         key: _modelControllerMap[key].model,
     });
