@@ -82,3 +82,17 @@ class ApplyException implements StateException {
       '${secondArgument == null ? '' : ', second argument: $secondArgument'}'
       ' - appropriate state or type was not found.';
 }
+
+/// Exception thrown when specific apply operation can not be executed.
+///
+/// This can happen because some apply operation was started outside of store
+/// execution zone. Execute apply operations only by store `apply*` methods,
+/// this helps store to properly handle possible changes in async operations.
+class WrongZoneApplyException implements StateException {
+  /// Creates a new [WrongZoneApplyException].
+  const WrongZoneApplyException();
+
+  @override
+  String toString() => 'WrongZoneApplyException: '
+      'Failed to apply - operation started outside of store execution zone.';
+}

@@ -1,3 +1,4 @@
+import 'context_manager_impl.dart';
 import 'interfaces.dart';
 import 'state.dart';
 import 'state_factory.dart';
@@ -13,13 +14,16 @@ class Store {
     void Function(StoreBuilder) compose, {
     StoreSettings settings = const StoreSettings(),
   }) {
-    final builder = StoreBuilder._(settings);
-    compose(builder);
-    return Store._(builder._repository);
+    const context = ContextManagerImpl();
+    final repository =
+        StoreRepository(settings, StateFactory(settings, context), context);
+    compose(StoreBuilder._(repository));
+    return Store._(repository, context);
   }
 
-  Store._(this._repository) : _manager = StoreManagerImpl(_repository) {
-    _executor = StoreExecutorImpl(_repository, _manager);
+  Store._(this._repository, ExecutionHelper helper)
+      : _manager = StoreManagerImpl(_repository) {
+    _executor = StoreExecutorImpl(_repository, _manager, helper);
   }
 
   final StoreManagerImpl _manager;
@@ -45,8 +49,7 @@ class Store {
 
 /// An object that can assemble [State]s.
 class StoreBuilder {
-  StoreBuilder._(StoreSettings settings)
-      : _repository = StoreRepository(settings, StateFactory(settings));
+  StoreBuilder._(this._repository);
 
   final StoreRepository _repository;
 

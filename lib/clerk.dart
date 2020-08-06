@@ -13,7 +13,6 @@ export 'src/interfaces.dart'
         StoreManager,
         StoreReader;
 export 'src/state.dart';
-export 'src/state_reduced.dart';
 export 'src/store.dart';
 export 'src/store_settings.dart';
 export 'src/types.dart'
@@ -22,11 +21,7 @@ export 'src/types.dart'
         ApplyUnary,
         ApplyBinary,
         CompareModels,
-        GetAccumulator,
         GetModel,
         Read,
         ReadUnary,
-        ReadBinary,
-        Run,
-        RunUnary,
-        RunBinary;
+        ReadBinary;

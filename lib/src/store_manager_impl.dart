@@ -4,7 +4,7 @@ import 'types.dart';
 import 'types_utils.dart';
 
 class StoreManagerImpl implements StoreManager {
-  StoreManagerImpl(this._repository);
+  const StoreManagerImpl(this._repository);
 
   final StoreRepository _repository;
 

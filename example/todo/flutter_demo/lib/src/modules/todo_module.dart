@@ -6,22 +6,19 @@ void initializeTodoModule(Locator locator) {
   final get = locator.get;
   locator
     ..bindSingleton<Store>(
-      () => createTodoStore()..executor.run(get<Init>()()),
+      () => createTodoStore()..executor.apply(get<Init>().call),
       onReset: (store) {
         store.teardown();
       },
     )
-    ..bindSingleton<TodoListReader>(
-      () => get<TodoListManager>(), // ignore: unnecessary_lambdas
-    )
     ..bindSingleton(() => TodoLoader())
-    ..bindSingleton(() => TodoListManager())
-    ..bindSingleton(() => Init(get(), get()))
-    ..bindSingleton(() => AddItem(get(), get()))
-    ..bindSingleton(() => ChangeItem(get(), get()))
-    ..bindSingleton(() => RemoveItem(get(), get()))
-    ..bindSingleton(() => ResetItemValidity(get()))
-    ..bindSingleton(() => StartItemAdd(get()))
-    ..bindSingleton(() => ToggleItem(get(), get()))
+    ..bindSingleton(() => TodoListReader())
+    ..bindSingleton(() => Init(get()))
+    ..bindSingleton(() => AddItem(get()))
+    ..bindSingleton(() => ChangeItem(get()))
+    ..bindSingleton(() => RemoveItem(get()))
+    ..bindSingleton(() => const ResetItemValidity())
+    ..bindSingleton(() => const StartItemAdd())
+    ..bindSingleton(() => ToggleItem(get()))
     ..bindSingleton(() => CommitItem(get(), get(), get()));
 }

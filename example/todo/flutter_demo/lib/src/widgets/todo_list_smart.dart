@@ -18,13 +18,13 @@ class _TodoListState extends StoreState<TodoList> with InjectorState {
   @override
   Widget build(BuildContext _) {
     return simple.TodoList(
-      itemsIds: store.read(_todoList.getItemsIds()),
-      isAddingAvailable: store.read(_todoList.isAddingAvailable()),
+      itemsIds: store.read(_todoList.getItemsIds),
+      isAddingAvailable: store.read(_todoList.isAddingAvailable),
       onAdd: _onAdd,
     );
   }
 
   void _onAdd() {
-    store.run(_startItemAdd());
+    store.apply(_startItemAdd.call);
   }
 }

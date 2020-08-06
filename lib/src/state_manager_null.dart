@@ -12,9 +12,6 @@ class StateManagerNull<M extends Object, A extends Object>
   Stream<M> get onChange => _settings.onListenChangeFailed();
 
   @override
-  Stream<M> get onAfterChanges => _settings.onListenChangeFailed();
-
-  @override
   V read<V>(Read<M, V> fn) => _settings.onReadFailed(M, V);
 
   @override

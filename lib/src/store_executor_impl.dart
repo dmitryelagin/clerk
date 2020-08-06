@@ -5,75 +5,72 @@ import 'store_repository.dart';
 import 'types.dart';
 
 class StoreExecutorImpl implements StoreExecutor {
-  StoreExecutorImpl(this._repository, this._manager) {
-    _executionZone = _createExecutionZone();
+  StoreExecutorImpl(this._repository, this._innerExecutor, this._helper) {
+    _executionZoneSpecification = _createExecutionZoneSpecification();
   }
 
   final StoreRepository _repository;
-  final StoreManager _manager;
+  final StoreExecutor _innerExecutor;
+  final ExecutionHelper _helper;
 
-  Zone _executionZone;
+  ZoneSpecification _executionZoneSpecification;
 
   var _hasTransanction = false;
 
-  bool get _canStartTransanction =>
-      !_hasTransanction && !_repository.isTeardowned;
-
   @override
-  void run(Run fn) {
+  void apply<A>(Apply<A> fn) {
     _runZoned(() {
-      _manager.apply(fn);
+      _innerExecutor.apply(fn);
     });
   }
 
   @override
-  void runUnary<X>(RunUnary<X> fn, X x) {
+  void applyUnary<A, X>(ApplyUnary<A, X> fn, X x) {
     _runZoned(() {
-      _manager.applyUnary(fn, x);
+      _innerExecutor.applyUnary(fn, x);
     });
   }
 
   @override
-  void runBinary<X, Y>(RunBinary<X, Y> fn, X x, Y y) {
+  void applyBinary<A, X, Y>(ApplyBinary<A, X, Y> fn, X x, Y y) {
     _runZoned(() {
-      _manager.applyBinary(fn, x, y);
+      _innerExecutor.applyBinary(fn, x, y);
     });
   }
 
   void _runZoned(void Function() fn) {
     if (_hasTransanction) {
       fn();
-    } else if (_canStartTransanction) {
-      _executionZone.run(fn);
+    } else {
+      // TODO: Think about nested zones
+      _helper.run(fn, specification: _executionZoneSpecification);
     }
   }
 
-  Zone _createExecutionZone() {
-    return Zone.current.fork(
-      specification: ZoneSpecification(
-        run: <R>(source, parent, zone, fn) {
-          return _canStartTransanction
-              ? _runTransanction(() => parent.run(zone, fn))
-              : parent.run(zone, fn);
-        },
-        runUnary: <R, X>(source, parent, zone, fn, x) {
-          return _canStartTransanction
-              ? _runTransanction(() => parent.runUnary(zone, fn, x))
-              : parent.runUnary(zone, fn, x);
-        },
-        runBinary: <R, X, Y>(source, parent, zone, fn, x, y) {
-          return _canStartTransanction
-              ? _runTransanction(() => parent.runBinary(zone, fn, x, y))
-              : parent.runBinary(zone, fn, x, y);
-        },
-      ),
+  ZoneSpecification _createExecutionZoneSpecification() {
+    return ZoneSpecification(
+      run: <R>(source, parent, zone, fn) {
+        return _hasTransanction
+            ? parent.run(zone, fn)
+            : _runTransanction(() => parent.run(zone, fn), source);
+      },
+      runUnary: <R, X>(source, parent, zone, fn, x) {
+        return _hasTransanction
+            ? parent.runUnary(zone, fn, x)
+            : _runTransanction(() => parent.runUnary(zone, fn, x), source);
+      },
+      runBinary: <R, X, Y>(source, parent, zone, fn, x, y) {
+        return _hasTransanction
+            ? parent.runBinary(zone, fn, x, y)
+            : _runTransanction(() => parent.runBinary(zone, fn, x, y), source);
+      },
     );
   }
 
-  T _runTransanction<T>(T Function() run) {
+  T _runTransanction<T>(T Function() fn, Zone source) {
     _hasTransanction = true;
-    final result = run();
-    _repository.applyChanges();
+    final result = fn();
+    _helper.run(_repository.applyChanges, source: source);
     _hasTransanction = false;
     return result;
   }

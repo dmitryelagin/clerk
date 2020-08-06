@@ -13,26 +13,20 @@ class State<M, A> {
   /// Creates [State] with provided rules.
   ///
   /// Callbacks will be executed as if they are appropriate methods.
-  State(
-    this.initial,
+  const State(
+    this.accumulator,
     this._getModel, [
-    GetAccumulator<M, A> getAccumulator,
     CompareModels<M> areEqualModels,
-  ])  : _getAccumulator = getAccumulator ?? ((_) => initial),
-        _areEqualModels = areEqualModels ?? identical;
+  ]) : _areEqualModels = areEqualModels ?? identical;
 
-  /// Initial accumulator object.
+  /// An accumulator object.
   ///
   /// It will be [State]'s permanent accumulator and will act as a single
-  /// source of truth if [GetAccumulator] is not provided.
-  final A initial;
+  /// source of truth.
+  final A accumulator;
 
-  final GetAccumulator<M, A> _getAccumulator;
   final GetModel<M, A> _getModel;
   final CompareModels<M> _areEqualModels;
-
-  /// Returns accumulator produced from model.
-  A getAccumulator(M model) => _getAccumulator(model);
 
   /// Returns model produced from accumulator.
   M getModel(A accumulator) => _getModel(accumulator);

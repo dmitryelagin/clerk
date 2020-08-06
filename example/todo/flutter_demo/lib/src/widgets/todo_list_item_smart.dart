@@ -26,7 +26,7 @@ class _TodoListItemState extends StoreState<TodoListItem> with InjectorState {
   @override
   Widget build(BuildContext _) {
     return simple.TodoListItem(
-      item: store.read(_todoList.getItem(widget.id)),
+      item: store.readUnary(_todoList.getItem, widget.id),
       onChange: _onChange,
       onToggle: _onToggle,
       onRemove: _onRemove,
@@ -36,22 +36,22 @@ class _TodoListItemState extends StoreState<TodoListItem> with InjectorState {
   }
 
   void _onChange(String label) {
-    store.run(_commitItem(widget.id, label));
+    store.applyBinary(_commitItem.call, widget.id, label);
   }
 
   void _onToggle(bool isDone) {
-    store.run(_toggleItem(widget.id, isDone: isDone));
+    store.applyBinary(_toggleItem.call, widget.id, isDone);
   }
 
   void _onRemove() {
-    store.run(_removeItem(widget.id));
+    store.applyUnary(_removeItem.call, widget.id);
   }
 
   void _onFocus() {
-    store.run(_resetItemValidity(widget.id));
+    store.applyUnary(_resetItemValidity.call, widget.id);
   }
 
   void _onRetry() {
-    store.run(_commitItem(widget.id));
+    store.applyUnary(_commitItem.call, widget.id);
   }
 }
