@@ -56,8 +56,7 @@ class StateController<M extends Object, A extends Object>
   }
 
   void sinkChange() {
-    if (!_hasPossibleChange) return;
-    _change.add(_prepareModel());
+    if (!identical(_model, _prepareModel())) _change.add(_model);
   }
 
   Future<void> teardown() => _change.close();

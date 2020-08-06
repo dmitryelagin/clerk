@@ -14,7 +14,7 @@ class Store {
     void Function(StoreBuilder) compose, {
     StoreSettings settings = const StoreSettings(),
   }) {
-    const context = ContextManagerImpl();
+    final context = ContextManagerImpl();
     final repository =
         StoreRepository(settings, StateFactory(settings, context), context);
     compose(StoreBuilder._(repository));

@@ -4,17 +4,9 @@ import 'exceptions.dart';
 import 'interfaces.dart';
 
 class ContextManagerImpl implements ContextManager, ExecutionHelper {
-  const ContextManagerImpl();
-
   static final _possibleChangesKey = Object();
 
-  static Set<Type> _getPossibleChanges({
-    Set<Type> Function() orElse = _throwChangesNotFound,
-    Zone source,
-  }) {
-    final Object changes = source != null ? source[_possibleChangesKey] : null;
-    return changes != null && changes is Set<Type> ? changes : orElse();
-  }
+  final _cache = Expando<Set<Type>>();
 
   static Set<Type> _throwChangesNotFound() =>
       throw const WrongZoneApplyException();
@@ -24,17 +16,15 @@ class ContextManagerImpl implements ContextManager, ExecutionHelper {
 
   @override
   bool get hasPossibleChanges =>
-      _getPossibleChanges(source: Zone.current, orElse: _getEmptyChanges)
-          .isNotEmpty;
+      _getPossibleChanges(Zone.current, orElse: _getEmptyChanges).isNotEmpty;
 
   @override
   bool hasPossibleChange(Type key) =>
-      _getPossibleChanges(source: Zone.current, orElse: _getEmptyChanges)
-          .contains(key);
+      _getPossibleChanges(Zone.current, orElse: _getEmptyChanges).contains(key);
 
   @override
   void registerPossibleChange(Type key) {
-    _getPossibleChanges(source: Zone.current).add(key);
+    _getPossibleChanges(Zone.current).add(key);
   }
 
   @override
@@ -44,8 +34,20 @@ class ContextManagerImpl implements ContextManager, ExecutionHelper {
     ZoneSpecification zoneSpecification,
   }) {
     runZoned(fn, zoneSpecification: zoneSpecification, zoneValues: {
-      _possibleChangesKey:
-          _getPossibleChanges(source: source, orElse: _createEmptyChanges),
+      _possibleChangesKey: source == null
+          ? _createEmptyChanges()
+          : _getPossibleChanges(source, orElse: _createEmptyChanges),
     });
+  }
+
+  Set<Type> _getPossibleChanges(
+    Zone source, {
+    Set<Type> Function() orElse = _throwChangesNotFound,
+  }) {
+    final cachedValue = _cache[source];
+    if (cachedValue != null) return cachedValue;
+    final Object value = source[_possibleChangesKey];
+    _cache[source] = value != null && value is Set<Type> ? value : orElse();
+    return _cache[source];
   }
 }
