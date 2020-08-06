@@ -42,7 +42,6 @@ class StoreExecutorImpl implements StoreExecutor {
     if (_hasTransanction) {
       fn();
     } else {
-      // TODO: Think about nested zones
       _helper.run(fn, specification: _executionZoneSpecification);
     }
   }
