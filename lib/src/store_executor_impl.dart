@@ -42,7 +42,7 @@ class StoreExecutorImpl implements StoreExecutor {
     if (_hasTransanction) {
       fn();
     } else {
-      _helper.run(fn, specification: _executionZoneSpecification);
+      _helper.run(fn, zoneSpecification: _executionZoneSpecification);
     }
   }
 
