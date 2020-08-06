@@ -3,11 +3,7 @@ import 'dart:async';
 import 'package:clerk/clerk.dart';
 
 class StoreManagerWrapper implements StoreManager {
-  StoreManagerWrapper(this._store) {
-    // TODO: Change to teardown stream
-    _subscriptions[StateAggregate] =
-        _store.accessor.onChange.listen(null, onDone: teardown);
-  }
+  StoreManagerWrapper(this._store);
 
   final Store _store;
 

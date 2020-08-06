@@ -16,8 +16,6 @@ class StoreRepository implements StoreAccessor {
   final ContextManager _context;
   final StreamController<StateAggregate> _change;
 
-  // TODO: Implement teardown stream
-
   final _accumulatorControllerMap = <Type, StateController>{};
   final _modelControllerMap = <Type, StateController>{};
   final _controllers = <StateController>[];
