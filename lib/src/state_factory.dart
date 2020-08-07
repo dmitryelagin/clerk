@@ -1,5 +1,6 @@
 import 'interfaces.dart';
 import 'state.dart';
+import 'state_aggregate_impl.dart';
 import 'state_controller.dart';
 import 'state_manager_null.dart';
 import 'store_settings.dart';
@@ -20,4 +21,7 @@ class StateFactory {
 
   StateController<M, A> getController<M, A>(State<M, A> state) =>
       StateController(state, _settings, _context);
+
+  StateAggregate getAggregate(Map<Type, Object?> models) =>
+      StateAggregateImpl(models);
 }

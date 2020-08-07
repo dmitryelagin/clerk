@@ -102,7 +102,6 @@ abstract class StateManager<M extends Object?, A extends Object?> {
 }
 
 abstract class ContextManager {
-  bool get hasPossibleChanges;
   bool hasPossibleChange(Type key);
   void registerPossibleChange(Type key);
 }
