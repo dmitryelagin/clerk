@@ -12,7 +12,7 @@ class StateController<M extends Object, A extends Object>
         _getModel = state.getModel,
         _areEqualModels = state.areEqualModels,
         _change = settings.getStreamController() {
-    _model = state.getModel(_accumulator);
+    _model = _prevModel = state.getModel(_accumulator);
   }
 
   final A _accumulator;
@@ -22,13 +22,12 @@ class StateController<M extends Object, A extends Object>
   final StreamController<M> _change;
 
   M _model;
+  M _prevModel;
 
   @override
-  Stream<M> get onChange => _change.stream.distinct(_areEqualModels);
+  Stream<M> get onChange => _change.stream;
 
   M get model => _prepareModel();
-
-  bool get _hasPossibleChange => _context.hasPossibleChange(A);
 
   @override
   V read<V>(Read<M, V> fn) => fn(_prepareModel());
@@ -55,18 +54,21 @@ class StateController<M extends Object, A extends Object>
     fn(_prepareAccumulator(), x, y);
   }
 
-  void sinkChange() {
-    if (identical(_model, _prepareModel())) return;
-    _change.add(_model);
+  bool trySinkChange() {
+    if (_areEqualModels(_prevModel, _prepareModel())) return false;
+    _change.add(_prevModel = _model);
+    return true;
   }
 
   Future<void> teardown() => _change.close();
 
-  M _prepareModel() =>
-      _model = _hasPossibleChange ? _getModel(_accumulator) : _model;
+  M _prepareModel() {
+    if (!_context.hasPossibleChange(A)) return _model;
+    return _model = _getModel(_accumulator);
+  }
 
   A _prepareAccumulator() {
-    if (!_hasPossibleChange) _context.registerPossibleChange(A);
+    _context.registerPossibleChange(A);
     return _accumulator;
   }
 }

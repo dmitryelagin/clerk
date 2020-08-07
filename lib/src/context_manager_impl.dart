@@ -15,10 +15,6 @@ class ContextManagerImpl implements ContextManager, ExecutionHelper {
   static Set<Type> _getEmptyChanges() => const {};
 
   @override
-  bool get hasPossibleChanges =>
-      _getPossibleChanges(Zone.current, orElse: _getEmptyChanges).isNotEmpty;
-
-  @override
   bool hasPossibleChange(Type key) =>
       _getPossibleChanges(Zone.current, orElse: _getEmptyChanges).contains(key);
 

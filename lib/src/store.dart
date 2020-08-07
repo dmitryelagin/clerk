@@ -16,7 +16,7 @@ class Store {
   }) {
     final context = ContextManagerImpl();
     final repository =
-        StoreRepository(settings, StateFactory(settings, context), context);
+        StoreRepository(settings, StateFactory(settings, context));
     compose(StoreBuilder._(repository));
     return Store._(repository, context);
   }

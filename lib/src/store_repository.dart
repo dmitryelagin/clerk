@@ -8,11 +8,10 @@ import 'state_factory.dart';
 import 'store_settings.dart';
 
 class StoreRepository implements StoreAccessor {
-  StoreRepository(StoreSettings settings, this._factory, this._context)
+  StoreRepository(StoreSettings settings, this._factory)
       : _change = settings.getStreamController();
 
   final StateFactory _factory;
-  final ContextManager _context;
   final StreamController<StateAggregate> _change;
 
   final _accumulatorControllerMap = <Type, StateController>{};
@@ -50,12 +49,11 @@ class StoreRepository implements StoreAccessor {
   }
 
   void applyChanges() {
+    var hasChange = false;
     for (final controller in _controllers) {
-      controller.sinkChange();
+      hasChange = controller.trySinkChange() || hasChange;
     }
-    if (_change.hasListener && _context.hasPossibleChanges) {
-      _change.add(state);
-    }
+    if (hasChange && _change.hasListener) _change.add(state);
   }
 
   Future<void> teardown() {
