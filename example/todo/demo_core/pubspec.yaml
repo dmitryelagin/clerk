@@ -3,7 +3,7 @@ description: A core, reusable code for Clerk package demos.
 publish_to: none
 version: 1.0.0
 environment:
-  sdk: ">=2.9.0-15.0.dev <3.0.0"
+  sdk: ">=2.9.0 <3.0.0"
 dependencies:
   clerk:
     version: ^0.3.0
