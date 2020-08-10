@@ -37,6 +37,15 @@ class TodoList {
     updateItem(id, (item) => item.update(validity: const TodoValidity()));
   }
 
+  void revertItemValidity(TodoItemId id) {
+    updateItem(id, (item) {
+      final validity = item.validity;
+      return validity is RevertableTodoValidity
+          ? validity.revert(item)
+          : item.update(validity: const TodoValidity());
+    });
+  }
+
   void toggleItem(TodoItemId id, {bool isDone}) {
     updateItem(id, (item) => item.update(isDone: isDone ?? !item.isDone));
   }

@@ -23,14 +23,23 @@ class _TodoListItemTextFieldState extends State<TodoListItemTextField> {
 
   @override
   void initState() {
+    super.initState();
     _syncTextWithModel();
     _focusNode.addListener(() {
-      if (_focusNode.hasFocus) return widget.onFocus();
+      if (_focusNode.hasFocus) {
+        widget.onFocus();
+        return;
+      }
       if (_textController.text.isEmpty) _syncTextWithModel();
       widget.onChange(_textController.text);
     });
     if (widget.item.id.isFake) _focusNode.requestFocus();
-    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(TodoListItemTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _syncTextWithModel();
   }
 
   @override

@@ -1,7 +1,6 @@
 import 'interfaces.dart';
 import 'store_repository.dart';
 import 'types.dart';
-import 'types_utils.dart';
 
 class StoreManagerImpl implements StoreManager {
   const StoreManagerImpl(this._repository);
@@ -10,29 +9,29 @@ class StoreManagerImpl implements StoreManager {
 
   @override
   V read<M, V>(Read<M, V> fn) {
-    return fn.isGeneric && !_repository.hasModel<M>()
-        ? fn(_getTypedThis())
+    return _isReaderApplicable<M>()
+        ? fn(_getCastedThis())
         : _repository.getByModel<M>().read(fn);
   }
 
   @override
   V readUnary<M, V, X>(ReadUnary<M, V, X> fn, X x) {
-    return fn.isGeneric && !_repository.hasModel<M>()
-        ? fn(_getTypedThis(), x)
+    return _isReaderApplicable<M>()
+        ? fn(_getCastedThis(), x)
         : _repository.getByModel<M>().readUnary(fn, x);
   }
 
   @override
   V readBinary<M, V, X, Y>(ReadBinary<M, V, X, Y> fn, X x, Y y) {
-    return fn.isGeneric && !_repository.hasModel<M>()
-        ? fn(_getTypedThis(), x, y)
+    return _isReaderApplicable<M>()
+        ? fn(_getCastedThis(), x, y)
         : _repository.getByModel<M>().readBinary(fn, x, y);
   }
 
   @override
   void apply<A>(Apply<A> fn) {
-    if (fn.isExecution && !_repository.hasAccumulator<A>()) {
-      fn(_getTypedThis());
+    if (_isManagerApplicable<A>()) {
+      fn(_getCastedThis());
     } else {
       _repository.getByAccumulator<A>().apply(fn);
     }
@@ -40,8 +39,8 @@ class StoreManagerImpl implements StoreManager {
 
   @override
   void applyUnary<A, X>(ApplyUnary<A, X> fn, X x) {
-    if (fn.isExecution && !_repository.hasAccumulator<A>()) {
-      fn(_getTypedThis(), x);
+    if (_isManagerApplicable<A>()) {
+      fn(_getCastedThis(), x);
     } else {
       _repository.getByAccumulator<A>().applyUnary(fn, x);
     }
@@ -49,12 +48,17 @@ class StoreManagerImpl implements StoreManager {
 
   @override
   void applyBinary<A, X, Y>(ApplyBinary<A, X, Y> fn, X x, Y y) {
-    if (fn.isExecution && !_repository.hasAccumulator<A>()) {
-      fn(_getTypedThis(), x, y);
+    if (_isManagerApplicable<A>()) {
+      fn(_getCastedThis(), x, y);
     } else {
       _repository.getByAccumulator<A>().applyBinary(fn, x, y);
     }
   }
 
-  T _getTypedThis<T>() => this as T; // ignore: avoid_as
+  bool _isReaderApplicable<T>() => T == StoreReader;
+
+  bool _isManagerApplicable<T>() =>
+      T == StoreManager || T == StoreExecutor || T == StoreReader;
+
+  T _getCastedThis<T>() => this as T; // ignore: avoid_as
 }

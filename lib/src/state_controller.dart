@@ -55,6 +55,7 @@ class StateController<M extends Object, A extends Object>
   }
 
   bool trySinkChange() {
+    if (!_context.hasPossibleChange(A)) return false;
     if (_areEqualModels(_prevModel, _prepareModel())) return false;
     _change.add(_prevModel = _model);
     return true;
