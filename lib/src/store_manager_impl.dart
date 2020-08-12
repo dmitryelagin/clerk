@@ -1,11 +1,20 @@
+import 'dart:async';
+
 import 'interfaces.dart';
 import 'store_repository.dart';
 import 'types.dart';
 
 class StoreManagerImpl implements StoreManager {
-  const StoreManagerImpl(this._repository);
+  StoreManagerImpl(this._helper, this._repository) {
+    _executionZoneSpecification = _createExecutionZoneSpecification();
+  }
 
+  final ExecutionHelper _helper;
   final StoreRepository _repository;
+
+  ZoneSpecification _executionZoneSpecification;
+
+  var _hasTransanction = false;
 
   @override
   V read<M, V>(Read<M, V> fn) => fn(_getModel());
@@ -19,17 +28,35 @@ class StoreManagerImpl implements StoreManager {
 
   @override
   void apply<A>(Apply<A> fn) {
-    fn(_getAccumulator());
+    if (_hasTransanction) {
+      fn(_getAccumulator());
+    } else {
+      _helper.run(() {
+        fn(_getAccumulator());
+      }, zoneSpecification: _executionZoneSpecification);
+    }
   }
 
   @override
   void applyUnary<A, X>(ApplyUnary<A, X> fn, X x) {
-    fn(_getAccumulator(), x);
+    if (_hasTransanction) {
+      fn(_getAccumulator(), x);
+    } else {
+      _helper.run(() {
+        fn(_getAccumulator(), x);
+      }, zoneSpecification: _executionZoneSpecification);
+    }
   }
 
   @override
   void applyBinary<A, X, Y>(ApplyBinary<A, X, Y> fn, X x, Y y) {
-    fn(_getAccumulator(), x, y);
+    if (_hasTransanction) {
+      fn(_getAccumulator(), x, y);
+    } else {
+      _helper.run(() {
+        fn(_getAccumulator(), x, y);
+      }, zoneSpecification: _executionZoneSpecification);
+    }
   }
 
   M _getModel<M>() =>
@@ -41,4 +68,32 @@ class StoreManagerImpl implements StoreManager {
           : _repository.getAccumulator();
 
   T _getCastedThis<T>() => this as T; // ignore: avoid_as
+
+  ZoneSpecification _createExecutionZoneSpecification() {
+    return ZoneSpecification(
+      run: <R>(source, parent, zone, fn) {
+        return _hasTransanction
+            ? parent.run(zone, fn)
+            : _runTransanction(() => parent.run(zone, fn), source);
+      },
+      runUnary: <R, X>(source, parent, zone, fn, x) {
+        return _hasTransanction
+            ? parent.runUnary(zone, fn, x)
+            : _runTransanction(() => parent.runUnary(zone, fn, x), source);
+      },
+      runBinary: <R, X, Y>(source, parent, zone, fn, x, y) {
+        return _hasTransanction
+            ? parent.runBinary(zone, fn, x, y)
+            : _runTransanction(() => parent.runBinary(zone, fn, x, y), source);
+      },
+    );
+  }
+
+  T _runTransanction<T>(T Function() fn, Zone source) {
+    _hasTransanction = true;
+    final result = fn();
+    _helper.run(_repository.applyChanges, source: source);
+    _hasTransanction = false;
+    return result;
+  }
 }

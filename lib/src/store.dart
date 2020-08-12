@@ -1,7 +1,6 @@
 import 'context_manager_impl.dart';
 import 'interfaces.dart';
 import 'state.dart';
-import 'store_executor_impl.dart';
 import 'store_manager_impl.dart';
 import 'store_repository.dart';
 import 'store_settings.dart';
@@ -16,24 +15,23 @@ class Store<S extends Object> {
     final context = ContextManagerImpl();
     final repository = StoreRepository(context, settings);
     compose(StoreBuilder._(repository));
-    return Store._(repository, context);
+    final manager = StoreManagerImpl(context, repository);
+    return Store._(repository, manager);
   }
 
-  Store._(this._repository, ExecutionHelper helper)
-      : _manager = StoreManagerImpl(_repository) {
-    _executor = StoreExecutorImpl(_repository, _manager, helper);
-  }
+  Store._(this._repository, this._manager);
 
   final StoreRepository<S> _repository;
-  final StoreManagerImpl _manager;
-
-  StoreExecutorImpl _executor;
+  final StoreManager _manager;
 
   /// A [StoreAccessor] instance of this [Store].
   StoreAccessor<S> get accessor => _repository;
 
   /// A [StoreExecutor] instance of this [Store].
-  StoreExecutor get executor => _executor;
+  StoreExecutor get executor => _manager;
+
+  /// A [StoreManager] instance of this [Store].
+  StoreManager get manager => _manager;
 
   /// A [StoreReader] instance of this [Store].
   StoreReader get reader => _manager;
