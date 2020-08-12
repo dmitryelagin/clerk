@@ -1,54 +1,52 @@
 import 'dart:async';
 
 import 'interfaces.dart';
-import 'map_utils.dart';
 import 'state.dart';
 import 'state_controller.dart';
-import 'state_factory.dart';
 import 'store_settings.dart';
 
-class StoreRepository implements StoreAccessor {
-  StoreRepository(StoreSettings settings, this._factory)
-      : _change = settings.getStreamController();
+class StoreRepository<S extends Object> implements StoreAccessor<S> {
+  StoreRepository(this._context, this._settings)
+      : _change = _settings.getStreamController();
 
-  final StateFactory _factory;
-  final StreamController<StateAggregate> _change;
+  final ContextManager _context;
+  final StoreSettings<S> _settings;
+  final StreamController<S> _change;
 
   final _accumulatorControllerMap = <Type, StateController>{};
   final _modelControllerMap = <Type, StateController>{};
   final _controllers = <StateController>[];
 
-  @override
-  StateAggregate get state {
-    return _factory.getAggregate({
-      for (final key in _modelControllerMap.keys)
-        key: _modelControllerMap[key].model,
-    });
-  }
+  static T _getTypedValue<T>(Object value) => value is T ? value : null;
 
   @override
-  Stream<StateAggregate> get onChange => _change.stream;
+  S get state => _settings.getStateAggregate(_getModels);
 
   @override
-  Stream<M> onModelChange<M>() => getByModel<M>().onChange;
+  Stream<S> get onChange => _change.stream;
 
-  bool hasAccumulator<A>() => _accumulatorControllerMap.containsKey(A);
-  bool hasModel<M>() => _modelControllerMap.containsKey(M);
+  @override
+  Stream<M> onModelChange<M>() =>
+      _getTypedValue(_modelControllerMap[M]?.onChange) ??
+      _settings.getModelChangeFallback();
 
-  StateManager<Object, A> getByAccumulator<A>() =>
-      _accumulatorControllerMap.get(A) ?? _factory.getManager();
+  M getModel<M>() =>
+      _getTypedValue(_modelControllerMap[M]?.model) ??
+      _settings.getModelFallback();
 
-  StateManager<M, Object> getByModel<M>() =>
-      _modelControllerMap.get(M) ?? _factory.getManager();
+  A getAccumulator<A>() =>
+      _getTypedValue(_accumulatorControllerMap[A]?.accumulator) ??
+      _settings.getAccumulatorFallback();
 
   void add<M, A>(State<M, A> state) {
-    final controller = _factory.getController(state);
+    final controller = _createController(state);
     _accumulatorControllerMap[A] = controller;
     _modelControllerMap[M] = controller;
     _controllers.add(controller);
   }
 
   void applyChanges() {
+    if (!_context.hasPossibleChanges) return;
     var hasChange = false;
     for (final controller in _controllers) {
       hasChange = controller.trySinkChange() || hasChange;
@@ -62,4 +60,12 @@ class StoreRepository implements StoreAccessor {
       ..._controllers.map((controller) => controller.teardown()),
     ]);
   }
+
+  StateController<M, A> _createController<M, A>(State<M, A> state) =>
+      StateController(state, _context, _settings.getStreamController());
+
+  Map<Type, Object> _getModels() => {
+        for (final key in _modelControllerMap.keys)
+          key: _modelControllerMap[key].model,
+      };
 }

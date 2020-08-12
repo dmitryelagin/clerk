@@ -17,7 +17,7 @@ void addToCounter(Counter counter, int count) {
 void main() {
   final store = Store((builder) {
     builder.add(State<int, Counter>(Counter(), (acc) => acc.value));
-  });
+  }, StoreSettings.standard);
   store.executor.applyUnary(addToCounter, 5);
   final result = store.reader.readUnary(getCounterMultipliedBy, 2);
   // ignore: avoid_print

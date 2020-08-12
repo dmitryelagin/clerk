@@ -15,8 +15,8 @@ class ListenChangeException implements StateException {
 
   @override
   String toString() => 'ListenChangeException: '
-      'Failed to listen $targetType model changes'
-      ' - appropriate state was not found.';
+      'Failed to listen $targetType model changes - appropriate '
+      'state was not found.';
 }
 
 /// Exception thrown when specific read operation can not be executed.
@@ -26,31 +26,15 @@ class ListenChangeException implements StateException {
 /// influenced by changing store behavior with settings.
 class ReadException implements StateException {
   /// Creates a new [ReadException].
-  const ReadException(
-    this.targetType,
-    this.resultType, [
-    this.firstArgument,
-    this.secondArgument,
-  ]);
+  const ReadException(this.targetType);
 
   /// The type of model that is required to read.
   final Type targetType;
 
-  /// The type of value that should be returned after reading.
-  final Type resultType;
-
-  /// The optionaly provided first argument.
-  final Object firstArgument;
-
-  /// The optionaly provided second argument.
-  final Object secondArgument;
-
   @override
   String toString() => 'ReadException: '
-      'Failed to read $resultType value from $targetType'
-      '${firstArgument == null ? '' : ', first argument: $firstArgument'}'
-      '${secondArgument == null ? '' : ', second argument: $secondArgument'}'
-      ' - appropriate state or type was not found.';
+      'Failed to read from $targetType - appropriate '
+      'state or type was not found.';
 }
 
 /// Exception thrown when specific apply operation can not be executed.
@@ -60,27 +44,15 @@ class ReadException implements StateException {
 /// be influenced by changing store behavior with settings.
 class ApplyException implements StateException {
   /// Creates a new [ApplyException].
-  const ApplyException(
-    this.targetType, [
-    this.firstArgument,
-    this.secondArgument,
-  ]);
+  const ApplyException(this.targetType);
 
   /// The type of accumulator that is required to apply.
   final Type targetType;
 
-  /// The optionaly provided first argument.
-  final Object firstArgument;
-
-  /// The optionaly provided second argument.
-  final Object secondArgument;
-
   @override
   String toString() => 'ApplyException: '
-      'Failed to apply to $targetType'
-      '${firstArgument == null ? '' : ', first argument: $firstArgument'}'
-      '${secondArgument == null ? '' : ', second argument: $secondArgument'}'
-      ' - appropriate state or type was not found.';
+      'Failed to apply to $targetType - appropriate '
+      'state or type was not found.';
 }
 
 /// Exception thrown when specific apply operation can not be executed.

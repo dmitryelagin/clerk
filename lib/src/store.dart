@@ -1,22 +1,20 @@
 import 'context_manager_impl.dart';
 import 'interfaces.dart';
 import 'state.dart';
-import 'state_factory.dart';
 import 'store_executor_impl.dart';
 import 'store_manager_impl.dart';
 import 'store_repository.dart';
 import 'store_settings.dart';
 
 /// An object that stores states and provides instruments to manage them.
-class Store {
+class Store<S extends Object> {
   /// Creates an assembled [Store].
   factory Store(
-    void Function(StoreBuilder) compose, {
-    StoreSettings settings = const StoreSettings(),
-  }) {
+    void Function(StoreBuilder) compose,
+    StoreSettings<S> settings,
+  ) {
     final context = ContextManagerImpl();
-    final repository =
-        StoreRepository(settings, StateFactory(settings, context));
+    final repository = StoreRepository(context, settings);
     compose(StoreBuilder._(repository));
     return Store._(repository, context);
   }
@@ -26,13 +24,13 @@ class Store {
     _executor = StoreExecutorImpl(_repository, _manager, helper);
   }
 
+  final StoreRepository<S> _repository;
   final StoreManagerImpl _manager;
-  final StoreRepository _repository;
 
   StoreExecutorImpl _executor;
 
   /// A [StoreAccessor] instance of this [Store].
-  StoreAccessor get accessor => _repository;
+  StoreAccessor<S> get accessor => _repository;
 
   /// A [StoreExecutor] instance of this [Store].
   StoreExecutor get executor => _executor;

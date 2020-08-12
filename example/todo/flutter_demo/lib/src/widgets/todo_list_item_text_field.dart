@@ -39,7 +39,7 @@ class _TodoListItemTextFieldState extends State<TodoListItemTextField> {
   @override
   void didUpdateWidget(TodoListItemTextField oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _syncTextWithModel();
+    if (!_focusNode.hasFocus) _syncTextWithModel();
   }
 
   @override
