@@ -28,8 +28,8 @@ class _TodoLoaderStub implements TodoLoader {
   static TodoItemId get _nextItemId => TodoItemId(_lastItemId += 1);
 
   static Future<T> _requestData<T>(
-    String type, {
-    T data,
+    String type,
+    T data, {
     bool canReturnError = false,
     int minResponseLag = 100,
   }) {
@@ -46,7 +46,7 @@ class _TodoLoaderStub implements TodoLoader {
   Future<TodoInitResponse> initApp() {
     return _requestData(
       'initApp',
-      data: TodoInitResponse(
+      TodoInitResponse(
         List.generate(_random.nextInt(8), (_) => _randomItem),
       ),
       minResponseLag: 500,
@@ -55,13 +55,13 @@ class _TodoLoaderStub implements TodoLoader {
 
   @override
   Future<TodoItemId> addItem(String label, {bool isDone}) =>
-      _requestData('addItem', data: _nextItemId, canReturnError: true);
+      _requestData('addItem', _nextItemId, canReturnError: true);
 
   @override
   Future<void> changeItem(TodoItemId id, {String label, bool isDone}) =>
-      _requestData('changeItem', canReturnError: true);
+      _requestData('changeItem', null, canReturnError: true);
 
   @override
   Future<void> removeItem(TodoItemId id) =>
-      _requestData('removeItem', canReturnError: true);
+      _requestData('removeItem', null, canReturnError: true);
 }

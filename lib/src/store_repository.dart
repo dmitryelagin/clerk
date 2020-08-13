@@ -66,6 +66,6 @@ class StoreRepository<S extends Object> implements StoreAccessor<S> {
 
   Map<Type, Object> _getModels() => {
         for (final key in _modelControllerMap.keys)
-          key: _modelControllerMap[key].model,
+          key: _modelControllerMap[key]?.model,
       };
 }
