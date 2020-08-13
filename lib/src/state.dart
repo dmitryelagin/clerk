@@ -7,7 +7,7 @@
 /// of how to get accumulator from model (before modifying accumulator),
 /// how to get model from accumulator (after modifying accumulator) and how
 /// to compare models to determine if the model has been changed.
-class State<M, A> {
+class State<M extends Object, A extends Object> {
   /// Creates [State] with provided rules.
   ///
   /// Callbacks will be executed as if they are appropriate methods.
