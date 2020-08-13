@@ -21,9 +21,8 @@ class StoreSettings<S extends Object> {
 
   /// The default settings for store with simplified `onChange` [Stream].
   ///
-  /// The `onChange` [Stream] will always return blank [Object] as a
-  /// state aggregate.
-  static final standard = StoreSettings((_) => Object());
+  /// The `onChange` [Stream] will always return `null` as a state aggregate.
+  static final standard = StoreSettings((_) => null);
 
   /// Creates state object from all models available in store.
   ///

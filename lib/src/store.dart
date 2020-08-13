@@ -49,7 +49,7 @@ class StoreBuilder {
   final StoreRepository _repository;
 
   /// Adds [State] to [StoreBuilder].
-  void add<M extends Object, A extends Object>(State<M, A> state) {
+  void add<M, A>(State<M, A> state) {
     _repository.add(state);
   }
 }
