@@ -79,17 +79,3 @@ abstract class StoreAccessor<S> {
   /// type can make emission synchronous or asynchronous.
   Stream<M> onModelChange<M>();
 }
-
-abstract class ContextManager {
-  bool get hasPossibleChanges;
-  bool hasPossibleChange(Type key);
-  void registerPossibleChange(Type key);
-}
-
-abstract class ExecutionHelper {
-  void run(
-    void Function() fn, {
-    Zone? source,
-    ZoneSpecification? zoneSpecification,
-  });
-}
