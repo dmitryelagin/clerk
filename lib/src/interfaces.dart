@@ -63,7 +63,7 @@ abstract class StoreReader {
 }
 
 /// An accessor to all available store data and events.
-abstract class StoreAccessor<S> {
+abstract class StoreAccessor<S extends Object> {
   /// The latest models of all store [State]s.
   S get state;
 
