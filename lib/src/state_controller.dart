@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'interfaces.dart';
+import 'context_manager.dart';
 import 'state.dart';
 import 'store_settings.dart';
 

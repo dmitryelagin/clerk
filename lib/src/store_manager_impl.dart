@@ -1,15 +1,16 @@
 import 'dart:async';
 
+import 'context_manager.dart';
 import 'interfaces.dart';
 import 'store_repository.dart';
 import 'types.dart';
 
 class StoreManagerImpl implements StoreManager {
-  StoreManagerImpl(this._helper, this._repository) {
+  StoreManagerImpl(this._context, this._repository) {
     _executionZoneSpecification = _createExecutionZoneSpecification();
   }
 
-  final ExecutionHelper _helper;
+  final ContextManager _context;
   final StoreRepository _repository;
 
   ZoneSpecification _executionZoneSpecification;
@@ -31,7 +32,7 @@ class StoreManagerImpl implements StoreManager {
     if (_hasTransanction) {
       fn(_getAccumulator());
     } else {
-      _helper.run(() {
+      _context.run(() {
         fn(_getAccumulator());
       }, zoneSpecification: _executionZoneSpecification);
     }
@@ -42,7 +43,7 @@ class StoreManagerImpl implements StoreManager {
     if (_hasTransanction) {
       fn(_getAccumulator(), x);
     } else {
-      _helper.run(() {
+      _context.run(() {
         fn(_getAccumulator(), x);
       }, zoneSpecification: _executionZoneSpecification);
     }
@@ -53,7 +54,7 @@ class StoreManagerImpl implements StoreManager {
     if (_hasTransanction) {
       fn(_getAccumulator(), x, y);
     } else {
-      _helper.run(() {
+      _context.run(() {
         fn(_getAccumulator(), x, y);
       }, zoneSpecification: _executionZoneSpecification);
     }
@@ -92,7 +93,7 @@ class StoreManagerImpl implements StoreManager {
   T _runTransanction<T>(T Function() fn, Zone source) {
     _hasTransanction = true;
     final result = fn();
-    _helper.run(_repository.applyChanges, source: source);
+    _context.run(_repository.applyChanges, source: source);
     _hasTransanction = false;
     return result;
   }

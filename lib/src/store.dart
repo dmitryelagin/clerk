@@ -1,4 +1,4 @@
-import 'context_manager_impl.dart';
+import 'context_manager.dart';
 import 'interfaces.dart';
 import 'state.dart';
 import 'store_manager_impl.dart';
@@ -12,7 +12,7 @@ class Store<S extends Object> {
     void Function(StoreBuilder) compose,
     StoreSettings<S> settings,
   ) {
-    final context = ContextManagerImpl();
+    final context = ContextManager();
     final repository = StoreRepository(context, settings);
     compose(StoreBuilder._(repository));
     return Store._(repository, StoreManagerImpl(context, repository));

@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'exceptions.dart';
-import 'interfaces.dart';
 
-class ContextManagerImpl implements ContextManager, ExecutionHelper {
+class ContextManager {
   static final _possibleChangesKey = Object();
 
   final _cache = Expando<Set<Type>>();
@@ -15,20 +14,16 @@ class ContextManagerImpl implements ContextManager, ExecutionHelper {
   static Set<Type> _createEmptyChanges() => {};
   static Set<Type> _getEmptyChanges() => const {};
 
-  @override
   bool get hasPossibleChanges =>
       _getPossibleChanges(Zone.current, orElse: _getEmptyChanges).isNotEmpty;
 
-  @override
   bool hasPossibleChange(Type key) =>
       _getPossibleChanges(Zone.current, orElse: _getEmptyChanges).contains(key);
 
-  @override
   void registerPossibleChange(Type key) {
     _getPossibleChanges(Zone.current).add(key);
   }
 
-  @override
   void run(
     void Function() fn, {
     Zone source,
