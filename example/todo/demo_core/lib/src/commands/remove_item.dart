@@ -12,7 +12,7 @@ class RemoveItem {
   Future<void> call(TodoList todoList, TodoItemId id) async {
     if (todoList.isPendingItem(id)) return;
 
-    todoList.resetItemValidity(id);
+    todoList.revertItemValidity(id);
 
     if (id.isFake) {
       todoList.removeItem(id);

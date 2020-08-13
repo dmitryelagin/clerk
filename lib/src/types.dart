@@ -1,5 +1,3 @@
-import 'dart:async';
-
 /// Type of a function that returns specific data from a complex object.
 typedef Read<M, V> = V Function(M);
 
@@ -25,14 +23,3 @@ typedef ApplyUnary<A, X> = void Function(A, X);
 ///
 /// Accepts an additional arguments to influence the writing.
 typedef ApplyBinary<A, X, Y> = void Function(A, X, Y);
-
-/// Type of a callback that returns model from accumulator.
-typedef GetModel<M, A> = M Function(A);
-
-/// Type of a callback that compares two models.
-typedef CompareModels<M> = bool Function(M, M);
-
-typedef GetStream = Stream<T> Function<T>();
-typedef GetStreamController = StreamController<T> Function<T>();
-typedef ReadFallback = T Function<T>(Type, Type, [Object?, Object?]);
-typedef ApplyFallback = void Function(Type, [Object?, Object?]);

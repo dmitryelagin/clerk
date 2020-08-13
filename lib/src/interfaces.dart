@@ -3,16 +3,8 @@ import 'dart:async';
 import 'state.dart';
 import 'types.dart';
 
-/// A container that provides access to all [State] models of specific store.
-abstract class StateAggregate {
-  /// Returns whether [StateAggregate] contains requested [State] model or not.
-  bool has<T>();
-
-  /// Returns [State] model with requested type.
-  ///
-  /// Returns `null` if [State] model was not found.
-  T? get<T>();
-}
+/// An object that can read from or apply to store.
+abstract class StoreManager implements StoreExecutor, StoreReader {}
 
 /// An object that can execute operations over store.
 abstract class StoreExecutor {
@@ -70,19 +62,16 @@ abstract class StoreReader {
   V readBinary<M, V, X, Y>(ReadBinary<M, V, X, Y> fn, X x, Y y);
 }
 
-/// An object that can read from or apply to store.
-abstract class StoreManager implements StoreExecutor, StoreReader {}
-
 /// An accessor to all available store data and events.
-abstract class StoreAccessor {
+abstract class StoreAccessor<S> {
   /// The latest models of all store [State]s.
-  StateAggregate get state;
+  S get state;
 
   /// A stream that emits models of store [State]s when anything changes.
   ///
   /// Emits only after any model was changed during [Apply] run. [Stream]
   /// type can make emission synchronous or asynchronous.
-  Stream<StateAggregate> get onChange;
+  Stream<S> get onChange;
 
   /// Returns stream which emits specific [State] model when it changes.
   ///
@@ -91,17 +80,8 @@ abstract class StoreAccessor {
   Stream<M> onModelChange<M>();
 }
 
-abstract class StateManager<M extends Object?, A extends Object?> {
-  Stream<M> get onChange;
-  V read<V>(Read<M, V> fn);
-  V readUnary<V, X>(ReadUnary<M, V, X> fn, X x);
-  V readBinary<V, X, Y>(ReadBinary<M, V, X, Y> fn, X x, Y y);
-  void apply(Apply<A> fn);
-  void applyUnary<X>(ApplyUnary<A, X> fn, X x);
-  void applyBinary<X, Y>(ApplyBinary<A, X, Y> fn, X x, Y y);
-}
-
 abstract class ContextManager {
+  bool get hasPossibleChanges;
   bool hasPossibleChange(Type key);
   void registerPossibleChange(Type key);
 }

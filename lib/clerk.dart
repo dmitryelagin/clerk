@@ -6,22 +6,9 @@ library clerk;
 
 export 'src/exceptions.dart';
 export 'src/interfaces.dart'
-    show
-        StateAggregate,
-        StoreAccessor,
-        StoreExecutor,
-        StoreManager,
-        StoreReader;
+    show StoreAccessor, StoreExecutor, StoreManager, StoreReader;
 export 'src/state.dart';
 export 'src/store.dart';
 export 'src/store_settings.dart';
 export 'src/types.dart'
-    show
-        Apply,
-        ApplyUnary,
-        ApplyBinary,
-        CompareModels,
-        GetModel,
-        Read,
-        ReadUnary,
-        ReadBinary;
+    show Apply, ApplyUnary, ApplyBinary, Read, ReadUnary, ReadBinary;

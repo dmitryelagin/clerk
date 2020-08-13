@@ -1,5 +1,3 @@
-import 'types.dart';
-
 /// A container of rules for working with specific model and accumulator.
 ///
 /// [State] object works with model and accumulator concepts. Model is the
@@ -15,19 +13,20 @@ class State<M, A> {
   /// Callbacks will be executed as if they are appropriate methods.
   const State(
     this.accumulator, {
-    required GetModel<M, A> getModel,
-    CompareModels<M>? areEqualModels,
+    required M Function(A) getModel,
+    bool Function(M, M) areEqualModels = identical,
   })  : _getModel = getModel,
-        _areEqualModels = areEqualModels ?? identical;
+        _areEqualModels = areEqualModels;
 
   /// An accumulator object.
   ///
   /// It will be [State]'s permanent accumulator and will act as a single
-  /// source of truth.
+  /// source of truth. Store will read accumulator only once and then it will
+  /// remain preserved internally.
   final A accumulator;
 
-  final GetModel<M, A> _getModel;
-  final CompareModels<M> _areEqualModels;
+  final M Function(A) _getModel;
+  final bool Function(M, M) _areEqualModels;
 
   /// Returns model produced from accumulator.
   M getModel(A accumulator) => _getModel(accumulator);

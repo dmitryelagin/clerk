@@ -8,11 +8,16 @@ class ContextManagerImpl implements ContextManager, ExecutionHelper {
 
   final _cache = Expando<Set<Type>>();
 
-  static Set<Type> _throwChangesNotFound() =>
-      throw const WrongZoneApplyException();
+  static Set<Type> _throwChangesNotFound() {
+    throw const WrongZoneApplyException();
+  }
 
   static Set<Type> _createEmptyChanges() => {};
   static Set<Type> _getEmptyChanges() => const {};
+
+  @override
+  bool get hasPossibleChanges =>
+      _getPossibleChanges(Zone.current, orElse: _getEmptyChanges).isNotEmpty;
 
   @override
   bool hasPossibleChange(Type key) =>

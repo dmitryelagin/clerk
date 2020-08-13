@@ -25,7 +25,7 @@ class ChangeItem {
     try {
       await _loader.changeItem(id, label: updatedLabel);
     } on Exception catch (_) {
-      todoList.validateItem(id, const ChangeItemFailure());
+      todoList.validateItem(id, ChangeItemFailure(previousItem.label));
     } finally {
       todoList.setItemIsSynchronized(id);
     }

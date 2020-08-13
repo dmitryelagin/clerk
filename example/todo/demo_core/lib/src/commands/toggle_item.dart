@@ -17,13 +17,13 @@ class ToggleItem {
     if (todoList.isPendingItem(id)) return;
 
     final previousItem = todoList.getItem(id);
-    todoList
-      ..resetItemValidity(id)
-      ..toggleItem(id, isDone: isDone);
+    todoList.toggleItem(id, isDone: isDone);
 
     if (id.isFake || previousItem.isDone == isDone) return;
 
-    todoList.setItemIsPending(id);
+    todoList
+      ..revertItemValidity(id)
+      ..setItemIsPending(id);
 
     try {
       await _loader.changeItem(id, isDone: isDone);
