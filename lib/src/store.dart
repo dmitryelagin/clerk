@@ -6,7 +6,7 @@ import 'store_repository.dart';
 import 'store_settings.dart';
 
 /// An object that stores states and provides instruments to manage them.
-class Store<S extends Object> {
+class Store<S extends Object?> {
   /// Creates an assembled [Store].
   factory Store(
     void Function(StoreBuilder) compose,
@@ -49,7 +49,7 @@ class StoreBuilder {
   final StoreRepository _repository;
 
   /// Adds [State] to [StoreBuilder].
-  void add<M extends Object, A extends Object>(State<M, A> state) {
+  void add<M, A>(State<M, A> state) {
     _repository.add(state);
   }
 }

@@ -6,7 +6,7 @@ import 'exceptions.dart';
 ///
 /// It helps to control exceptions handling and to create customized
 /// stream-related objects.
-class StoreSettings<S extends Object> {
+class StoreSettings<S extends Object?> {
   /// Creates a [StoreSettings] object from simple callbacks.
   ///
   /// Provide callbacks with the same names as [StoreSettings]'s own methods
@@ -21,9 +21,8 @@ class StoreSettings<S extends Object> {
 
   /// The default settings for store with simplified `onChange` [Stream].
   ///
-  /// The `onChange` [Stream] will always return blank [Object] as a
-  /// state aggregate.
-  static final standard = StoreSettings((_) => Object());
+  /// The `onChange` [Stream] will always return `null` as a state aggregate.
+  static final standard = StoreSettings((_) => null);
 
   /// Creates state object from all models available in store.
   ///
@@ -32,7 +31,7 @@ class StoreSettings<S extends Object> {
   /// when `state` getter is called. Function will be provided with the
   /// callback that returns a map of all available models as values and their
   /// corresponding types as keys.
-  final S Function(Map<Type, Object> Function()) getStateAggregate;
+  final S Function(Map<Type, Object?> Function()) getStateAggregate;
 
   /// Creates [StreamController] for store internal usage.
   ///

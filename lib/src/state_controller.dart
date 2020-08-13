@@ -4,7 +4,7 @@ import 'context_manager.dart';
 import 'state.dart';
 import 'store_settings.dart';
 
-class StateController<M extends Object, A extends Object> {
+class StateController<M extends Object?, A extends Object?> {
   StateController(this._state, this._context, StoreSettings settings)
       : _accumulator = _state.accumulator,
         _change = settings.getStreamController() {

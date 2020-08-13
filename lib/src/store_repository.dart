@@ -6,7 +6,7 @@ import 'state.dart';
 import 'state_controller.dart';
 import 'store_settings.dart';
 
-class StoreRepository<S extends Object> implements StoreAccessor<S> {
+class StoreRepository<S extends Object?> implements StoreAccessor<S> {
   StoreRepository(this._context, this._settings)
       : _change = _settings.getStreamController();
 
@@ -39,7 +39,7 @@ class StoreRepository<S extends Object> implements StoreAccessor<S> {
       _getTypedValue(_accumulatorControllerMap[A]?.accumulator) ??
       _settings.getAccumulatorFallback();
 
-  void add<M extends Object, A extends Object>(State<M, A> state) {
+  void add<M, A>(State<M, A> state) {
     final controller = StateController(state, _context, _settings);
     _accumulatorControllerMap[A] = controller;
     _modelControllerMap[M] = controller;
@@ -62,7 +62,7 @@ class StoreRepository<S extends Object> implements StoreAccessor<S> {
     ]);
   }
 
-  Map<Type, Object> _getModels() => {
+  Map<Type, Object?> _getModels() => {
         for (final key in _modelControllerMap.keys)
           key: _modelControllerMap[key]!.model,
       };
