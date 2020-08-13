@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'interfaces.dart';
 import 'state.dart';
+import 'store_settings.dart';
 
 class StateController<M extends Object, A extends Object> {
-  StateController(this._state, this._context, this._change)
-      : _accumulator = _state.accumulator {
+  StateController(this._state, this._context, StoreSettings settings)
+      : _accumulator = _state.accumulator,
+        _change = settings.getStreamController() {
     _model = _prevModel = _state.getModel(_accumulator);
   }
 

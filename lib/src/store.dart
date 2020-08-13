@@ -15,8 +15,7 @@ class Store<S extends Object> {
     final context = ContextManagerImpl();
     final repository = StoreRepository(context, settings);
     compose(StoreBuilder._(repository));
-    final manager = StoreManagerImpl(context, repository);
-    return Store._(repository, manager);
+    return Store._(repository, StoreManagerImpl(context, repository));
   }
 
   Store._(this._repository, this._manager);
@@ -50,7 +49,7 @@ class StoreBuilder {
   final StoreRepository _repository;
 
   /// Adds [State] to [StoreBuilder].
-  void add<M, A>(State<M, A> state) {
+  void add<M extends Object, A extends Object>(State<M, A> state) {
     _repository.add(state);
   }
 }

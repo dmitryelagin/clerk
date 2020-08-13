@@ -38,8 +38,8 @@ class StoreRepository<S extends Object> implements StoreAccessor<S> {
       _getTypedValue(_accumulatorControllerMap[A]?.accumulator) ??
       _settings.getAccumulatorFallback();
 
-  void add<M, A>(State<M, A> state) {
-    final controller = _createController(state);
+  void add<M extends Object, A extends Object>(State<M, A> state) {
+    final controller = StateController(state, _context, _settings);
     _accumulatorControllerMap[A] = controller;
     _modelControllerMap[M] = controller;
     _controllers.add(controller);
@@ -61,11 +61,8 @@ class StoreRepository<S extends Object> implements StoreAccessor<S> {
     ]);
   }
 
-  StateController<M, A> _createController<M, A>(State<M, A> state) =>
-      StateController(state, _context, _settings.getStreamController());
-
   Map<Type, Object> _getModels() => {
         for (final key in _modelControllerMap.keys)
-          key: _modelControllerMap[key]?.model,
+          key: _modelControllerMap[key].model,
       };
 }
