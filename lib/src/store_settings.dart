@@ -32,7 +32,7 @@ class StoreSettings<S extends Object> {
   /// when `state` getter is called. Function will be provided with the
   /// callback that returns a map of all available models as values and their
   /// corresponding types as keys.
-  final S Function(Map<Type, Object?> Function()) getStateAggregate;
+  final S Function(Map<Type, Object> Function()) getStateAggregate;
 
   /// Creates [StreamController] for store internal usage.
   ///
