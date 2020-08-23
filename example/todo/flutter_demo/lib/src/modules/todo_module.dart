@@ -17,7 +17,7 @@ void initializeTodoModule(Locator locator) {
     ..bindSingleton(() => AddItem(get()))
     ..bindSingleton(() => ChangeItem(get()))
     ..bindSingleton(() => RemoveItem(get()))
-    ..bindSingleton(() => const ResetItemValidity())
+    ..bindSingleton(() => const RevertItemValidity())
     ..bindSingleton(() => const StartItemAdd())
     ..bindSingleton(() => ToggleItem(get()))
     ..bindSingleton(() => CommitItem(get(), get(), get()));

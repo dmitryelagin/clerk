@@ -6,7 +6,7 @@ import 'package:summon/summon.dart';
 
 import 'store_manager_wrapper.dart';
 
-abstract class StoreState<T extends StatefulWidget> extends State<T> {
+mixin StoreState<T extends StatefulWidget> on State<T> {
   StoreManagerWrapper _store;
   StreamSubscription<Object> _subscription;
 

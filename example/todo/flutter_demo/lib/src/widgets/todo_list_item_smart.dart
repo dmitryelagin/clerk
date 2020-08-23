@@ -16,16 +16,18 @@ class TodoListItem extends StatefulWidget {
   _TodoListItemState createState() => _TodoListItemState();
 }
 
-class _TodoListItemState extends StoreState<TodoListItem> with InjectorState {
+class _TodoListItemState extends State<TodoListItem>
+    with StoreState, InjectorState {
   TodoListReader get _todoList => get();
   ToggleItem get _toggleItem => get();
   CommitItem get _commitItem => get();
   RemoveItem get _removeItem => get();
-  ResetItemValidity get _resetItemValidity => get();
+  RevertItemValidity get _revertItemValidity => get();
 
   @override
   Widget build(BuildContext _) {
     return simple.TodoListItem(
+      key: widget.key,
       item: store.readUnary(_todoList.getItem, widget.id),
       shouldAutofocus: store.readUnary(_todoList.isFakeItem, widget.id),
       onChange: _onChange,
@@ -51,7 +53,7 @@ class _TodoListItemState extends StoreState<TodoListItem> with InjectorState {
   }
 
   void _onFocus() {
-    store.applyUnary(_resetItemValidity.call, widget.id);
+    store.applyUnary(_revertItemValidity.call, widget.id);
   }
 
   void _onRetry() {

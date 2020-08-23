@@ -11,7 +11,7 @@ class TodoList extends StatefulWidget {
   _TodoListState createState() => _TodoListState();
 }
 
-class _TodoListState extends StoreState<TodoList> with InjectorState {
+class _TodoListState extends State<TodoList> with StoreState, InjectorState {
   TodoListReader get _todoList => get();
   StartItemAdd get _startItemAdd => get();
   FetchItems get _fetchItems => get();
