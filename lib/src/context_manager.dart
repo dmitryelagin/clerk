@@ -24,17 +24,12 @@ class ContextManager {
     _getPossibleChanges(Zone.current).add(key);
   }
 
-  void run(
-    void Function() fn, {
-    Zone source,
-    ZoneSpecification zoneSpecification,
-  }) {
-    runZoned(fn, zoneSpecification: zoneSpecification, zoneValues: {
-      _possibleChangesKey: source == null
-          ? _createEmptyChanges()
-          : _getPossibleChanges(source, orElse: _createEmptyChanges),
-    });
-  }
+  R run<R>(R Function() fn, {Zone source, ZoneSpecification specification}) =>
+      runZoned(fn, zoneSpecification: specification, zoneValues: {
+        _possibleChangesKey: source == null
+            ? _createEmptyChanges()
+            : _getPossibleChanges(source, orElse: _createEmptyChanges),
+      });
 
   Set<Type> _getPossibleChanges(
     Zone source, {

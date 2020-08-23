@@ -28,37 +28,29 @@ class StoreManagerImpl implements StoreManager {
       fn(_getModel(), x, y);
 
   @override
-  void apply<A>(Apply<A> fn) {
-    if (_hasTransanction) {
-      fn(_getAccumulator());
-    } else {
-      _context.run(() {
-        fn(_getAccumulator());
-      }, zoneSpecification: _executionZoneSpecification);
-    }
-  }
+  FutureOr<void> apply<A>(Apply<A> fn) => _hasTransanction
+      ? fn(_getAccumulator())
+      : _context.run(
+          () => fn(_getAccumulator()),
+          specification: _executionZoneSpecification,
+        );
 
   @override
-  void applyUnary<A, X>(ApplyUnary<A, X> fn, X x) {
-    if (_hasTransanction) {
-      fn(_getAccumulator(), x);
-    } else {
-      _context.run(() {
-        fn(_getAccumulator(), x);
-      }, zoneSpecification: _executionZoneSpecification);
-    }
-  }
+  FutureOr<void> applyUnary<A, X>(ApplyUnary<A, X> fn, X x) => _hasTransanction
+      ? fn(_getAccumulator(), x)
+      : _context.run(
+          () => fn(_getAccumulator(), x),
+          specification: _executionZoneSpecification,
+        );
 
   @override
-  void applyBinary<A, X, Y>(ApplyBinary<A, X, Y> fn, X x, Y y) {
-    if (_hasTransanction) {
-      fn(_getAccumulator(), x, y);
-    } else {
-      _context.run(() {
-        fn(_getAccumulator(), x, y);
-      }, zoneSpecification: _executionZoneSpecification);
-    }
-  }
+  FutureOr<void> applyBinary<A, X, Y>(ApplyBinary<A, X, Y> fn, X x, Y y) =>
+      _hasTransanction
+          ? fn(_getAccumulator(), x, y)
+          : _context.run(
+              () => fn(_getAccumulator(), x, y),
+              specification: _executionZoneSpecification,
+            );
 
   M _getModel<M>() =>
       M == StoreReader ? _getCastedThis() : _repository.getModel();

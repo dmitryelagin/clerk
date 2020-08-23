@@ -15,7 +15,7 @@ abstract class StoreExecutor {
   /// with required [State] accumulator. [Apply] can require [StoreManager]
   /// [StoreExecutor] or [StoreReader] as the first argument, so the
   /// appropriate object will be provided instead of accumulator.
-  void apply<A>(Apply<A> fn);
+  FutureOr<void> apply<A>(Apply<A> fn);
 
   /// Modifies [State] accumulator with provided [ApplyUnary].
   ///
@@ -25,7 +25,7 @@ abstract class StoreExecutor {
   /// provided argument. [ApplyUnary] can require [StoreManager]
   /// [StoreExecutor] or [StoreReader] as the first argument, so the
   /// appropriate object will be provided instead of accumulator.
-  void applyUnary<A, X>(ApplyUnary<A, X> fn, X x);
+  FutureOr<void> applyUnary<A, X>(ApplyUnary<A, X> fn, X x);
 
   /// Modifies [State] accumulator with provided [ApplyBinary].
   ///
@@ -35,7 +35,7 @@ abstract class StoreExecutor {
   /// provided arguments. [ApplyBinary] can require [StoreManager]
   /// [StoreExecutor] or [StoreReader] as the first argument, so the
   /// appropriate object will be provided instead of accumulator.
-  void applyBinary<A, X, Y>(ApplyBinary<A, X, Y> fn, X x, Y y);
+  FutureOr<void> applyBinary<A, X, Y>(ApplyBinary<A, X, Y> fn, X x, Y y);
 }
 
 /// An object that gets value from store [State] model with provided callback.
