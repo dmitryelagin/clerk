@@ -27,6 +27,7 @@ class _TodoListItemState extends StoreState<TodoListItem> with InjectorState {
   Widget build(BuildContext _) {
     return simple.TodoListItem(
       item: store.readUnary(_todoList.getItem, widget.id),
+      shouldAutofocus: store.readUnary(_todoList.isFakeItem, widget.id),
       onChange: _onChange,
       onToggle: _onToggle,
       onRemove: _onRemove,
@@ -43,8 +44,10 @@ class _TodoListItemState extends StoreState<TodoListItem> with InjectorState {
     store.applyBinary(_toggleItem.call, widget.id, isDone);
   }
 
-  void _onRemove() {
-    store.applyUnary(_removeItem.call, widget.id);
+  Future<bool> _onRemove() async {
+    final id = widget.id;
+    await store.applyUnary(_removeItem.call, id);
+    return !store.readUnary(_todoList.hasItem, id);
   }
 
   void _onFocus() {

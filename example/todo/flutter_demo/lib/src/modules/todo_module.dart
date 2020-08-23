@@ -6,14 +6,14 @@ void initializeTodoModule(Locator locator) {
   final get = locator.get;
   locator
     ..bindSingleton<Store>(
-      () => createTodoStore()..executor.apply(get<Init>().call),
+      () => createTodoStore()..executor.apply(get<FetchItems>().call),
       onReset: (store) {
         store.teardown();
       },
     )
     ..bindSingleton(() => TodoLoader())
     ..bindSingleton(() => TodoListReader())
-    ..bindSingleton(() => Init(get()))
+    ..bindSingleton(() => FetchItems(get()))
     ..bindSingleton(() => AddItem(get()))
     ..bindSingleton(() => ChangeItem(get()))
     ..bindSingleton(() => RemoveItem(get()))

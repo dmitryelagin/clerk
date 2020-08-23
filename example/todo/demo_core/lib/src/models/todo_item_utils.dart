@@ -1,12 +1,12 @@
 import 'todo_item.dart';
-import 'todo_validity.dart';
+import 'validity.dart';
 
 extension TodoItemUtils on TodoItem {
   TodoItem update({
     String label,
     bool isDone,
     bool isPending,
-    TodoValidity validity,
+    Validity validity,
   }) {
     return TodoItem(
       id,

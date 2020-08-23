@@ -30,22 +30,21 @@ class _TodoLoaderStub implements TodoLoader {
   static Future<T> _requestData<T>(
     String type,
     T data, {
-    bool canReturnError = false,
+    double errorRate = 0.25,
     int minResponseLag = 100,
   }) {
     final milliseconds = (_random.nextDouble() * 200 + minResponseLag).round();
     final duration = Duration(milliseconds: milliseconds);
     return Future<void>.delayed(duration).then((_) {
-      final shouldReturnData = _random.nextDouble() > 0.25;
-      if (!canReturnError || shouldReturnData) return data;
+      if (_random.nextDouble() >= errorRate) return data;
       throw Exception();
     });
   }
 
   @override
-  Future<TodoInitResponse> initApp() {
+  Future<TodoInitResponse> fetchItems() {
     return _requestData(
-      'initApp',
+      'fetchItems',
       TodoInitResponse(
         List.generate(_random.nextInt(8), (_) => _randomItem),
       ),
@@ -55,13 +54,12 @@ class _TodoLoaderStub implements TodoLoader {
 
   @override
   Future<TodoItemId> addItem(String label, {bool isDone}) =>
-      _requestData('addItem', _nextItemId, canReturnError: true);
+      _requestData('addItem', _nextItemId);
 
   @override
   Future<void> changeItem(TodoItemId id, {String label, bool isDone}) =>
-      _requestData('changeItem', null, canReturnError: true);
+      _requestData('changeItem', null);
 
   @override
-  Future<void> removeItem(TodoItemId id) =>
-      _requestData('removeItem', null, canReturnError: true);
+  Future<void> removeItem(TodoItemId id) => _requestData('removeItem', null);
 }

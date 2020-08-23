@@ -1,6 +1,6 @@
 import 'package:demo_core/demo_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/src/widgets/todo_list_item_text_field.dart';
+import 'package:flutter_demo/src/widgets/manageable_list_item_text_field.dart';
 
 class TodoListItem extends StatelessWidget {
   const TodoListItem({
@@ -10,49 +10,80 @@ class TodoListItem extends StatelessWidget {
     @required this.onRemove,
     @required this.onFocus,
     @required this.onRetry,
+    this.shouldAutofocus = false,
     Key key,
   }) : super(key: key);
 
   final TodoItem item;
+  final bool shouldAutofocus;
 
+  final Future<bool> Function() onRemove;
   final void Function(String) onChange;
   final void Function(bool) onToggle;
-  final void Function() onRemove;
   final void Function() onFocus;
   final void Function() onRetry;
 
-  bool get _canRetry =>
-      item.validity is AddItemFailure || item.validity is ChangeItemFailure;
+  DismissDirection get _direction => item.validity is RetryableValidity
+      ? DismissDirection.horizontal
+      : DismissDirection.endToStart;
 
   @override
-  Widget build(BuildContext _) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Checkbox(
-          value: item.isDone,
-          onChanged: onToggle,
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Dismissible(
+      key: key,
+      direction: _direction,
+      confirmDismiss: _confirmDismiss,
+      background: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        color: theme.dividerColor,
+        child: Row(
+          children: const [
+            Icon(Icons.refresh),
+            Text('Retry'),
+          ],
         ),
-        Expanded(
-          child: TodoListItemTextField(
-            item: item,
-            onFocus: onFocus,
-            onChange: onChange,
+      ),
+      secondaryBackground: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        color: theme.dividerColor,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: const [
+            Text('Delete'),
+            Icon(Icons.delete_outline),
+          ],
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Checkbox(
+            value: item.isDone,
+            onChanged: onToggle,
           ),
-        ),
-        if (_canRetry)
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            splashColor: Colors.transparent,
-            tooltip: 'Retry',
-            onPressed: onRetry,
+          Expanded(
+            child: ManageableListItemTextField(
+              label: item.label,
+              validity: item.validity,
+              isPending: item.isPending,
+              shouldAutofocus: shouldAutofocus,
+              textColor: item.isDone ? theme.textTheme.caption.color : null,
+              onFocus: onFocus,
+              onChange: onChange,
+            ),
           ),
-        IconButton(
-          icon: const Icon(Icons.remove_circle_outline),
-          tooltip: 'Remove',
-          onPressed: onRemove,
-        ),
-      ],
+        ],
+      ),
     );
+  }
+
+  Future<bool> _confirmDismiss(DismissDirection direction) {
+    if (direction == DismissDirection.endToStart) {
+      return onRemove();
+    } else {
+      onRetry();
+      return Future.value();
+    }
   }
 }

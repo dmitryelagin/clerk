@@ -1,17 +1,29 @@
 import '../../models/todo_item.dart';
 import '../../models/todo_item_id.dart';
 import '../../models/todo_item_utils.dart';
-import '../../models/todo_validity.dart';
+import '../../models/validity.dart';
 
 class TodoList {
   final List<TodoItem> _items = [];
 
-  bool isPendingItem(TodoItemId id) => getItem(id).isPending;
+  Validity validity = Validity.valid;
+  bool isPending = false;
 
-  TodoItem getItem(TodoItemId id) =>
-      _items.firstWhere((item) => item.id.value == id.value);
+  bool isPendingItem(TodoItemId id) =>
+      isPending || (getItem(id)?.isPending ?? false);
+
+  TodoItem getItem(TodoItemId id) => _items
+      .firstWhere((item) => item.id.value == id.value, orElse: () => null);
 
   Iterable<TodoItem> getItems() => List.unmodifiable(_items);
+
+  void clear() {
+    _items.clear();
+  }
+
+  void resetValidity() {
+    validity = Validity.valid;
+  }
 
   void replaceItems(Iterable<TodoItem> updatedItems) {
     _items.replaceRange(0, _items.length, updatedItems);
@@ -29,20 +41,20 @@ class TodoList {
     updateItem(id, (item) => item.update(label: label));
   }
 
-  void validateItem(TodoItemId id, TodoValidity validity) {
+  void validateItem(TodoItemId id, Validity validity) {
     updateItem(id, (item) => item.update(validity: validity));
   }
 
   void resetItemValidity(TodoItemId id) {
-    updateItem(id, (item) => item.update(validity: const TodoValidity()));
+    updateItem(id, (item) => item.update(validity: Validity.valid));
   }
 
   void revertItemValidity(TodoItemId id) {
     updateItem(id, (item) {
       final validity = item.validity;
-      return validity is RevertableTodoValidity
+      return validity is RevertableValidity<TodoItem>
           ? validity.revert(item)
-          : item.update(validity: const TodoValidity());
+          : item.update(validity: Validity.valid);
     });
   }
 
@@ -59,7 +71,8 @@ class TodoList {
   }
 
   void updateItem(TodoItemId id, TodoItem Function(TodoItem) update) {
-    final item = _items.firstWhere((item) => item.id.value == id.value);
+    final item = getItem(id);
+    if (item == null) return;
     final index = _items.indexOf(item);
     _items.replaceRange(index, index + 1, [update(item)]);
   }

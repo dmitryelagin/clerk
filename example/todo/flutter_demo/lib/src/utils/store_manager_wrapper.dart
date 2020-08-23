@@ -13,14 +13,14 @@ class StoreManagerWrapper implements StoreManager {
   Stream<Object> get onChange => _change.stream;
 
   @override
-  void apply<A>(Apply<A> fn) => _store.executor.apply(fn);
+  FutureOr<void> apply<A>(Apply<A> fn) => _store.executor.apply(fn);
 
   @override
-  void applyUnary<A, X>(ApplyUnary<A, X> fn, X x) =>
+  FutureOr<void> applyUnary<A, X>(ApplyUnary<A, X> fn, X x) =>
       _store.executor.applyUnary(fn, x);
 
   @override
-  void applyBinary<A, X, Y>(ApplyBinary<A, X, Y> fn, X x, Y y) =>
+  FutureOr<void> applyBinary<A, X, Y>(ApplyBinary<A, X, Y> fn, X x, Y y) =>
       _store.executor.applyBinary(fn, x, y);
 
   @override

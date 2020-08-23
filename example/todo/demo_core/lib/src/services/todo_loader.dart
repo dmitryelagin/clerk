@@ -9,7 +9,7 @@ part 'todo_loader_stub.dart';
 abstract class TodoLoader {
   factory TodoLoader() = _TodoLoaderStub;
 
-  Future<TodoInitResponse> initApp();
+  Future<TodoInitResponse> fetchItems();
   Future<TodoItemId> addItem(String label, {bool isDone});
   Future<void> changeItem(TodoItemId id, {String label, bool isDone});
   Future<void> removeItem(TodoItemId id);
